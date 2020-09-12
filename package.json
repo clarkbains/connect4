@@ -1,0 +1,26 @@
+{
+  "name": "connect4",
+  "version": "1.0.0",
+  "description": "multiplayer connect4 game",
+  "main": "main.js",
+  "scripts": {
+    "tsc:w": "tsc -w > /dev/null",
+    "start": "concurrently \"npm run tsc:w\" \"node-dev --notify=false  out/main.js\" "
+  },
+  "author": "Clark Bains",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/express": "^4.17.8",
+    "@types/node": "7.0.7",
+    "concurrently": "^3.5.0",
+    "node-dev": "^5.2.0",
+    "typescript": "^2.4.1"
+  },
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "express": "^4.17.1",
+    "jsonwebtoken": "^8.5.1",
+    "sequelize": "^6.3.5",
+    "sqlite3": "^5.0.0"
+  }
+}
