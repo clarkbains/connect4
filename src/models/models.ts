@@ -1,14 +1,14 @@
 const { isNumber, xor } = require("lodash")
 
 //Used by the server to send your own profile to you
-class ResponseUser { 
+export class ResponseUser { 
     userid: number
     name: string
     email: string
     score:number
     isEditable:boolean
     constructor(u: User | object) { 
-        this.id = u.id
+        this.userid = u.userid
         this.name = u.name
         this.email = u.email
         this.score = u.score
@@ -16,12 +16,12 @@ class ResponseUser {
     }
 }
 //Used by the server to send someone elses profile to you
-class Public ResponseUser { 
+export class PublicResponseUser { 
     userid: number
     name: string
     score:number
     constructor(u: User | object) { 
-        this.id = u.id
+        this.userid = u.userid
         this.name = u.name
         this.email = u.email
         this.score = u.score
@@ -29,7 +29,7 @@ class Public ResponseUser {
 }
 
 //Used by a client to request someone's details
-class RequestUser { 
+export class RequestUser { 
     userid: number
     email: string
     name: string
@@ -40,7 +40,7 @@ class RequestUser {
     }
 }
 //Used by the server to indicate a single move, by a single player
-class ResponseMove {
+export class ResponseMove {
     moveid: number
     x:number
     y:number
@@ -57,7 +57,7 @@ class ResponseMove {
     }
 }
 //Used by the server to give basic game information
-class ResponseGameBasic { 
+export class ResponseGameBasic { 
     gameid: number
     name: string
     size: number[]
@@ -77,7 +77,7 @@ class ResponseGameBasic {
 }
 
 //Used by the server to send a whole game to a client
-class ResponseGameWhole extends ResponseGameBasic{ 
+export class ResponseGameWhole extends ResponseGameBasic{ 
     state: ResponseMove[]
     constructor(g: ResponseGameWhole | object) { 
         super(g)
@@ -86,7 +86,7 @@ class ResponseGameWhole extends ResponseGameBasic{
 }
 //Used by the server for wss to send single moves.
 //Will probably just use ResponseMove
-class ResponseGameIncremental extends ResponseGameBasic{ 
+export class ResponseGameIncremental extends ResponseGameBasic{ 
     move:ResponseMove
     constructor(g: ResponseGameIncremental | object) { 
         super(g)
@@ -95,7 +95,7 @@ class ResponseGameIncremental extends ResponseGameBasic{
 }
 
 //Used by a client to request for a game request to be opened
-class RequestMatch { 
+export class RequestMatch { 
     size: number[]
     name: string
     participants: number[]
@@ -108,7 +108,7 @@ class RequestMatch {
 
 
 //Used for a client to indicate interest in a match
-class RequestResponseMatch { 
+export class RequestResponseMatch { 
     matchid:number
     accepted:boolean
     msg:string
@@ -120,7 +120,7 @@ class RequestResponseMatch {
     }
 }
 //Used by a server to indicate the status of a match
-class ResponseMatch { 
+export class ResponseMatch { 
     matchid:number
     accepted:boolean
     gameid:number
@@ -139,7 +139,7 @@ class ResponseMatch {
     }
 }
 //Used to request a password change, knowing the old password
-class RequestPasswordChangePassword { 
+export class RequestPasswordChangePassword { 
     oldPassword: string
     newPassword: string
     constructor(p: RequestPasswordChangePassword | object) { 
@@ -148,7 +148,7 @@ class RequestPasswordChangePassword {
     }
 }
 //Used to request a password change, knowing a token
-class RequestPasswordChangeToken { 
+export class RequestPasswordChangeToken { 
     token: string
     newPassword: string
     constructor(p: RequestPasswordChangePassword | object) { 
@@ -157,14 +157,14 @@ class RequestPasswordChangeToken {
     }
 }
 //Request an email to be sent out with password reset link
-class RequestPasswordReset { 
+export class RequestPasswordReset { 
     email: string
     constructor(p: RequestPasswordReset | object) { 
         this.email = p.email
     }
 }
 //Request a JWT with email and password
-class LoginRequest { 
+export class LoginRequest { 
     email: string
     password: string
     constructor(l: LoginRequest | object) { 
@@ -174,63 +174,122 @@ class LoginRequest {
 }
 
 
-
-
-class DatabaseUser { 
+export class DatabaseUser { 
     userid: number
     name: string
     email: string
-    salt: string
-    hash: string
     score: number
+
     constructor(u: DatabaseUser | object) { 
-        this.id = u.id
+        this.userid = u.userid
         this.name = u.name
         this.email = u.email
-        this.salt = u.salt
-        this.hash = u.hash
         this.score = u.score
     }
 }
-class DatabaseGame { 
-    gameid: number
-    name: string
-    email: string
+export class DatabaseCredential { 
+    credentialid: number
+    userid: string
     salt: string
     hash: string
-    score: number
+    constructor(d: DatabaseCredential | object) { 
+        this.credentialid = d.credentialid
+        this.userid = d.userid
+        this.salt = d.salt
+        this.hash = d.hash
+    }
+}
+export class DatabaseGame {
+    gameid:number 
+    matchid: number
+    currentTurn: number
+    gameFinished: boolean
+    score: number|null
+    constructor(g:DatabaseGame|object){
+        this.gameid = g.gameid
+        this.matchid = g.matchid
+        this.currentTurn = g.currentTurn
+        this.gameFinished = g.gameFinished
+        this.score = g.score
+    }
 
-}class DatabaseMove { 
+}
+export class DatabaseMove { 
     moveid: number
     gameid: number
     x: number
     y: number
     time: number
+    constructor(m:DatabaseMove|object){
+        this.moveid = m.moveid
+        this.gameid = m.gameid
+        this.x = m.x
+        this.y = m.y
+        this.time = m.time
+    }
 
 }
-class DatabaseMatchRequest { 
+//Used to show a general match
+export class DatabaseMatch {
+
     matchid: number
-    size: number[] | string
-    participants: number[]|string
-    accepted: boolean
-    gameid:number
+    userid: number //creator
+    width: number
+    height: number
+    participants:number //number of target participants
+    msg: string //Game msg
+    name: string //Game name
+    acceptance: number //0,1,2
+    constructor(m:DatabaseMatch|object){
+        this.matchid = m.matchid
+        this.userid = m.userid
+        this.width = m.width
+        this.height = m.height
+        this.participants = m.participants
+        this.msg = m.msg
+        this.name = m.name
+        this.acceptance = m.acceptance
+}
+
+
 
 }
-class DatabaseMatchAcceptances { 
+//Used to show a users acceptance or declanation of a match
+export class DatabaseMatchAcceptance { 
     matchid: number
     userid: number
-    accepted: boolean
-    msg: string
+    acceptance: number //0,1,2
+    msg: string //Optional Message for decliners
+    constructor(ma:DatabaseMatchAcceptance){
+        this.matchid = ma.matchid
+        this.userid = ma.userid
+        this.acceptance = ma.acceptance
+        this.msg = ma.msg
+    }
+
+}
+
+export class PragmaTableInfo { 
+    cid: number
+    name: string
+    type: string
+    notnull: number
+    dflt_value: any
+    pk: number
+    constructor(p:PragmaTableInfo|object){
+        this.cid = p.cid
+        this.name = p.name
+        this.type = p.type
+        this.notnull = p.notnull
+        this.dflt_value = p.dflt_value
+        this.pk = p.pk
+}
 
 }
 
 
 
-module.exports.models = {
-
-
-}
-module.exports.assign = function (data:object|object[], model, verify) {
+export let assign = function (data:object|object[], model, verify) {
     function assignAndVerify(row:object) {
         let res = new model(row)
         if (res.verify) {
@@ -247,7 +306,7 @@ module.exports.assign = function (data:object|object[], model, verify) {
 }
 
 //Shallow compare of property diffs
-module.exports.compare = function (oldData, newData) {
+export let compare = function (oldData, newData) {
     let diffs = []
     let propertyList = [...new Set([...Object.keys(oldData), ...Object.keys(newData)])];
     for (let key of propertyList) {

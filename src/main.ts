@@ -5,12 +5,12 @@ const glob = require('glob')
 const path = require('path');
 const mw = require('./middleware')
 const app = express()
-const Auth = require('./auth')
+const Auth = require('./auth') 
 const Gw = require('./gateway')
 import conf from './config'
 const opts = {
     auth: new Auth(conf.JWTSigner),
-    gw: new Gw(),
+    gw: new Gw(conf.dbFile, true),
     conf: conf
 }
 
