@@ -24,10 +24,10 @@ module.exports = class Gateway {
     if (wipe) {
       this.dropTables().then(() => this.createTable()).then(() => {
         //Tesking update generation
-        let mock = new models.DatabaseMatchAcceptance({matchid:1, userid:2, acceptance:5, msg:"test"})
-        this.generateUpdate('MatchAcceptances', mock).then((r)=>{console.log(r)})
-    })
-  }
+        let mock = new models.DatabaseMatchAcceptance({ matchid: 1, userid: 2, acceptance: 5, msg: "test" })
+        this.generateUpdate('MatchAcceptances', mock).then((r) => { console.log(r) })
+      })
+    }
     else
       this.createTable()
   }
@@ -72,6 +72,7 @@ module.exports = class Gateway {
   putCredential(x: models.DatabaseCredential) {
     return this._promisifySql(this.generateInsert("Credentials", x))
   }
+
   getUser(x: models.DatabaseUser) {
     return this._promisifySql(this.generateSelect("Users", x, models.DatabaseUser))
   }
@@ -90,6 +91,44 @@ module.exports = class Gateway {
   getCredential(x: models.DatabaseCredential) {
     return this._promisifySql(this.generateSelect("MatchAcceptances", x, models.DatabaseCredential))
   }
+
+  updateUser(x: models.DatabaseUser) {
+    return this.generateUpdate("Users", x).then(p => this._promisifySql(p))
+  }
+  updateGame(x: models.DatabaseGame) {
+    return this.generateUpdate("Games", x).then(p => this._promisifySql(p))
+  }
+  updateMove(x: models.DatabaseMove) {
+    return this.generateUpdate("Moves", x).then(p => this._promisifySql(p))
+  }
+  updateMatch(x: models.DatabaseMatch) {
+    return this.generateUpdate("Matchs", x).then(p => this._promisifySql(p))
+  }
+  updateMatchAcceptance(x: models.DatabaseMatchAcceptance) {
+    return this.generateUpdate("MatchAcceptances", x).then(p => this._promisifySql(p))
+  }
+  updateCredential(x: models.DatabaseCredential) {
+    return this.generateUpdate("Credentials", x).then(p => this._promisifySql(p))
+  }
+  deleteUser(x: models.DatabaseUser, limit:number) {
+    return this._promisifySql(this.generateDelete("Users", x, limit))
+  }
+  deleteGame(x: models.DatabaseGame, limit:number) {
+    return this._promisifySql(this.generateDelete("Games", x, limit))
+  }
+  deleteMove(x: models.DatabaseMove, limit:number) {
+    return this._promisifySql(this.generateDelete("Moves", x, limit))
+  }
+  deleteMatch(x: models.DatabaseMatch, limit:number) {
+    return this._promisifySql(this.generateDelete("Matchs", x, limit))
+  }
+  deleteMatchAcceptance(x: models.DatabaseMatchAcceptance, limit:number) {
+    return this._promisifySql(this.generateDelete("MatchAcceptances", x, limit))
+  }
+  deleteCredential(x: models.DatabaseCredential, limit:number) {
+    return this._promisifySql(this.generateDelete("MatchAcceptances", x, limit))
+  }
+
 
   fuzzySearch(email: string, id: number) {
     return this._promisifySql({
@@ -142,7 +181,7 @@ module.exports = class Gateway {
             if (res.length > 1) console.warn(`Tried to get single result from ${sql}, got ${res.length}, check query`)
             res = [res[0]]
           }
-          let assigned = models.assign(res, model,false)
+          let assigned = models.assign(res, model, false)
           if (!assigned) {
             console.error(`Did not assign data correctly to model ${model}`, res)
           }
@@ -211,7 +250,7 @@ module.exports = class Gateway {
     }
   }
   //Table name is not escaped, use only sanatised input
-  generateDelete(tableName: string, item: object): sqlOpts {
+  generateDelete(tableName: string, item: object, limit: number): sqlOpts {
     let queryParts: string[] = []
     let fields: string[] = []
     let binds: (string | number)[] = []
@@ -223,7 +262,7 @@ module.exports = class Gateway {
     }
     if (fields.length > 0) {
       return {
-        sql: `DELETE FROM ${tableName} WHERE ${queryParts.join(" AND ")}`,
+        sql: `DELETE FROM ${tableName} WHERE ${queryParts.join(" AND ")} ${limit?"LIMIT 1":""}`,
         params: binds
       }
 
@@ -232,7 +271,7 @@ module.exports = class Gateway {
       sql: ";"
     }
   }
-  generateUpdate(tableName: string, item: object):Promise<sqlOpts> {
+  generateUpdate(tableName: string, item: object): Promise<sqlOpts> {
 
     return this._promisifySql<models.PragmaTableInfo>(
       {
@@ -268,8 +307,8 @@ module.exports = class Gateway {
           params: [...updateVals, ...whereVals]
         }
 
-      }).catch(()=>{
-        return {sql:";"}
+      }).catch(() => {
+        return { sql: ";" }
       })
   }
 
