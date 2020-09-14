@@ -2,33 +2,35 @@
 * Won't always be correct, and you should probably tailer the generated sql to your specific application
 */
 const fs = require('fs')
-let models = fs.readFileSync(process.argv[2],'utf8')
-let classes = models.match(/export\s*class\s*(\w*)/ig).map(e=>e.match(/(\w*)$/)[1])
+let models = fs.readFileSync(process.argv[2], 'utf8')
+let classes = models.match(/export\s*class\s*(\w*)/ig).map(e => e.match(/(\w*)$/)[1])
 
 
 //classes = classes[1].split("\n").map(elm=>elm.replace(/\s/g,"").split(":")[0].replace(/(^"|"$)/g,"")).filter(e=>e)
 keys = []
-if (process.argv[3]){
+if (process.argv[3]) {
     //console.log("Looking for class: ", process.argv[3], "\n")
-    let regex = new RegExp(`class\\s*${process.argv[3].trim()}\\s{([^}]*)}`,"is")
+    let regex = new RegExp(`class\\s*${process.argv[3].trim()}\\s[^{}]*{([^}]*)}`, "is")
     let properties = models.match(regex)
-    if (!properties){
+    if (!properties) {
         console.error("Could Not find that class")
         console.log(classes)
         process.exit(1)
     }
 
-    properties = properties[1].split("\n").map(e=>e.trim()).filter(e=>e)
-    //console.log(properties)
-    for (let prop of properties){
+    properties = properties[1].split("\n").map(e => e.trim()).filter(e => e)
+    for (let prop of properties) {
         //console.log("Inscpecting Property", prop)
-        let m = prop.match(/^(\w*)\s*:\s*(.*)$/i)
-        if (m){
+        let m = prop.match(/^(\w*)\s*:\s*(.*?)(?:\/\/(.*))?$/i)
+        if (m) {
+
+
             //console.log("Pushing ", m[1], m[2])
             keys.push(
                 {
                     name: m[1],
-                    type: m[2]
+                    type: m[2],
+                    comment: m[3]
                 }
             )
         }
@@ -42,34 +44,52 @@ if (process.argv[3]){
 }
 let sqlParams = []
 let constraints = []
-for (let i in keys){
+for (let i in keys) {
     let ro = keys[i]
-    //console.log(i, ro.name, ro.type)
-    if (i==0 && ro.name.match(/id/i) && ro.type.match(/number/i)){
+    //console.log(ro)
+    let def = ro.comment?ro.comment.match(/def:([^:]*):/):""
+
+    def = def ? def[1] : undefined
+    if (i == 0 && ro.name.match(/id/i) && ro.type.match(/number/i)) {
         //console.log("Creating id")
         sqlParams.push(`\`${ro.name}\` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL`)
+        continue
         //constraints.push(`CONSTRAINT \`${ro.name}_pk\` PRIMARY KEY (\`${ro.name}\`)`)
-    } else if (ro.type.match(/number/i) && (ro.type.match(/null/i)|| ro.type.match(/undefined/i))){
-        sqlParams.push(`\`${ro.name}\` INTEGER(20)`)
-    } else if (ro.type.match(/number/i)){
+    } else if (ro.type.match(/number/i) && (ro.type.match(/null/i) || ro.type.match(/undefined/i))) {
+        sqlParams.push(`\`${ro.name}\` INTEGER(20) `)
+    } else if (ro.type.match(/number/i)) {
         sqlParams.push(`\`${ro.name}\` INTEGER(20)  NOT NULL`)
-    } else if (ro.type.match(/boolean/i)){
+    } else if (ro.type.match(/boolean/i)) {
         sqlParams.push(`\`${ro.name}\` INTEGER(1)`)
-    } else if (ro.type.match(/string/i)){
+    } else if (ro.type.match(/string/i) && (ro.type.match(/null/i) || ro.type.match(/undefined/i))) {
         sqlParams.push(`\`${ro.name}\` TEXT(1000)`)
+    } else if (ro.type.match(/string/i) ) {
+        sqlParams.push(`\`${ro.name}\` TEXT(1000) NOT NULL`)
     }
+    if (def) {
+        sqlParams[sqlParams.length - 1] += ` DEFAULT (${def})`
+
+    }
+
     //If key is like gameid, add a foreign key to game.gameid
-    let g = ro.name.match(/(\w*?)[_-]*id/i)
-    if (i >0 && g && g[1]){
-        constraints.push(`CONSTRAINT \`${ro.name}_fk\` FOREIGN KEY (\`${ro.name}\`) REFERENCES ${g[1]}s(\`${ro.name}\`)`)
+    let f = ro.name.match(/(\w*?)[_-]*id$/i)
+    let u = ro.comment ? ro.comment.match(/unique/i) : false
+    let fk = ro.comment?ro.comment.match(/fk:([^:]*):([^:]*):/i):false
+
+    if (f && f[1]) {
+        constraints.push(`CONSTRAINT \`${ro.name}_fk\` FOREIGN KEY (\`${ro.name}\`) REFERENCES ${f[1]}s(\`${ro.name}\`)`)
+    } else if (u) {
+        constraints.push(`CONSTRAINT \`${ro.name}_uq\` UNIQUE (\`${ro.name}\`)`)
+    } else if (fk) {
+        constraints.push(`CONSTRAINT \`${ro.name + fk[1]+ fk[2]}_fkc\` FOREIGN KEY (\`${ro.name}\`) REFERENCES ${fk[1]} (\`${fk[2]}\`)`)
     }
 }
 let className = process.argv[3]
-let tableName = className.replace(/database/i,"")
+let tableName = className.replace(/database/i, "")
 
 let constructorAssignments = []
 let constructorParamName = tableName.match(/^(.{1,1})/)[1].toLowerCase()
-for (let i in keys){
+for (let i in keys) {
     let ro = keys[i]
     constructorAssignments.push(`\tthis.${ro.name} = ${constructorParamName}.${ro.name}`)
 }

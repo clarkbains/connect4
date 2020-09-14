@@ -1,4 +1,5 @@
-const { isNumber, xor } = require("lodash")
+import { any } from "sequelize/types/lib/operators"
+import {DatabaseModel,CRUD} from '../resources/databaseHelpers'
 
 //Used by the server to send your own profile to you
 export class ResponseUser { 
@@ -28,15 +29,20 @@ export class PublicResponseUser {
     }
 }
 
-//Used by a client to request someone's details
+//Used by a client to request own details
 export class RequestUser { 
     userid: number
     email: string
+    username: string
     name: string
+    private: number
     constructor(u: RequestUser | object) { 
         this.userid = u.userid
         this.email = u.email
         this.name = u.string
+        this.username = u.username
+        this.private = u.private
+        
     }
 }
 //Used by the server to indicate a single move, by a single player
@@ -138,22 +144,32 @@ export class ResponseMatch {
         this.participants = m.participants
     }
 }
-//Used to request a password change, knowing the old password
-export class RequestPasswordChangePassword { 
-    oldPassword: string
-    newPassword: string
+export abstract class RequestPasswordChange{ 
+    newpassword: string
+    email?: string
+    username?: string
     constructor(p: RequestPasswordChangePassword | object) { 
-        this.oldPassword = p.oldPassword
-        this.newPassword = p.newPassword
+        this.newpassword = p.newpassword
+        this.email = p.email
+        this.username = p.username
+    }
+}
+
+//Used to request a password change, knowing the old password
+export class RequestPasswordChangePassword extends RequestPasswordChange{ 
+    oldpassword: string
+    constructor(p: RequestPasswordChangePassword | object) { 
+        super(p)
+        this.oldpassword = p.oldpassword
+        
     }
 }
 //Used to request a password change, knowing a token
-export class RequestPasswordChangeToken { 
+export class RequestPasswordChangeToken extends RequestPasswordChange{ 
     token: string
-    newPassword: string
     constructor(p: RequestPasswordChangePassword | object) { 
+        super(p)
         this.token = p.token
-        this.newPassword = p.newPassword
     }
 }
 //Request an email to be sent out with password reset link
@@ -173,54 +189,129 @@ export class LoginRequest {
     }
 }
 
+export class UserModifyRequest {
+    name:string
+    email:string
+    username:string
+    private:number
+    constructor(c:UserModifyRequest|object){
+        this.name = c.name
+        this.email = c.email
+        this.username = c.username
+        this.private = c.private
+}
 
-export class DatabaseUser { 
-    userid: number
-    name: string
-    email: string
-    score: number
+}
 
-    constructor(u: DatabaseUser | object) { 
-        this.userid = u.userid
-        this.name = u.name
-        this.email = u.email
-        this.score = u.score
+
+
+
+
+
+export class DatabaseFriend extends DatabaseModel{ 
+    friendid: number
+    user1: number //fk:Users:userid:
+    user2: number //fk:Users:userid:
+
+    constructor(f: DatabaseFriend | object) {
+        super("Friends") 
+        this.friendid = f.friendid
+        this.user1 = f.user1
+        this.user2 = f.user2
     }
 }
-export class DatabaseCredential { 
+export class DatabasePendingFriend extends DatabaseModel{ 
+    pendingfriendid: number
+    user1: number //fk:Users:userid:
+    user2: number //fk:Users:userid:
+    msg: string|null
+
+    constructor(p:DatabasePendingFriend|object){
+        super("PendingFriends")
+        this.pendingfriendid = p.pendingfriendid
+        this.user1 = p.user1
+        this.user2 = p.user2
+        this.msg = p.msg
+}
+
+}
+
+
+export class DatabaseUser extends DatabaseModel{ 
+    userid: number
+    name: string
+    username: string //unique
+    email: string //unique
+    score: number //def:0:
+    private: boolean //def:0:
+
+    constructor(u: DatabaseUser | object) {
+        super("Users") 
+        this.userid = u.userid
+        this.name = u.name
+        this.username = u.username
+        this.email = u.email
+        this.score = u.score
+        this.private = u.private
+
+
+    }
+}
+export class DatabaseCredential extends DatabaseModel{ 
     credentialid: number
     userid: string
     salt: string
     hash: string
-    constructor(d: DatabaseCredential | object) { 
+    constructor(d: DatabaseCredential | object) {
+        super("Credentials") 
         this.credentialid = d.credentialid
         this.userid = d.userid
         this.salt = d.salt
         this.hash = d.hash
     }
 }
-export class DatabaseGame {
+export class DatabaseGame extends DatabaseModel{
     gameid:number 
     matchid: number
-    currentTurn: number
-    gameFinished: boolean
+    currentturn: number
+    gamefinished: boolean
     score: number|null
     constructor(g:DatabaseGame|object){
+        super("Game")
         this.gameid = g.gameid
         this.matchid = g.matchid
-        this.currentTurn = g.currentTurn
-        this.gameFinished = g.gameFinished
+        this.currentturn = g.currentturn
+        this.gamefinished = g.gamefinished
         this.score = g.score
     }
 
+
 }
-export class DatabaseMove { 
+export class DatabaseGameMessage extends DatabaseModel{
+    gamemessageid:number 
+    gameid: number
+    userid: number
+    msg: string
+    time: number // def:strftime('%s','now'):
+    constructor(g:DatabaseGameMessage|object){
+        super("GameMessages")
+        this.gamemessageid = g.gamemessageid
+        this.gameid = g.gameid
+        this.userid = g.userid
+        this.msg = g.msg
+        this.time = g.time
+    }
+
+
+}
+export class DatabaseMove extends DatabaseModel{ 
     moveid: number
     gameid: number
     x: number
     y: number
     time: number
     constructor(m:DatabaseMove|object){
+        super("Moves")
         this.moveid = m.moveid
         this.gameid = m.gameid
         this.x = m.x
@@ -230,17 +321,19 @@ export class DatabaseMove {
 
 }
 //Used to show a general match
-export class DatabaseMatch {
+export class DatabaseMatch extends DatabaseModel{
 
     matchid: number
     userid: number //creator
     width: number
     height: number
     participants:number //number of target participants
-    msg: string //Game msg
-    name: string //Game name
-    acceptance: number //0,1,2
+    msg: string|null //Game msg
+    name: string //Gamename def:strftime('Game %Y-%m-%d %H-%M','now'):
+    privacylevel: number//0,1,2 def:0:
+    status: number //0,1,2
     constructor(m:DatabaseMatch|object){
+        super("Matchs")
         this.matchid = m.matchid
         this.userid = m.userid
         this.width = m.width
@@ -248,34 +341,37 @@ export class DatabaseMatch {
         this.participants = m.participants
         this.msg = m.msg
         this.name = m.name
-        this.acceptance = m.acceptance
+        this.status = m.status
 }
 
 
 
 }
 //Used to show a users acceptance or declanation of a match
-export class DatabaseMatchAcceptance { 
-    matchid: number
-    userid: number
-    acceptance: number //0,1,2
-    msg: string //Optional Message for decliners
-    constructor(ma:DatabaseMatchAcceptance){
+export class DatabaseMatchAcceptance extends DatabaseModel{
+    matcchacceptanceid: number 
+    matchid: number //correlated with match
+    userid: number //owner
+    status: number //0:pending,1:accepted,2:denied def:0:
+    msg: string|null //Optional Message for decliners
+    constructor(ma:DatabaseMatchAcceptance | object){
+        super("MatchAcceptances")
         this.matchid = ma.matchid
         this.userid = ma.userid
-        this.acceptance = ma.acceptance
+        this.status = ma.status
         this.msg = ma.msg
+        this.matcchacceptanceid = ma.matcchacceptanceid
     }
 
 }
 
-export class PragmaTableInfo { 
+export class PragmaTableInfo{ 
     cid: number
     name: string
     type: string
     notnull: number
     dflt_value: any
-    pk: number
+    pk: number //Primary Key
     constructor(p:PragmaTableInfo|object){
         this.cid = p.cid
         this.name = p.name

@@ -1,6 +1,6 @@
 import express from "express";
-import AuthorizationError from "../../resources/errors/AuthorizationError";
-
+import { DatabaseUser } from "../../models/models";
+import * as statuses from '../../resources/APIStatus'
 module.exports = class {
     app: express.Application
     opts: object
@@ -10,13 +10,21 @@ module.exports = class {
         this.setupApplication()
     }
     setupApplication() {
-        this.app.use((req: express.Request, res: express.Response, next: Function) => {
+        this.app.use(async (req: express.Request, res: express.Response, next: Function) => {
             let tokens = this._getTokens(req, res,true)
             for (let token of tokens){
                 try {
-                    let userid = this.opts.auth.verifyToken(token)
-                    req.user = {id:userid}
-                    let newJwt = this.opts.auth.createToken(userid)
+                    let jwt = await this.opts.auth.verifyToken(token)
+                    if (jwt.use !== "login"){
+                        throw new statuses.JWTError()
+                    }
+                    let user = await new DatabaseUser({userid:jwt.userid}).select({db:this.opts.gateway.db})
+                    if (!user || !user[0]){
+                        //JWT from deleted user
+                        throw new statuses.NotFound("User")
+                    }
+                    res.locals.user = user[0]
+                    let newJwt = this.opts.auth.createToken(jwt.userid)
                     //TODO: Make this wait until only 15 minutes are left on JWT to reduce request size
                     res.clearCookie("jwt")
                     //Didn't work with curl, will wait to see if it works better in browser
@@ -25,9 +33,10 @@ module.exports = class {
                     return next()
                 } catch (error) {
                     console.log("Encountered Invalid JWT", error)
+                    return res.send(error)
                 }
             }
-            res.send(new AuthorizationError())
+            res.send(new statuses.AuthorizationError())
         })
     }
 

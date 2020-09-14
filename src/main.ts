@@ -1,16 +1,15 @@
 import express from "express";
-import { IRoute } from "./resources/route";
 const bodyParser = require('body-parser')
 const glob = require('glob')
 const path = require('path');
 const mw = require('./middleware')
 const app = express()
-const Auth = require('./auth') 
+import {Authenticator} from './resources/Auth'
 const Gw = require('./gateway')
 import conf from './config'
 const opts = {
-    auth: new Auth(conf.JWTSigner),
-    gw: new Gw(conf.dbFile, true),
+    auth: new Authenticator(conf.JWTSigner),
+    gateway: new Gw(conf.dbFile, false),
     conf: conf
 }
 
@@ -32,6 +31,7 @@ glob.sync(path.join(__dirname, '/routes/') + '**/*.js').forEach(function (file: 
 });
 let maxid = 0
 for (let key of apps.keys()) {
+    //console.log(apps.get(key))
     if (maxid < apps.get(key).id) {
         maxid = apps.get(key).id
     }
@@ -64,7 +64,7 @@ function treeRoutes(routes: Map<string, any>, parentId: number, currentApplcatio
                 currentApplcation.use(currRoute.route, r.app)
             }
             catch (e) {
-                console.warn("An Error Occurred while adding the previous handler",e)
+               // console.warn("An Error Occurred while adding the previous handler",e)
             }
 
         }
