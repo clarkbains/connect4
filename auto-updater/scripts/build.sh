@@ -7,5 +7,5 @@ echo "Removing Old Version..."
 docker-compose kill > /dev/null 2>&1 
 docker-compose rm -f > /dev/null 2>&1 
 echo "Starting New Version..."
-docker-compose up -d --no-deps --build
+docker-compose up -d --no-deps --build |& sed 's/\x1b\[.*m//g'
 echo "New Version Started."
