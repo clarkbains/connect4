@@ -25,3 +25,6 @@ For long time aurelia-cli user, you can still use `au run` with those arguments 
 ## Build for production
 
 Run `npm run build`, or the old way `au build --env prod`.
+
+## View
+Currently hosted [Here](https://78y43y3ghfo7tyfgh43o74fye7w87fghw7fy.2406.clarkbains.com/)
