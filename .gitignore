@@ -33,6 +33,6 @@ node_modules
 # Compiled files
 /scripts
 /src/environment.js
-/dist
+/connect4/dist/
 /db/*
 /data
