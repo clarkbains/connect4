@@ -40,11 +40,33 @@ export class ChangePasswordSuccess extends APISuccess {
     }
 
 }
+export class TokenDebugRequest extends APISuccess {
+    token:string
+    constructor(token) {
+        super("Got Token", "Dev Token")
+        this.token = token
+    }
+
+}
 export class LoginSuccess extends APISuccess {
     token: string
     constructor(jwt:string) {
         super("Logged In", "Please Make a request")
         this.token = jwt
+    }
+
+}
+export class GetUserSuccess extends APISuccess {
+    user: string
+    constructor(user:object) {
+        super("Got User", "")
+        this.user = user
+    }
+
+}
+export class LogoutSuccess extends APISuccess {
+    constructor() {
+        super("Logged Out", `Your sessison tokens have been overwritten`)
     }
 
 }
@@ -100,7 +122,12 @@ export class MissingRequiredField extends APIError{
         }
 
     }
-
+export class FieldsNotValidated extends APIError{
+        constructor (){
+            super("Fields Not Validated", "This request failed a verification step. Please check the Docs", 400)
+    
+        }
+    }
 export class NotFound extends APIError {
     constructor(type: string){
         super(`Cannot Find ${type}`, `the resource cannot be found on the server`, 404)

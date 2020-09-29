@@ -15,7 +15,7 @@ module.exports = class {
     }
     setupApplication(){
         this.app.get("/me", APIHelpers.WrapRequest(async (req: express.Request, res: express.Response, success: Function) => {
-           res.send(new RequestUser(res.locals.user))
+           res.send(new statuses.GetUserSuccess(new RequestUser(res.locals.user)))
         }))
         this.app.patch("/me",APIHelpers.WrapRequest(async (req: express.Request, res: express.Response, success: Function) => {
             let modified = new UserModifyRequest(req.body)
@@ -29,6 +29,7 @@ module.exports = class {
             .catch(e=> {throw new statuses.DatabaseError()})
             res.send(new statuses.DeleteSuccess("User"))
          }))
+ 
     } 
 }
 module.exports.route = "/user"

@@ -10,6 +10,7 @@
   "dependencies": {
     "aurelia-animator-css": "^1.0.4",
     "aurelia-bootstrapper": "^2.3.3",
+    "aurelia-plugins-notifier": "^2.6.0",
     "body-parser": "^1.19.0",
     "bootstrap": "^4.5.2",
     "express": "^4.17.1",
@@ -61,14 +62,16 @@
   },
   "scripts": {
     "run:api-node": "node-dev --notify=false  dist/api/main.js",
-    "run:tsc": "tsc -w",
-    "run:api": "concurrently \"npm run tsc:w\" \"npm run run:api-node\" ",
+    "run:api": "concurrently \"tsc -w\" \"npm run run:api-node\" ",
+
     "run:ui:server": "webpack-dev-server --extractCss",
-    "run:ui:file": "webpack --watch --extractCss",
+    "run:ui:file": "webpack --env prod --watch",
     "build:ui": "webpack --env.production --extractCss",
     "build:api": "tsc ||:",
     "start": "concurrently \"npm run run:api\" \"npm run run:ui:file\"",
-    "build": "npm run build:api && npm run build:ui"
+    "build": "npm run build:api && npm run build:ui",
+    "deploy:local": "node dist/api/main.js",
+    "deploy:docker": "./auto-updater/scripts/build.sh"
   },
   "engines": {
     "node": ">=10.12.0"

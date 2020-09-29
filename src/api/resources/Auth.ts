@@ -20,20 +20,21 @@ export class Authenticator {
 
     createPasswordResetToken(userid: number) {
         return jwt.sign({
-
             userid: userid,
             use: "reset"
-
         }, this.secret, { expiresIn: '24h' });
     }
     verifyPassword(password: string, hash: string, salt: string) {
+        if (!password || !hash || !salt){
+            return false
+        }
         console.log("Checking Password", password)
-        return hash == password
+        return hash == password && password == salt
     }
     hashPassword(password: string) {
         return {
             hash: password,
-            salt: "pepper"
+            salt: password
         }
     }
 

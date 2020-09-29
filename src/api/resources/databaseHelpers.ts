@@ -25,49 +25,49 @@ export interface SqlOpts {
 export abstract class DatabaseModel {
     cls: any
     tableName: string
-   // db: sqlite3.Database
+    // db: sqlite3.Database
     constructor(tableName: string) {
         let _this = this
         Object.defineProperty(this, 'cls', {
-            enumerable:false,
+            enumerable: false,
             value: _this.constructor
-        }) 
+        })
         Object.defineProperty(this, 'tableName', {
-            enumerable:false,
+            enumerable: false,
             value: tableName
-        }) 
-        
+        })
+
 
         //this.db = database
     }
-    insert(opts: SqlOpts){
-        
-        let o  =<SqlGeneratorOpts> opts 
+    insert(opts: SqlOpts) {
+
+        let o = <SqlGeneratorOpts>opts
         o.obj = this
         return this.runInsert(o)
     }
-    select<T>(opts: SqlOpts):Promise<T[]>{
-        let o  =<SqlGeneratorOpts> opts 
+    select<T>(opts: SqlOpts): Promise<T[]> {
+        let o = <SqlGeneratorOpts>opts
         o.obj = this
         return this.runSelect<T>(o)
     }
-    delete(opts: SqlOpts){
-        let o  = <SqlGeneratorOpts> opts 
+    delete(opts: SqlOpts) {
+        let o = <SqlGeneratorOpts>opts
         o.obj = this
         return this.runDelete(o)
-    } 
-    update(opts: SqlOpts){
-        let o  =<SqlGeneratorOpts> opts 
+    }
+    update(opts: SqlOpts) {
+        let o = <SqlGeneratorOpts>opts
         o.obj = this
         return this.runUpdate(o)
     }
-    raw(db: sqlite3.Database, opts: PromisifiedSqlOpts){
+    raw(db: sqlite3.Database, opts: PromisifiedSqlOpts) {
         return DatabaseModel.promisifySql(db, opts)
     }
     runInsert(opts: SqlGeneratorOpts) {
         return DatabaseModel.promisifySql(opts.db, this.generateInsert(opts))
     }
-    runSelect<T>(opts:SqlGeneratorOpts):Promise<T[]> {
+    runSelect<T>(opts: SqlGeneratorOpts): Promise<T[]> {
         return DatabaseModel.promisifySql(opts.db, this.generateSelect(opts))
 
     }
@@ -112,6 +112,7 @@ export abstract class DatabaseModel {
                 model: PragmaTableInfo
             }).then((r) => {
                 let primaryKeys = new Set<string>();
+
                 for (let column of r) {
                     if (column.pk)
                         primaryKeys.add(column.name)
@@ -135,11 +136,14 @@ export abstract class DatabaseModel {
                     console.info("Using custom binds for update")
                     whereParts = [opts.whereClause]
                     whereVals = opts.whereBinds
-                } else if (whereParts.length < 1)
-                //Provide Protection against faulty primary key detection
+                } else if (whereParts.length < 1) {
+                    //Provide Protection against faulty primary key detection
+                    //console.log(r, updateParts, updateVals, whereParts, whereVals)
                     return {
                         sql: "select null;"
                     }
+                }
+
                 return {
                     sql: `UPDATE ${this.tableName} SET ${updateParts.join(",")} WHERE ${whereParts.join(" AND ")} ${opts.limit === undefined ? "" : ` LIMIT ${opts.limit}`};`,
                     params: [...updateVals, ...whereVals]
@@ -197,7 +201,7 @@ export abstract class DatabaseModel {
                 }
 
             }
-            
+
         } else {
             console.info("Using Custom Where bind for select")
             return {

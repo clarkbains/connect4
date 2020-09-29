@@ -1,0 +1,15 @@
+version: '2'
+
+services:
+  connect4:
+    container_name: connect4
+    build: .
+    image: connect4
+    hostname: connect4
+    domainname: local.clarkbains.com
+    restart: always
+    ports:
+      - '7325:9000'
+    volumes:
+      - './data/:/app/db:z'
+

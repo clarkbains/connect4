@@ -1,6 +1,17 @@
+import {inject} from 'aurelia-framework'
+import {Gateway} from '../gateway'
+
+@inject(Gateway)
 export class Home{
-    constructor(){
+    constructor(g){
         let time = 0;
-        setInterval(()=>{this.seconds = time/10; time ++}, 100)
+        this.seconds = 0;
+        let _this = this
+        console.log(this)
+
+        setInterval(()=>{
+            _this.seconds = time/10; 
+            time ++
+        }, 100)
     }
 }

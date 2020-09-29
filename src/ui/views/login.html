@@ -1,6 +1,7 @@
 <template>
     <label for="text">Username</label>
-    <input type="text" name="username"/>
+    <input type="text" name="username" value.from-view="username"/>
     <label for="password">Password</label>
-    <input type="password" name="password"/>
+    <input type="password" name="password" value.from-view="password"/>
+    <button click.delegate="login()">Log In</button>
 </template>

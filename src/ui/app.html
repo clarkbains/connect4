@@ -1,6 +1,10 @@
+
 <template>
-  <ul repeat.for="nav of router.navigation">
-      <li class="${nav.isActive ? 'active' : ''}"><a href.bind="nav.href">${nav.title}</a></li>
-  </ul>
-  <router-view></router-view>
+  <require from="./views/nav-bar.html"></require>
+
+  <nav-bar router.bind="router", ></nav-bar>
+
+  <div class="main-view">
+    <router-view></router-view>
+  </div>
 </template>

@@ -23,7 +23,7 @@ module.exports = class {
             let dbObj = new models.DatabaseUser(
                 new models.UserModifyRequest(req.body)
             )
-            APIHelpers.VerifyProperties(dbObj, ["email", "username"])
+            APIHelpers.VerifyProperties(dbObj, "this.email && this.username")
             APIHelpers.DefaultProperties(dbObj, [
                 ["name", "Anonymous Carrot"]
             ])
@@ -36,14 +36,16 @@ module.exports = class {
         this.app.post("/login", APIHelpers.WrapRequest(async (req: express.Request, res: express.Response, success: Function) => {
             let loginRequest = new models.LoginRequest(req.body)
             let u = await new models.DatabaseUser(loginRequest).select({ db: this.opts.gateway.db })
+            console.log("Found User for Login:",u)
             if (u.length == 0)
                 throw new statuses.NotFound("User")
             let creds = await new models.DatabaseCredential(u[0]).select({ db: this.opts.gateway.db })
             if (creds.length == 0)
                 throw new statuses.NoPasswordSet()
+            console.log(creds)
             if (this.opts.auth.verifyPassword(loginRequest.password, creds[0].hash, creds[0].salt)) {
                 let jwt = this.opts.auth.createToken(creds[0].userid)
-                res.cookie('jwt', jwt, { maxAge: 3600000, domain: "127.0.0.1", path: "/" })
+                res.cookie('jwt', jwt, { maxAge: 3600000, domain: "localhost", path: "/" })
                 return success(new statuses.LoginSuccess(jwt))
             }
             throw new statuses.CredentialError()
@@ -98,28 +100,42 @@ module.exports = class {
             let cred = this.opts.auth.hashPassword(myRequest.newpassword)
             let oldCreds = await new models.DatabaseCredential({ userid: userid })
                 .select({ db: this.opts.gateway.db })
-            let updatedCreds = new models.DatabaseCredential(oldCreds)
+            console.log("Changing creds from",oldCreds)
+            let updatedCreds = new models.DatabaseCredential(oldCreds?oldCreds[0]:{})
             updatedCreds.hash = cred.hash
             updatedCreds.salt = cred.salt
             updatedCreds.userid = userid
-            if (oldCreds.length == 0)
+            console.log(updatedCreds)
+            if (oldCreds.length == 0){
+                console.log("Inserting new User Creds",updatedCreds)
                 await updatedCreds.insert({ db: this.opts.gateway.db })
-            else
+
+            }
+            else{
+                console.log("Updating Current Creds",updatedCreds)
                 await updatedCreds.update({ db: this.opts.gateway.db })
+
+            }
             await success(new statuses.ChangePasswordSuccess)
         }))
 
 
         //TODO: Add mailgun Integration
         this.app.post("/sendresetemail", APIHelpers.WrapRequest(async (req: express.Request, res: express.Response, success: Function) => {
-            let r = new models.DatabaseUser(new models.RequestPasswordReset(req.body))
+            let q = new models.RequestPasswordReset(req.body)
+            console.log(q,r, req.body)
+            q.verifyProperties()
+            let r = new models.DatabaseUser(q)
+            
+            
             let user = await r.select({ db: this.opts.gateway.db })
             if (user.length == 0)
                 throw new statuses.NotFound("User")
             let token = this.opts.auth.createPasswordResetToken(user[0].userid)
-            success(token)
+            success(new statuses.TokenDebugRequest(token))
         }
         )
+
         )
     }
 

@@ -1,11 +1,13 @@
 import * as statuses from './APIStatus'
 import express from 'express'
-export function VerifyProperties(obj:object, properties:string[]): object{
-    for (let prop of properties){
-        if (obj[prop] === undefined){
-            throw new statuses.MissingRequiredField([prop])
+export function VerifyProperties(obj:object): object{
+
+        if (!obj.verify){
+            return console.error("Verify Callsed for Model with no verify attribute", obj)
         }
-    }
+        else if (!obj.verify()){
+            throw new statuses.FieldsNotValidated()
+        }
     return obj
 }
 export function DefaultProperties(obj:object, properties:string[][]):object{

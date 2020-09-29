@@ -60,6 +60,9 @@ module.exports = ({ production } = {}, {extractCss, analyze, tests, hmr, port, h
     sourceMapFilename: production ? '[name].[chunkhash].bundle.map' : '[name].[hash].bundle.map',
     chunkFilename: production ? '[name].[chunkhash].chunk.js' : '[name].[hash].chunk.js'
   },
+  watchOptions: {
+    aggregateTimeout: 600
+  },
   optimization: {
     runtimeChunk: true,  // separates the runtime chunk, required for long term cacheability
     // moduleIds is the replacement for HashedModuleIdsPlugin and NamedModulesPlugin deprecated in https://github.com/webpack/webpack/releases/tag/v4.16.0
@@ -78,7 +81,7 @@ module.exports = ({ production } = {}, {extractCss, analyze, tests, hmr, port, h
       maxInitialRequests: Infinity, // Default is 3, make this unlimited if using HTTP/2
       maxAsyncRequests: Infinity, // Default is 5, make this unlimited if using HTTP/2
       minSize: 10000, // chunk is only created if it would be bigger than minSize, adjust as required
-      maxSize: 100000, // splits chunks if bigger than 40k, adjust as required (maxSize added in webpack v4.15)
+      maxSize: 1000000, // splits chunks if bigger than 40k, adjust as required (maxSize added in webpack v4.15)
       
 
       cacheGroups: {
@@ -197,7 +200,9 @@ module.exports = ({ production } = {}, {extractCss, analyze, tests, hmr, port, h
     port: port || project.platform.port,
     host: host
   },
-  devtool: production ? 'nosources-source-map' : 'cheap-module-eval-source-map',
+  //devtool: production ? 'nosources-source-map' : 'cheap-module-eval-source-map',
+  devtool: 'cheap-module-eval-source-map',
+
   module: {
     rules: [
       // CSS required in JS/TS files should use the style-loader that auto-injects it into the website
@@ -243,12 +248,12 @@ module.exports = ({ production } = {}, {extractCss, analyze, tests, hmr, port, h
       template: 'index.ejs',
       minify: production ? {
         removeComments: true,
-        collapseWhitespace: true
-        // collapseInlineTagWhitespace: true,
-        // collapseBooleanAttributes: true,
-        // removeAttributeQuotes: true,
-        // minifyCSS: true,
-        // minifyJS: true,
+        collapseWhitespace: true,
+         collapseInlineTagWhitespace: true,
+         collapseBooleanAttributes: true,
+         removeAttributeQuotes: true,
+         minifyCSS: true,
+         minifyJS: true,
         // removeScriptTypeAttributes: true,
         // removeStyleLinkTypeAttributes: true,
         // ignoreCustomFragments: [/\${.*?}/g]

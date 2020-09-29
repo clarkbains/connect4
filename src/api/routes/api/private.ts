@@ -1,6 +1,8 @@
 import express from "express";
 import { DatabaseUser } from "../../models/models";
 import * as statuses from '../../resources/APIStatus'
+import * as APIHelpers from '../../resources/APIHelpers'
+
 module.exports = class {
     app: express.Application
     opts: object
@@ -12,6 +14,7 @@ module.exports = class {
     setupApplication() {
         this.app.use(async (req: express.Request, res: express.Response, next: Function) => {
             let tokens = this._getTokens(req, res,true)
+            console.log("Trying to authenticate user")
             for (let token of tokens){
                 try {
                     let jwt = await this.opts.auth.verifyToken(token)
@@ -26,10 +29,10 @@ module.exports = class {
                     res.locals.user = user[0]
                     let newJwt = this.opts.auth.createToken(jwt.userid)
                     //TODO: Make this wait until only 15 minutes are left on JWT to reduce request size
-                    res.clearCookie("jwt")
+                    //res.clearCookie("jwt")
                     //Didn't work with curl, will wait to see if it works better in browser
                     //Should be set as http only after testing
-                    res.cookie('jwt',newJwt,{maxAge: 3600000, domain: "127.0.0.1", path:"/"})
+                    res.cookie('jwt',newJwt,{maxAge: 3600000, domain: "localhost", path:"/", httpOnly:true})
                     return next()
                 } catch (error) {
                     return res.send(error)
@@ -37,6 +40,10 @@ module.exports = class {
             }
             res.send(new statuses.AuthorizationError())
         })
+        this.app.get("/loginstatus",APIHelpers.WrapRequest(async (req: express.Request, res: express.Response, success: Function) => {
+            await console.log("Getting status", req.locals)
+            success(new statuses.LoginSuccess(""))
+        }))
     }
 
     _getTokens(req: express.Request, res: express.Response, allowOther: boolean): string[] {
