@@ -101,7 +101,7 @@ module.exports = class {
             let oldCreds = await new models.DatabaseCredential({ userid: userid })
                 .select({ db: this.opts.gateway.db })
             console.log("Changing creds from",oldCreds)
-            let updatedCreds = new models.DatabaseCredential(oldCreds?oldCreds[0]:{})
+            let updatedCreds = new models.DatabaseCredential(oldCreds[0]?oldCreds[0]:{})
             updatedCreds.hash = cred.hash
             updatedCreds.salt = cred.salt
             updatedCreds.userid = userid
