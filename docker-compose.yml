@@ -11,5 +11,5 @@ services:
     ports:
       - '7325:9000'
     volumes:
-      - './data/:/app/db:z'
+      - '../data/:/app/db:z'
 

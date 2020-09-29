@@ -61,16 +61,15 @@
     "webpack-dev-server": "^3.11.0"
   },
   "scripts": {
-    "run:api-node": "node-dev --notify=false  dist/api/main.js",
+    "run:api-node": "node-dev --notify=false  connect4/dist/api/main.js",
     "run:api": "concurrently \"tsc -w\" \"npm run run:api-node\" ",
-
     "run:ui:server": "webpack-dev-server --extractCss",
     "run:ui:file": "webpack --env prod --watch",
     "build:ui": "webpack --env.production --extractCss",
     "build:api": "tsc ||:",
     "start": "concurrently \"npm run run:api\" \"npm run run:ui:file\"",
     "build": "npm run build:api && npm run build:ui",
-    "deploy:local": "node dist/api/main.js",
+    "deploy:local": "node connect4/dist/api/main.js",
     "deploy:docker": "./auto-updater/scripts/build.sh"
   },
   "engines": {

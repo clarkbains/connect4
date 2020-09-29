@@ -3,7 +3,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const DuplicatePackageCheckerPlugin = require('duplicate-package-checker-webpack-plugin');
-const project = require('./aurelia_project/aurelia.json');
+const project = require('./connect4/src/ui/aurelia_project/aurelia.json');
 const { AureliaPlugin, ModuleDependenciesPlugin } = require('aurelia-webpack-plugin');
 const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
@@ -14,8 +14,8 @@ const when = (condition, config, negativeConfig) =>
   condition ? ensureArray(config) : ensureArray(negativeConfig);
 
 // primary config:
-const outDir = path.resolve(__dirname, project.platform.output);
-const srcDir = path.resolve(__dirname, 'src','ui');
+const outDir = path.resolve(__dirname, 'connect4',project.platform.output);
+const srcDir = path.resolve(__dirname, 'connect4','src','ui');
 const nodeModulesDir = path.resolve(__dirname, 'node_modules');
 const baseUrl = '';
 
@@ -245,7 +245,7 @@ module.exports = ({ production } = {}, {extractCss, analyze, tests, hmr, port, h
       'aurelia-testing': ['./compile-spy', './view-spy']
     }),
     new HtmlWebpackPlugin({
-      template: 'index.ejs',
+      template: path.join('connect4','src','ui','index.ejs'),
       minify: production ? {
         removeComments: true,
         collapseWhitespace: true,

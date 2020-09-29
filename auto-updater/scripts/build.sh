@@ -4,8 +4,8 @@ cd "${0%/*}"
 echo "Building..."
 cd ..
 echo "Removing Old Version..."
-docker-compose kill > /dev/null 2&>1 
-docker-compose rm -f > /dev/null 2&>1 
+docker-compose kill > /dev/null 2>&1 
+docker-compose rm -f > /dev/null 2>&1 
 echo "Starting New Version..."
 docker-compose up -d --no-deps --build
 echo "New Version Started."
