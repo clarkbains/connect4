@@ -39,7 +39,7 @@ module.exports = class {
         })
 
         this.app.use((error:statuses.APIError,req:express.Request,res:express.Response,next:express.NextFunction)=>{
-            res.status(error.code).send(error)
+            //res.status(error.code).send(error)
         })
     } 
 

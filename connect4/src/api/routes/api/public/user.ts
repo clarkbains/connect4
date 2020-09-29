@@ -45,7 +45,7 @@ module.exports = class {
             console.log(creds)
             if (this.opts.auth.verifyPassword(loginRequest.password, creds[0].hash, creds[0].salt)) {
                 let jwt = this.opts.auth.createToken(creds[0].userid)
-                res.cookie('jwt', jwt, { maxAge: 3600000, domain: "localhost", path: "/" })
+                res.cookie('jwt', jwt, { maxAge: 3600000, domain: APIHelpers.GetDomain(req), path: "/" })
                 return success(new statuses.LoginSuccess(jwt))
             }
             throw new statuses.CredentialError()

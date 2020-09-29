@@ -32,6 +32,7 @@ export function WrapRequest(func:Function) {
         
     return async (req:express.Request, res:express.Response) => {
         async function sendResponse (r:statuses.APIStatus){
+          //  console.log("Response Callback fired with", r)
             if (r.code){
                 res.status(r.code).send(r)
             } else {
@@ -42,7 +43,7 @@ export function WrapRequest(func:Function) {
         try {
             await func(req, res, sendResponse)
         } catch (e) {
-            console.log("Thrown from Promise", e)
+            console.log("Thrown from Route wrapper", e)
             if (e && e.code) {
                 
                 return await sendResponse(e)
@@ -51,4 +52,32 @@ export function WrapRequest(func:Function) {
             await sendResponse(new statuses.UnknownError())
         }
     }
+}
+export function WrapMiddleware(func:Function) {
+        
+    return async (req:express.Request, res:express.Response, next:Function) => {
+        async function sendResponse (r:statuses.APIStatus){
+            if (r.code){
+                res.status(r.code).send(r)
+            } else {
+                console.warn("Do not send :any objects with the callback")
+                res.status(200).send(r)
+            }
+        }
+        try {
+            await func(req, res, next)
+        } catch (e) {
+            console.log("Thrown from Middleware wrapper", e)
+            if (e && e.code) {
+                
+                return await sendResponse(e)
+            }
+            
+            await sendResponse(new statuses.UnknownError())
+        }
+    }
+}
+export function GetDomain(req){
+    let host = req.headers.host
+    return host.match(/^([^:]*):\d/)[1]
 }

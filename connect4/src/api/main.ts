@@ -7,6 +7,7 @@ const app = express()
 import {Authenticator} from './resources/Auth'
 const Gw = require('./gateway')
 import conf from './config'
+require('source-map-support').install();
 const opts = {
     auth: new Authenticator(conf.JWTSigner),
     gateway: new Gw(conf.dbFile, false),

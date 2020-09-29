@@ -110,7 +110,8 @@ export class Gateway{
         if (opts.body){
             opts.body = JSON.stringify(opts.body)
         }
-        return fetch("http://localhost:9000/api" + path, opts)
+        let url = window.location.protocol + "//" + window.location.host
+        return fetch(url + "/api" + path, opts)
         .then(r=>r.json())
         
     }

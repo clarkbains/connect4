@@ -12,7 +12,7 @@ module.exports = class {
         this.setupApplication()
     }
     setupApplication() {
-        this.app.use(async (req: express.Request, res: express.Response, next: Function) => {
+        this.app.use(APIHelpers.WrapMiddleware(async (req: express.Request, res: express.Response, next: Function) => {
             let tokens = this._getTokens(req, res,true)
             console.log("Trying to authenticate user")
             for (let token of tokens){
@@ -32,14 +32,14 @@ module.exports = class {
                     //res.clearCookie("jwt")
                     //Didn't work with curl, will wait to see if it works better in browser
                     //Should be set as http only after testing
-                    res.cookie('jwt',newJwt,{maxAge: 3600000, domain: "localhost", path:"/", httpOnly:true})
+                    res.cookie('jwt',newJwt,{maxAge: 3600000, domain: APIHelpers.GetDomain(req), path:"/", httpOnly:true})
                     return next()
                 } catch (error) {
-                    return res.send(error)
+                    console.warn("Ran into issue validating jwt",error)    
                 }
             }
-            res.send(new statuses.AuthorizationError())
-        })
+            throw new statuses.AuthorizationError()
+        }))
         this.app.get("/loginstatus",APIHelpers.WrapRequest(async (req: express.Request, res: express.Response, success: Function) => {
             await console.log("Getting status", req.locals)
             success(new statuses.LoginSuccess(""))

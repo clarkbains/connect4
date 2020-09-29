@@ -13,7 +13,7 @@ module.exports = class {
     }
     setupApplication() {
         this.app.get("/logout",APIHelpers.WrapRequest(async (req: express.Request, res: express.Response, success: Function) => {
-            res.cookie('jwt',"",{maxAge: 3600000, domain: "localhost", path:"/", httpOnly:true})
+            res.cookie('jwt',"",{domain: APIHelpers.GetDomain(req)})
             success(new statuses.LogoutSuccess())
         }))
 

@@ -14,6 +14,7 @@ module.exports = {
       sendErr = new statuses.UnknownError()
     else
       sendErr = err
+    console.log("Sending error", sendErr.code)
     res.status(sendErr.code).send(sendErr)
   },
   noRouteMiddleware: function (req: express.Request, res: express.Response) {
