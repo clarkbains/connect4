@@ -79,5 +79,5 @@ export function WrapMiddleware(func:Function) {
 }
 export function GetDomain(req){
     let host = req.headers.host
-    return host.match(/^([^:]*):\d/)[1]
+    return host.match(/^([^:]*)(:\d*)?$/)[1]
 }
