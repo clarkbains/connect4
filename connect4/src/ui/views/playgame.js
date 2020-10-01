@@ -1,6 +1,7 @@
 import { inject } from 'aurelia-framework'
 import { Gateway } from '../gateway'
 import { Router } from 'aurelia-router';
+import { isConstructorDeclaration } from 'typescript';
 
 @inject(Gateway, Router)
 export class PlayGame {
@@ -8,6 +9,11 @@ export class PlayGame {
         this.gateway = g
         this.router = r
         this.gameInfo = {}
+        this.rows=10;
+        this.cols=10;
+        this.width=100;
+        this.height=100;
+        this.def = []
     }
     activate(obj) {
         this.gameid = obj.id
@@ -28,33 +34,30 @@ export class PlayGame {
 
     }
     update(data) {
-        this.context.clearRect(0, 0, this.game.width, this.game.height);
+        console.log("Updating Data", data)
+        this.context.clearRect(0, 0, this.width, this.height);
         this.context.fillStyle = 'black';
         this.context.lineWidth = 15;
         this.context.beginPath();
 
+        this.rows = data.length || 10
+        this.cols = data.length?data[0].length:10
 
-        let rows = data.length || 10
-        let cols = data.length?data[0].length:10
-
-        let circleWidth = this.game.width / (cols + 1);
-        let circleHight = this.game.height / (rows + 1)
-
-        this.context.rect(0, 0, this.game.width, this.game.height);
+        this.context.rect(0, 0, this.width, this.height);
         this.context.fill();
         let items = ['red', 'yellow', 'green',"white"]
-        for (let rowNum = 0; rowNum < rows; rowNum++) {
-            for (let colNum = 0; colNum < cols; colNum++) {
+        for (let rowNum = 0; rowNum < this.rows; rowNum++) {
+            for (let colNum = 0; colNum < this.cols; colNum++) {
                 let co = data[rowNum][colNum]
                 this.context.fillStyle = co;
                 this.context.strokeStyle = 'black';
 
                 this.context.beginPath();
                 this.context.ellipse(
-                    circleWidth * colNum + circleWidth,
-                    circleHight * rowNum + circleHight,
-                    0.85*circleWidth / 2,
-                    0.85* circleHight / 2,
+                    this.getCircleWidth() * colNum + this.getCircleWidth(),
+                    this.getCircleHeight() * rowNum + this.getCircleHeight(),
+                    0.85*this.getCircleWidth() / 2,
+                    0.85*this.getCircleHeight() / 2,
                     0,
                     0,
                     Math.PI * 2);
@@ -64,31 +67,68 @@ export class PlayGame {
             }
         }
 
-        console.log(this.context)
-        this.rows
     }
-    refresh() {
-        this.update([["blue","white","white","blue","white"],
-        ["blue","red","white","blue","blue"],
-        ["red","red","blue","blue","red"],
-        ["blue","blue","red","white","blue"],
-        ["red","blue","white","blue","red"],
-        ["red","red","red","white","blue"]])
+    getCircleHeight(){
+        return this.height / (this.rows + 1)
+    }
+    getCircleWidth(){
+        return this.width/ (this.cols + 1);
+    }
+
+    reset() {
+        function rand (l,h){
+            return Math.floor(Math.random() * (h - l) + l)
+        }
+        console.log(rand(1,5))
+        this.def=[]
+        let col = ["red","blue","white","yellow"]
+        for (let i =0; i< rand(10,20); i++){
+            let row = []
+            for (let j =0; j< rand(10,20);j++){
+                row.push(col[rand(0,4)])
+            }
+            this.def.push(row)
+        }
+        this.resize()
     }
     resize() {
-        this.game.height = window.innerHeight * 0.90;
-        this.game.width = window.innerWidth * 0.90;
-        this.refresh()
+        this.height = window.innerHeight * 0.9;
+        this.width = window.innerWidth * 0.9;
+        this.boundingRect = this.game.getBoundingClientRect()
+        console.log("Resizing, ",this.height, this.width)
+        this.game.height = this.height;
+        this.game.width = this.width;
+        this.update(this.def)
+    }
+    clickHandler(e){
+        console.log(e,this)
+        var rect = this.boundingRect;
+        const coord = {
+            x: (e.clientX - rect.left-this.getCircleWidth())/this.getCircleWidth()+0.5,
+            y: (e.clientY - rect.top-this.getCircleHeight())/this.getCircleHeight()+0.5,
+
+          }
+        const floored = {
+            x: Math.floor(coord.x),
+            y:Math.floor(coord.y)
+        }
+          //this.def[floored.y][floored.x]="green"
+          let _this = this
+          this.gateway.makeMove(this.gameid, floored.x).then((e)=>{
+              _this.def[e.y][e.x] = "green"
+              _this.update(_this.def)
+              console.log(_this.def)
+
+          })
+        console.log(floored)
+    
     }
 
 
-    attached() {
+    attached(obj) {
         this.context = this.game.getContext('2d');
-        this.game.height = window.innerHeight * 0.70;
-        this.game.width = window.innerWidth * 0.70;
-        this.resize()
-        this.refresh()
-    }
-
+        this.reset()
+        this.game.addEventListener('click', (e)=>this.clickHandler(e));
+        }
 
 }

@@ -63,6 +63,21 @@ export class RequestUser {
 
     }
 }
+export class RequestMove {
+    x: number
+    //y: number
+    userid: number
+    //time: number
+    gameid: number
+    constructor(m: ResponseMove | object) {
+        //this.moveid = m.moveid
+        this.x = m.x
+        //this.y = m.y
+        this.userid = m.userid
+        //this.time = m.time
+        this.gameid = m.gameid
+    }
+}
 //Used by the server to indicate a single move, by a single player
 export class ResponseMove {
     moveid: number

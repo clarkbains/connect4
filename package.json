@@ -8,6 +8,7 @@
   },
   "license": "MIT",
   "dependencies": {
+    "@babel/polyfill": "^7.11.5",
     "aurelia-animator-css": "^1.0.4",
     "aurelia-bootstrapper": "^2.3.3",
     "aurelia-plugins-notifier": "^2.6.0",
@@ -33,6 +34,7 @@
     "babel-eslint": "^10.1.0",
     "babel-loader": "^8.1.0",
     "babel-plugin-istanbul": "^6.0.0",
+    "babel-polyfill": "^6.26.0",
     "clean-webpack-plugin": "^3.0.0",
     "concurrently": "^3.5.0",
     "copy-webpack-plugin": "^6.0.3",

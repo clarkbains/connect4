@@ -17,7 +17,7 @@ module.exports = class {
         this.app.get("/me", APIHelpers.WrapRequest(async (req: express.Request, res: express.Response, success: Function) => {
            let resp = new statuses.GetUserSuccess(new RequestUser(res.locals.user))
            console.log(resp)
-            res.send(resp)
+            success(resp)
         }))
         this.app.patch("/me",APIHelpers.WrapRequest(async (req: express.Request, res: express.Response, success: Function) => {
             let modified = new UserModifyRequest(req.body)
