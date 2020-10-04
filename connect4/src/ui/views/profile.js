@@ -15,6 +15,7 @@ export class Profile{
             this.keys=Object.keys(this.profile)
 
         })
+        this.friend = true
     }
 
     

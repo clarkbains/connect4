@@ -3,4 +3,7 @@
         <h1>${key}</h1>
         ${profile[key]}
     </div>
+    <button if.bind="!self && !friend">Send Friend Request</button>
+    <button if.bind="friend">Unfriend</button>
+    
 </template>
