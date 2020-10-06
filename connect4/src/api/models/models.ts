@@ -220,11 +220,11 @@ export class RequestPasswordReset extends Request{
 }
 //Request a JWT with email and password
 export class LoginRequest {
-    email: string
+  //  email: string
     password: string
     username: string
     constructor(l: LoginRequest | object) {
-        this.email = l.email
+       // this.email = l.email
         this.password = l.password
         this.username = l.username
     }

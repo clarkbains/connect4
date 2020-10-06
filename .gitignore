@@ -34,5 +34,5 @@ node_modules
 /scripts
 /src/environment.js
 /connect4/dist/
-/db/*
-/data
+/db/
+/data/

@@ -7,9 +7,9 @@ export class Profile{
         this.gateway = g
     }
     activate(obj){
-        console.log("Activiated with", obj)
-     //   this.prof = 
-        this.gateway.getUser(obj.id || "me").then((r)=>{
+        let userId = obj.id || "me"
+        console.log("Activiated with", userId)
+        this.gateway.getUser(userId).then((r)=>{
             console.log(r.user)
             this.profile = r.user
             this.keys=Object.keys(this.profile)

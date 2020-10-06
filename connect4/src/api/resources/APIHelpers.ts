@@ -3,7 +3,7 @@ import express from 'express'
 export function VerifyProperties(obj:object): object{
 
         if (!obj.verify){
-            return console.error("Verify Callsed for Model with no verify attribute", obj)
+            return console.error("Verify Called for Model with no verify attribute", obj)
         }
         else if (!obj.verify()){
             throw new statuses.FieldsNotValidated()

@@ -1,6 +1,8 @@
 import { PLATFORM } from "aurelia-framework";
 require('./app.css');
 require('bootstrap/dist/css/bootstrap.min.css');
+require('font-awesome/css/font-awesome.min.css');
+
 import { Gateway } from './gateway'
 import { inject } from 'aurelia-framework'
 import {Redirect} from 'aurelia-router';
@@ -33,13 +35,23 @@ export class App {
         moduleId: PLATFORM.moduleName("views/home"),
         nav: true,
         settings: {
-          visible: true
+          visible: true,
+        }
+      },
+      {
+        route: "createAccount",
+        name: 'createAccount',
+        title: "Create Account",
+        moduleId: PLATFORM.moduleName("views/create"),
+        nav: true,
+        settings: {
+          visible: false,
         }
       },
       {
         route: 'profile/:id?',
         name: 'profile',
-        href:"#/profile/me",
+        href:"#/profile",
         title: "Profile",
         moduleId: PLATFORM.moduleName("views/profile"),
         nav: true,
@@ -103,6 +115,17 @@ export class App {
         settings:{
           visible:false,
           auth:false
+        }
+      }
+      ,
+      {
+        route: 'notFound',
+        name: 'notFound',
+        title: "Not Found",
+        nav: true,
+        moduleId: PLATFORM.moduleName("views/notFound"),
+        settings:{
+          visible:false,
         }
       }
     ]);

@@ -1,0 +1,23 @@
+<template>
+    <div class="center">
+        <div class="content"></div>
+        <div class="form-group">
+            <label for="username">Username</label>
+            <input type="text" class="form-control" value.from-view="username"
+                placeholder="Robert'); DROP TABLE Students;--">
+        </div>
+        <div class="form-group">
+            <label for="email">Email</label>
+            <input type="text" class="form-control" value.from-view="email"
+                placeholder="bob@localhost">
+        </div>
+        <span>
+            <button type="button" click.delegate="createAccount()" class="btn btn-primary">Create Account</button>
+            <button type="button" click.delegate="goBack()" class="btn btn-secondary">Back</button>
+        </span>
+        <p>Note that you will recieve and email with a link to set your password. Or Use the password reset page while in dev</p>
+
+    </div>
+    </div>
+
+</template>

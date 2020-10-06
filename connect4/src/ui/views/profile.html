@@ -1,9 +1,91 @@
 <template>
-    <div repeat.for="key of keys">
-        <h1>${key}</h1>
-        ${profile[key]}
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-block">
+                        <div class="row">
+                            <div class="col-md-8 col-sm-8">
+                                <h2 class="card-title"><i class="fa fa-user"></i> ${profile.username}</h2>
+                                <p class="card-text"><i class="fa fa-envelope"></i> ${profile.email} </p>
+                                <p class="card-text"><i class="fa fa-trophy"></i> ${profile.score} placeholder score</p>
+                            
+                                <p><strong>Options: </strong>
+                                    <button class="btn btn-primary">Start Game</button>
+                                    <button class="btn btn-info">View Our Games</button>
+                                    <button class="btn btn-secondary" if.bind="!self && !friend" >Request Friend</button>
+                                    <button class="btn btn-outline-danger" if.bind="friend" >Unfriend</button>
+                                </p>
+                            </div>
+                            <div class="col-md-4 col-sm-4 text-center">
+                                <img src="../static/anon.png"
+                                    style="border-radius:50%; width: 200px;">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+            <h2 class="card-title"> Games</h2>
+            <div class="card-body">
+
+                <div class="row">
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="card-block">
+                                <div class="row">
+                                    <div class="col-md-8 col-sm-8">
+                                        <h2 class="card-title text-danger"> Game Title</h2>
+                                        <p class="card-text"><i class="fa fa-user"></i> Opponent</p>
+                                        <p class="card-text"><i class="fa fa-trophy"></i> score delta</p>
+                                        <p><strong>Options: </strong>
+                                            <button class="btn btn-info">View Game</button>
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+            </div>
+
+
+            <div class="card-body">
+
+                <div class="row">
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="card-block">
+                                <div class="row">
+                                    <div class="col-md-8 col-sm-8">
+                                        <h2 class="card-title text-success"> Game Title</h2>
+                                        <p class="card-text"><i class="fa fa-user"></i> Opponent</p>
+                                        <p class="card-text"><i class="fa fa-trophy"></i> score delta</p>
+                                        <p><strong>Options: </strong>
+                                            <button class="btn btn-info">View Game</button>
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+            </div>
+
+
+
+        
+        
+
+
     </div>
-    <button if.bind="!self && !friend">Send Friend Request</button>
-    <button if.bind="friend">Unfriend</button>
-    
+
+
+
 </template>

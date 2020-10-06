@@ -35,6 +35,7 @@ module.exports = class {
 
         this.app.post("/login", APIHelpers.WrapRequest(async (req: express.Request, res: express.Response, success: Function) => {
             let loginRequest = new models.LoginRequest(req.body)
+            loginRequest
             let u = await new models.DatabaseUser(loginRequest).select({ db: this.opts.gateway.db })
             console.log("Found User for Login:",u)
             if (u.length == 0)

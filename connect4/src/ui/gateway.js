@@ -49,12 +49,11 @@ export class Gateway {
             //})
     }
     getUser(id) {
-        if (id == "me") {
-            return this._verify(this._request({
-                path: "/private/user/me",
+            return this._request({
+                path: "/private/user/"+id,
                 method: "GET",
-            }))
-        }
+            })
+
 
     }
     makeMove(gameId, x) {
@@ -98,7 +97,7 @@ export class Gateway {
             path: "/public/logout",
             method: "GET"
         }).then(e => {
-            this.observers.forEach(f => { f(false) })
+            this.observers.forEach(f => { f(false) });
         })
 
 
@@ -129,21 +128,26 @@ export class Gateway {
                 if (opts.verify) {
                     console.log("Verifying result")
                     // eslint-disable-next-line no-inner-declarations
-                    function err(e) {
+                    function err(e,c) {
                         console.log("Caught request error, gracefully handling")
                         if (opts.red) {
-                            console.log("Attempting Logout")
-                            _this._logout()
+                            if (c==401){
+                                console.log("Attempting Logout")
+                                _this._logout()
+                            }
+                            else if (c==404){
+                                _this.router.navigate("notFound")
+                            }
                         }
                         return e.then(json => { throw json })
 
                     }
 
-                    if (body && body.code && body.code == 401) {
-                        return err(body)
+                    if (body && body.code && (body.code>299)) {
+                        return err(body, body.code)
                     }
-                    else if (response.status == 401) {
-                        return err(body)
+                    else if (response.status > 299) {
+                        return err(body, response.status)
                     }
 
                 }

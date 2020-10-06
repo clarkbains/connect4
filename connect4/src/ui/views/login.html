@@ -1,7 +1,22 @@
 <template>
-    <label for="text">Username</label>
-    <input type="text" name="username" value.from-view="username"/>
-    <label for="password">Password</label>
-    <input type="password" name="password" value.from-view="password"/>
-    <button click.delegate="login()">Log In</button>
+    <div class="center">
+        <div class="content"></div>
+        <div class="form-group">
+            <label for="username">Username</label>
+            <input type="text" class="form-control" value.from-view="username" id="username"
+                placeholder="Enter email or username">
+        </div>
+        <div class="form-group">
+            <label for="password">Password</label>
+            <input name="password" type="password" class="form-control" value.from-view="password">
+        </div>
+        <span>
+            <button type="button" click.delegate="login()" class="btn btn-primary">Log In</button>
+            <button type="button" click.delegate="reset()" class="btn btn-secondary">Reset Password</button>
+            or, <a click.delegate="createAccount()">create an account</a>
+        </span>
+
+    </div>
+    </div>
+
 </template>

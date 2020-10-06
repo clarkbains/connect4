@@ -3,7 +3,7 @@ import { Gateway } from '../gateway'
 import { Router } from 'aurelia-router';
 
 @inject(Gateway, Router)
-export class Login {
+export class Create {
     constructor(g, r) {
         this.g = g
         this.router = r
@@ -18,20 +18,13 @@ export class Login {
                 console.log("Not logged in", JSON.stringify(e))
             })
     }
-    createAccount(){
-        this.router.navigate("createAccount")
+    goBack(){
+        this.router.navigateBack()
     }
-    login() {
+    createAccount() {
         console.log("Logging in");
-        this.g.login(this.username, this.password)
-            .then(e => { console.log("Looks Like We Logged In!"); this.redir() })
-            .catch(e => { console.warn(e) });
+        this.router.navigate("login")
     }
-    redir() {
-        this.router.navigate("profile")
-    }
-    reset() {
-        this.router.navigate("resetpassword")
-    }
+
 
 }
