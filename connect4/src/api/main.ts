@@ -3,6 +3,7 @@ const bodyParser = require('body-parser')
 const glob = require('glob')
 const path = require('path');
 const mw = require('./middleware')
+const compression = require('compression')
 const app = express()
 import {Authenticator} from './resources/Auth'
 const Gw = require('./gateway')
@@ -15,6 +16,7 @@ const opts = {
 }//s
 
 app.use(bodyParser.json())
+app.use(compression())
 let apps = new Map<string, any>()
 /*Pretty Proud of this. Globs everything in routes, converts it into a tree system, and then adds all the
  * routes, which makes it super simple to move parts of the api around, rename things, or add versions later.

@@ -14,6 +14,7 @@
     "aurelia-plugins-notifier": "^2.6.0",
     "body-parser": "^1.19.0",
     "bootstrap": "^4.5.2",
+    "compression": "^1.7.4",
     "express": "^4.17.1",
     "font-awesome": "^4.7.0",
     "jquery": "^3.5.1",
