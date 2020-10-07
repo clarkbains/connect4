@@ -81,7 +81,7 @@ module.exports = ({ production } = {}, {extractCss, analyze, tests, hmr, port, h
       maxInitialRequests: Infinity, // Default is 3, make this unlimited if using HTTP/2
       maxAsyncRequests: Infinity, // Default is 5, make this unlimited if using HTTP/2
       minSize: 10000, // chunk is only created if it would be bigger than minSize, adjust as required
-      maxSize: 1000000, // splits chunks if bigger than 40k, adjust as required (maxSize added in webpack v4.15)
+      maxSize: 100000, // splits chunks if bigger than 40k, adjust as required (maxSize added in webpack v4.15)
       
 
       cacheGroups: {
@@ -230,11 +230,11 @@ module.exports = ({ production } = {}, {extractCss, analyze, tests, hmr, port, h
       // embed small images and fonts as Data Urls and larger ones as files:
       { test: /\.(png|gif|jpg|cur)$/i, loader: 'url-loader', options: { limit: 8192 } },
       { test: /\.woff2(\?v=[0-9]\.[0-9]\.[0-9])?$/i, loader: 'url-loader', options: { limit: 10000, mimetype: 'application/font-woff2' } },
-      { test: /\.woff(\?v=[0-9]\.[0-9]\.[0-9])?$/i, loader: 'url-loader', options: { limit: 10000, mimetype: 'application/font-woff' } },
+      //{ test: /\.woff(\?v=[0-9]\.[0-9]\.[0-9])?$/i, loader: 'url-loader', options: { limit: 10000, mimetype: 'application/font-woff' } },
       // load these fonts normally, as files:
-      { test: /\.(ttf|eot|svg|otf)(\?v=[0-9]\.[0-9]\.[0-9])?$/i, loader: 'file-loader' },
+      { test: /\.(ttf|eot|woff|svg|otf)(\?v=[0-9]\.[0-9]\.[0-9])?$/i, loader: 'file-loader' },
       { test: /environment\.json$/i, use: [
-        {loader: "app-settings-loader", options: {env: true ? 'production' : 'development' }},
+        {loader: "app-settings-loader", options: {env: production ? 'production' : 'development' }},
       ]},
     ]
   },
