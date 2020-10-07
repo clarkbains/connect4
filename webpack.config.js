@@ -81,7 +81,7 @@ module.exports = ({ production } = {}, {extractCss, analyze, tests, hmr, port, h
       maxInitialRequests: Infinity, // Default is 3, make this unlimited if using HTTP/2
       maxAsyncRequests: Infinity, // Default is 5, make this unlimited if using HTTP/2
       minSize: 10000, // chunk is only created if it would be bigger than minSize, adjust as required
-      maxSize: 400000, // splits chunks if bigger than 40k, adjust as required (maxSize added in webpack v4.15)
+      maxSize: 100000, // splits chunks if bigger than 40k, adjust as required (maxSize added in webpack v4.15)
       
 
       cacheGroups: {
