@@ -1,0 +1,119 @@
+.
+├── auto-updater
+│   ├── Connect4CIService.js //Ci Service for auto deploy
+│   ├── package.json //deps for CI system
+│   ├── package-lock.json 
+│   ├── README.md //Bad documentation for CI server
+│   └── scripts
+│       ├── build.sh //Docker-compsoe build script
+│       └── update.sh //Git pulls
+├── babel.config.json //Babel config
+├── connect4
+│   └── src
+│       ├── api
+│       │   ├── config.ts //Opts for the api
+│       │   ├── consts.js //Constants for the API
+│       │   ├── gateway.ts //Class to hold the database, and some seed data, as well as create commands for the tables
+│       │   ├── main.ts //enterance point, mounts routes, and starts database
+│       │   ├── middleware.ts //Contains middleware to handle errors
+│       │   ├── models
+│       │   │   └── models.ts //Contains all request and response models for the data, as well as Database models
+│       │   ├── resources
+│       │   │   ├── APIHelpers.ts //Contains wrappers for express routes/
+│       │   │   ├── APIStatus.ts //Contains models which wrap errors (and some response data from models.ts), for API responses
+│       │   │   ├── Auth.ts //Contains "Salting" and "hashing", not yet implemented, stores everything in plaintext
+│       │   │   └── databaseHelpers.ts //Contains a custom built orm, which auto generates sql for the database models, for CRUD operations
+│       │   └── routes
+│       │       ├── api
+│       │       │   ├── private
+│       │       │   │   ├── games
+│       │       │   │   │   └── pending.ts //TODO
+│       │       │   │   ├── games.ts //Implements simple move echo for the sample connect 4 game
+│       │       │   │   ├── test.ts //Api Test routes
+│       │       │   │   └── user.ts //Private User Ops. ie "RUD" of CRUD
+│       │       │   ├── private.ts //Does JWT checking and authenticates requests.
+│       │       │   ├── public
+│       │       │   │   └── user.ts //User login and creations, as well as basic retrieval
+│       │       │   └── public.ts //Useless, just here to maintain the structure of the API mirroring the folder structure
+│       │       ├── api.ts //Useless, see above
+│       │       └── ui.ts //Serves static UI files
+│       └── ui
+│           ├── app.css //Minimal css
+│           ├── app.html //Main View, imports nav bar and the selected view
+│           ├── app.js //Configures Router
+│           ├── aurelia_project // Framework stuff.
+│           │   ├── aurelia.json
+│           │   ├── environments
+│           │   │   └── prod.js
+│           │   ├── generators
+│           │   │   ├── attribute.js
+│           │   │   ├── attribute.json
+│           │   │   ├── binding-behavior.js
+│           │   │   ├── binding-behavior.json
+│           │   │   ├── component.js
+│           │   │   ├── component.json
+│           │   │   ├── element.js
+│           │   │   ├── element.json
+│           │   │   ├── generator.js
+│           │   │   ├── generator.json
+│           │   │   ├── task.js
+│           │   │   ├── task.json
+│           │   │   ├── value-converter.js
+│           │   │   └── value-converter.json
+│           │   └── tasks
+│           │       ├── build.js
+│           │       ├── build.json
+│           │       ├── run.js
+│           │       └── run.json
+│           ├── config
+│           │   ├── environment.json
+│           │   └── environment.production.json
+│           ├── gateway.js //Holds all the methods to promisify api requests
+│           ├── gatewayUtils.js //Obsolete
+│           ├── index.ejs //Template that the app.html is inserted into
+│           ├── main.js //Configures all the plugins for webpack
+│           ├── models
+│           │   └── models.js //Obsolete
+│           ├── resources
+│           │   └── index.js //Framework Stuff
+│           ├── static //All our images
+│           │   ├── anon.png
+│           │   ├── c4.jpg
+│           │   └── favicon.ico
+│           ├── views 
+│           │   ├── create.html //Create User account HTML
+│           │   ├── create.js //Create User account js
+│           │   ├── home.html//Home Page html
+│           │   ├── home.js //HOme page js
+│           │   ├── login.html //Login Page html
+│           │   ├── login.js //Login page js
+│           │   ├── logout.html //Logout page HTML
+│           │   ├── logout.js //Logout page js
+│           │   ├── nav-bar.html //Nav bar html
+│           │   ├── notFound.html //404 Page HTML
+│           │   ├── notFound.js //404 Page JS
+│           │   ├── passwordreset.html //Password Reset HTML
+│           │   ├── passwordreset.js //Password Reset JS
+│           │   ├── playgame.html //Game play HTML
+│           │   ├── playgame.js //Game Play JS
+│           │   ├── profile.html //User Profile HTML
+│           │   ├── profile.js //User Profile JS
+│           │   ├── selectgame.html //Game selection Page HTML
+│           │   └── selectgame.js //Game selection Page JS
+│           └── widgets
+│               ├── piece.html //Obsolete
+│               └── piece.js //Obsolete
+├── data
+│   └── test //docker compose DB bind mount.
+├── db
+│   └── test //SQLite DB from node script
+├── docker-compose.yml //Compose file for docker
+├── Dockerfile //Commands to create a docker image
+├── files.txt //Thats this
+├── package.json //Deps for project
+├── package-lock.json
+├── README.md //Description of project
+├── tsconfig.json
+└── webpack.config.js
+
+26 directories, 91 files

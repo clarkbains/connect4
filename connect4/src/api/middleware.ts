@@ -3,9 +3,6 @@ import { send } from 'process'
 import * as statuses from './resources/APIStatus'
 
 module.exports = {
-  authMiddleware: function (req: express.Request, res:express.Response, next) {
-    next()
-  },
   errorMiddleware: function (err: Error, req: express.Request, res: express.Response, next: express.NextFunction) {
     console.log("Error")
     console.error(err, err.stack)

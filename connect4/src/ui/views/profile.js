@@ -17,6 +17,9 @@ export class Profile{
         })
         this.friend = true
     }
+    toggleFriend(){
+        this.friend = !this.friend
+    }
 
     
 }

@@ -85,24 +85,32 @@ export class PlayGame {
         for (let i =0; i< rand(10,20); i++){
             let row = []
             for (let j =0; j< rand(10,20);j++){
-                row.push(col[rand(0,4)])
+                row.push("white")
             }
             this.def.push(row)
         }
         this.resize()
     }
     resize() {
-        this.height = window.innerHeight * 0.9;
-        this.width = window.innerWidth * 0.9;
+        this.height = this.m.clientWidth;
+        this.width = this.m.clientWidth;
         this.boundingRect = this.game.getBoundingClientRect()
         console.log("Resizing, ",this.height, this.width)
         this.game.height = this.height;
         this.game.width = this.width;
         this.update(this.def)
     }
+    getMousePos(rect, evt,w,h) {
+        return {
+            x: (evt.clientX - rect.left) / (rect.right - rect.left) * w,
+            y: (evt.clientY - rect.top) / (rect.bottom - rect.top) * h
+        };
+    }
+    
     clickHandler(e){
         console.log(e,this)
         var rect = this.boundingRect;
+        console.log(e.clientX - rect.left,e.clientY - rect.top,this. getMousePos(rect,e,this.width, this.height))
         const coord = {
             x: (e.clientX - rect.left-this.getCircleWidth())/this.getCircleWidth()+0.5,
             y: (e.clientY - rect.top-this.getCircleHeight())/this.getCircleHeight()+0.5,
@@ -110,11 +118,11 @@ export class PlayGame {
           }
         const floored = {
             x: Math.floor(coord.x),
-            y:Math.floor(coord.y)
+            y: Math.floor(coord.y)
         }
           //this.def[floored.y][floored.x]="green"
           let _this = this
-          this.gateway.makeMove(this.gameid, floored.x).then((e)=>{
+          this.gateway.makeMove(this.gameid, floored).then((e)=>{
               _this.def[e.y][e.x] = "green"
               _this.update(_this.def)
               console.log(_this.def)
@@ -126,6 +134,8 @@ export class PlayGame {
 
 
     attached(obj) {
+        this.m = this.widthDiv
+        console.log(this.m)
         this.context = this.game.getContext('2d');
         this.reset()
         this.game.addEventListener('click', (e)=>this.clickHandler(e));

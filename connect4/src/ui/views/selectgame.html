@@ -1,6 +1,92 @@
 <template>
-    Creating New Game
-    <br> Current Games
-    <button click.delegate="sampleGame()">Go To Sample Game</button>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col">
+                <h1>Start a New Game</h1>
+                <hr>
+                <button click.delegate="sampleGame()" class="btn btn-outline-success">Go To Sample Game</button>
+            </div>
+            <div class="col">
+                <h1>My Current Games</h1>
+                <hr>
+                <div>
+                    <div class="card m-3">
+                        <div class="card-block">
+                            <h2 class="card-title">Game Date</h2>
+                            <div class="card-body">
+                                <p><i class="fa fa-user"></i> User Played against</p>
+                                <button class="btn btn-info">Go To Game</button>
+                                <button class="btn btn-info">Resign Game</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <div class="card m-3">
+                        <div class="card-block">
+                            <h2 class="card-title">Game Date 2</h2>
+                            <div class="card-body">
+                                <p><i class="fa fa-user"></i> User2 Played against</p>
+                                <button class="btn btn-info">Go To Game</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                <h1>My Finished Games</h1>
+                <hr>
+                <div class="card m-3">
+                    <div class="card-block">
+
+                            <h2 class="card-title">Game Date</h2>
+                            <div class="card-body">
+                                <div class="container-fluid">
+                                    <div class="row">
+                                        <div class="col-8">
+                                            <p><i class="fa fa-user"></i> User2 Played against</p>
+                                            <p><i class="fa fa-trophy"></i> You Won (Player Resigned)</p>
+                                            <button class="btn btn-info">Look at Game</button>
+                                        </div>
+                                        <div class="col-4">
+                                            <i class="fa fa-trophy fa-5x text-success" ></i>
+                                        </div>
+                                    </div>
+                                </div>
+
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="card m-3">
+                    <div class="card-block">
+
+                            <h2 class="card-title">Game Date</h2>
+                            <div class="card-body">
+                                <div class="container-fluid">
+                                    <div class="row">
+                                        <div class="col-8">
+                                            <p><i class="fa fa-user"></i> User2 Played against</p>
+                                            <button class="btn btn-info">Look at Game</button>
+                                            <p><i class="fa fa-trophy"></i> You Did Not Win</p>
+
+                                        </div>
+                                        <div class="col-4">
+                                        </div>
+                                    </div>
+                                </div>
+
+                        </div>
+                    </div>
+                </div>
+
+
+            </div>
+        </div>
+    </div>
+
 
 </template>

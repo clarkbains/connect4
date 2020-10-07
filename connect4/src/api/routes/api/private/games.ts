@@ -40,11 +40,8 @@ module.exports = class {
             console.log(move)
 
             console.log(move)
-            function rand (l,h){
-                return Math.floor(Math.random() * (h - l) + l)
-            }
+
             let resp = new models.ResponseMove(move)
-            resp.y = rand(1,9)
             success(resp)
             //Make Game moves
 

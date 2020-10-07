@@ -1,7 +1,29 @@
 <template>
-    <h1>Playing Game ${gameid}.</h1> <button click.delegate="reset()">reset</button>
-    <div>
-        <canvas id="game" ref="game" class="game"></canvas>
+    <div class="container-fluid">
+        <div class="row ">
+            <h1>Playing Game ${gameid}.</h1>
+        </div>
+        <div class="row">
+            <p><button click.delegate="reset()" class="btn btn-link">reset</button>the canvas (dev)</p>
+        </div>
+        <div class="row p-2">
 
+            <button class="btn btn-primary btn-block">Message Opponent</button>
+            <button class="btn btn-secondary btn-block">Request To Add Friend</button>
+            <button class="btn btn-info btn-block">View Profile</button>
+
+
+            <button class="btn btn-outline-danger btn-block">Resign From Game</button>
+
+
+
+        </div>
+
+        <!--Do Not remove. This is used to calculate the size for the canvas to be grown to-->
+        <div style="width:100%" ref="widthDiv"></div>
+        <div class="row">
+            <canvas id="game" ref="game" class="game"></canvas>
+        </div>
     </div>
+
 </template>

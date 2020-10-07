@@ -30,8 +30,12 @@ This project needs a bit of refactoring, but as it stands, here are all of the k
     - dist (Transpiled Code):
         - ui
         - api
+An alternate list of files can be found in `./files.txt`
+
 ## Notes
 - The API also serves the static site files. You do not need to run your own local web server.
+- The Actual connect 4 game is useless right now. Clicking on a canvas will colour the circle green. This is demoing a server side response. I still have to do server side game logic. (Also piece placement will be offset if you scroll down on the page, click detection is absolute, not relative.)
+- I Will eventually be pulling out bootstrap cards into their own view. This was just for a quick mock up
 
 ## Downloading Dependencies
 `npm install`

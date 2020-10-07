@@ -2,8 +2,7 @@
     <div class="container-fluid">
         <div class="row">
             <div class="col-12">
-                <div class="card">
-                    <div class="card-block">
+
                         <div class="row">
                             <div class="col-md-8 col-sm-8">
                                 <h2 class="card-title"><i class="fa fa-user"></i> ${profile.username}</h2>
@@ -13,22 +12,21 @@
                                 <p><strong>Options: </strong>
                                     <button class="btn btn-primary">Start Game</button>
                                     <button class="btn btn-info">View Our Games</button>
-                                    <button class="btn btn-secondary" if.bind="!self && !friend" >Request Friend</button>
-                                    <button class="btn btn-outline-danger" if.bind="friend" >Unfriend</button>
+                                    <button class="btn btn-secondary" if.bind="!self && !friend" click.delegate="toggleFriend()">Request Friend</button>
+                                    <button class="btn btn-outline-danger" if.bind="friend" click.delegate="toggleFriend()">Unfriend</button>
                                 </p>
                             </div>
                             <div class="col-md-4 col-sm-4 text-center">
                                 <img src="../static/anon.png"
                                     style="border-radius:50%; width: 200px;">
                             </div>
-                        </div>
-                    </div>
+
                 </div>
             </div>
         </div>
 
-
-            <h2 class="card-title"> Games</h2>
+        <!--Todo: Make this into its own view-->
+            <h2 class="card-title"> Recent Games</h2>
             <div class="card-body">
 
                 <div class="row">

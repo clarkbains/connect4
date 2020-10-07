@@ -56,12 +56,13 @@ export class Gateway {
 
 
     }
-    makeMove(gameId, x) {
+    makeMove(gameId, coord) {
         return this._verify(this._request({
             path: `/private/games/${gameId}/moves`,
             method: "POST",
             body: {
-                x: x
+                x: coord.x,
+                y:coord.y
             }
         }))
     }
