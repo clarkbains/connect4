@@ -15,7 +15,7 @@ I have set up a CI system.
 All the HTML and JS can be found in connect4/src/ui/views. I will polish it up as I go.
 
 A (not great) description of the files can be found in `./files.text`. A better, though less complete description can be found in `README.md`
-
+Responsiveness is not guaranteed, and should be viewed in a full screen browser. Aka the nav bar in hamburger mode is broken at the moment
 
 A rough outline of objects can be found as implemented classes in connect4/src/api/models/models.ts
 

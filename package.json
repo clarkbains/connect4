@@ -69,7 +69,7 @@
     "run:api-node": "node-dev --notify=false  connect4/dist/api/main.js",
     "run:api": "concurrently \"tsc -w\" \"npm run run:api-node\" ",
     "run:ui:server": "webpack-dev-server --extractCss",
-    "run:ui:file": "webpack --env prod --watch",
+    "run:ui:file": "webpack --env.production --watch",
     "build:ui": "webpack --env.production --extractCss",
     "build:api": "tsc ||:",
     "start": "concurrently \"npm run run:api\" \"npm run run:ui:file\"",

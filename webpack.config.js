@@ -200,8 +200,8 @@ module.exports = ({ production } = {}, {extractCss, analyze, tests, hmr, port, h
     port: port || project.platform.port,
     host: host
   },
-  //devtool: production ? 'nosources-source-map' : 'cheap-module-eval-source-map',
-  devtool: 'cheap-module-eval-source-map',
+  devtool: production ? 'nosources-source-map' : 'cheap-module-eval-source-map',
+  //devtool: 'cheap-module-eval-source-map',
 
   module: {
     rules: [
@@ -234,7 +234,7 @@ module.exports = ({ production } = {}, {extractCss, analyze, tests, hmr, port, h
       // load these fonts normally, as files:
       { test: /\.(ttf|eot|svg|otf)(\?v=[0-9]\.[0-9]\.[0-9])?$/i, loader: 'file-loader' },
       { test: /environment\.json$/i, use: [
-        {loader: "app-settings-loader", options: {env: production ? 'production' : 'development' }},
+        {loader: "app-settings-loader", options: {env: true ? 'production' : 'development' }},
       ]},
     ]
   },
