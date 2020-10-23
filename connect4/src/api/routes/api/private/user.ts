@@ -1,6 +1,6 @@
 
 import express from 'express'
-import { RequestUser, UserModifyRequest, DatabaseUser } from '../../../models/models'
+import { RequestUser, UserModifyRequest, DatabaseUser, DatabaseFriend, PublicResponseUser } from '../../../models/models'
 import * as APIHelpers from '../../../resources/APIHelpers'
 import * as statuses from '../../../resources/APIStatus'
 import { DatabaseModel } from '../../../resources/databaseHelpers'
@@ -22,11 +22,17 @@ module.exports = class {
         }))
         this.app.get("/:userid",APIHelpers.WrapRequest(async (req: express.Request, res: express.Response, success: Function) => {
             let r = new DatabaseUser({userid:req.params.userid})
+            let f = new DatabaseFriend({user1:res.locals.userid, user2:r.userid})
+            let friends = !!await f.select({db: this.opts.gateway.db});
+            res.locals.userid==r.userid;
+
             let u = await r.select({db: this.opts.gateway.db});
             if (u.length==0){
                 throw new statuses.NotFound("User")
             }
-            let resp = new statuses.GetUserSuccess(new RequestUser(u[0]))
+            let foundUser = new PublicResponseUser(u[0]);
+
+            let resp = new statuses.GetUserSuccess(foundUser)
             console.log(resp)
              success(resp)
          }))

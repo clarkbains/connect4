@@ -1,0 +1,9 @@
+<template>
+    <p>Matchid ${match}</p>
+    <p>Gameid ${game}</p>
+    <button click.delegate="createMatch()" class="btn btn-primary" disabled.bind="!!match">Create Match</button>
+    <button click.delegate="acceptDemo()" class="btn btn-primary" disabled.bind="!!accepted">Accept The Game</button>
+
+    <button click.delegate="startGame()" class="btn btn-primary" disabled.bind="!!game">Create Game</button>
+
+</template>

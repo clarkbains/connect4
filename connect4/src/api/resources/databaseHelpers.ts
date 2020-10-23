@@ -27,6 +27,7 @@ export abstract class DatabaseModel {
     tableName: string
     // db: sqlite3.Database
     constructor(tableName: string) {
+        //Define as non enerable so we can enumerate all the keys and not get anything extra included
         let _this = this
         Object.defineProperty(this, 'cls', {
             enumerable: false,
@@ -46,7 +47,7 @@ export abstract class DatabaseModel {
         o.obj = this
         return this.runInsert(o)
     }
-    select<T>(opts: SqlOpts): Promise<T[]> {
+    select<T>(opts: SqlOpts): Promise<T[]|T> {
         let o = <SqlGeneratorOpts>opts
         o.obj = this
         return this.runSelect<T>(o)
@@ -67,7 +68,7 @@ export abstract class DatabaseModel {
     runInsert(opts: SqlGeneratorOpts) {
         return DatabaseModel.promisifySql(opts.db, this.generateInsert(opts))
     }
-    runSelect<T>(opts: SqlGeneratorOpts): Promise<T[]> {
+    runSelect<T>(opts: SqlGeneratorOpts): Promise<T|T[]> {
         return DatabaseModel.promisifySql(opts.db, this.generateSelect(opts))
 
     }
@@ -96,7 +97,7 @@ export abstract class DatabaseModel {
         }
         if (fields.length > 0)
             return {
-                sql: `INSERT INTO ${this.tableName} (${fields.join(",")}) VALUES (${queryParts.join(",")})`,
+                sql: `INSERT INTO ${this.tableName} (${fields.join(",")}) VALUES (${queryParts.join(",")});`,
                 params: binds
             }
 
@@ -197,7 +198,8 @@ export abstract class DatabaseModel {
                 return {
                     sql: `SELECT * FROM ${this.tableName} WHERE ${queryParts.join(" AND ")}${opts.limit === undefined ? "" : ` LIMIT ${opts.limit}`};`,
                     params: binds,
-                    model: this.cls
+                    model: this.cls,
+                    single:opts.limit===1
                 }
 
             }
@@ -207,7 +209,8 @@ export abstract class DatabaseModel {
             return {
                 sql: `SELECT *  FROM ${this.tableName} WHERE ${opts.whereClause} ${opts.limit === undefined ? "" : ` LIMIT ${opts.limit}`};`,
                 params: opts.whereBinds,
-                model: this.cls
+                model: this.cls,
+                single:opts.limit===1
             }
         }
         return {
@@ -215,25 +218,37 @@ export abstract class DatabaseModel {
         }
     }
 
-    static promisifySql<T>(db: sqlite3.Database, opts: PromisifiedSqlOpts): Promise<T[]> {
+    static promisifySql<T>(db: sqlite3.Database, opts: PromisifiedSqlOpts): Promise<T> {
         let sql = opts.sql
         let params = opts.params
         //let cb = opts.cb || this._cb
         let model = opts.model
         console.log("Running SQL: ", sql)
+       // if (params) console.log("binds: ",params.join(","))
 
         return new Promise((resolve, reject) => {
             db.all(sql, params, (error: Error, res: null | object | object[]) => {
                 if (error) {
+                    console.error("DBERROR", error)
                     return reject(error)
                 }
                 if (res && model) {
                     let assigned = assign(res, model, false)
                     if (!assigned) {
                         console.error(`Did not assign data correctly to model ${model}`, res)
+                    } else if (opts.single){
+                        if (assigned.length>=1){
+                            assigned = assigned[0]
+                        } else {
+                            console.error("Single mode assign with 0 elms to assign from.")
+                            return reject(null)
+                        }
                     }
                     res = assigned
                 }
+
+                //console.log("res",res,)
+
                 resolve(res)
                 //cb(resolve, res)
             })

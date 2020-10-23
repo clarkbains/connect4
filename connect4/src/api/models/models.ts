@@ -39,11 +39,13 @@ export class PublicResponseUser {
     userid: number
     name: string
     score: number
+    friends: boolean
     constructor(u: User | object) {
         this.userid = u.userid
         this.name = u.name
         this.email = u.email
         this.score = u.score
+        this.friends = u.friends
     }
 }
 
@@ -65,17 +67,9 @@ export class RequestUser {
 }
 export class RequestMove {
     x: number
-    y: number
-    userid: number
-    //time: number
-    gameid: number
     constructor(m: ResponseMove | object) {
         //this.moveid = m.moveid
         this.x = m.x
-        this.y = m.y
-        this.userid = m.userid
-        //this.time = m.time
-        this.gameid = m.gameid
     }
 }
 //Used by the server to indicate a single move, by a single player
@@ -316,14 +310,16 @@ export class DatabaseGame extends DatabaseModel {
     matchid: number
     currentturn: number
     gamefinished: boolean
-    score: number | null
+    userid:number|null
+   // score: number | null
     constructor(g: DatabaseGame | object) {
-        super("Game")
+        super("Games")
         this.gameid = g.gameid
         this.matchid = g.matchid
         this.currentturn = g.currentturn
+        this.userid = g.userid
         this.gamefinished = g.gamefinished
-        this.score = g.score
+        //this.score = g.score
     }
 
 
@@ -348,6 +344,7 @@ export class DatabaseGameMessage extends DatabaseModel {
 export class DatabaseMove extends DatabaseModel {
     moveid: number
     gameid: number
+    userid: number
     x: number
     y: number
     time: number
@@ -355,6 +352,7 @@ export class DatabaseMove extends DatabaseModel {
         super("Moves")
         this.moveid = m.moveid
         this.gameid = m.gameid
+        this.userid = m.userid
         this.x = m.x
         this.y = m.y
         this.time = m.time
@@ -371,8 +369,8 @@ export class DatabaseMatch extends DatabaseModel {
     participants: number //number of target participants
     msg: string | null //Game msg
     name: string //Gamename def:strftime('Game %Y-%m-%d %H-%M','now'):
-    privacylevel: number//0,1,2 def:0:
-    status: number //0,1,2
+    privacylevel: number//0 public,1 friends only,2 private def:0:
+    status: number //0,1 def:0:
     constructor(m: DatabaseMatch | object) {
         super("Matchs")
         this.matchid = m.matchid

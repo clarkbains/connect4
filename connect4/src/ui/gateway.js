@@ -1,19 +1,15 @@
 import { inject } from 'aurelia-framework'
 import { Router } from 'aurelia-router';
+import { NotifierService } from 'aurelia-plugins-notifier';
 
-@inject(Router)
+@inject(Router, NotifierService)
 export class Gateway {
-    constructor(r) {
+    constructor(r, ns) {
         this.router = r
-        this.data = ""
+        this._logoutns = ns
         this.observers = []
     }
-    foo() {
-        console.log("DI Works", this.data)
-    }
-    bar(s) {
-        this.data = s
-    }
+
     addLoggedInObserver(f) {
         this.observers.push(f)
     }
@@ -36,7 +32,7 @@ export class Gateway {
         return this._request({
             path: "/public/user/login",
             method: "POST",
-            red:false,
+            red: false,
             body: {
                 username: username,
                 password: password
@@ -44,46 +40,117 @@ export class Gateway {
         }).then((e) => {
             this.observers.forEach(f => { f(true) })
         })
-          //  .catch(() => {
-           //     throw new LoginFailed("Try Adding A Username")
-            //})
     }
     getUser(id) {
-            return this._request({
-                path: "/private/user/"+id,
-                method: "GET",
-            })
+        return this._request({
+            path: "/private/user/" + id,
+            method: "GET",
+        })
 
 
     }
     makeMove(gameId, coord) {
-        return this._verify(this._request({
+        return this._request({
             path: `/private/games/${gameId}/moves`,
             method: "POST",
             body: {
                 x: coord.x,
-                y:coord.y
+                y: coord.y
             }
-        }))
+        })
+    }
+    makeDemoMatch() {
+        return this._request({
+            path: `/private/games/requests`,
+            method: "POST",
+            body: {}
+        })
+    }
+    promoteDemoMatch(matchid) {
+        return this._request({
+            path: `/private/games/requests/${matchid}/promote`,
+            method: "POST",
+            body: {}
+        })
+    }
+    acceptDemo(matchid) {
+        return this._request({
+            path: `/private/games/requests/${matchid}/acceptAll`,
+            method: "POST",
+            body: {}
+        })
+    }
+
+    getBoard(gameid) {
+        return this._request({
+            path: `/private/games/${gameid}/board`,
+            method: "POST",
+
+        })
+    }
+    getTurn(gameid) {
+        return this._request({
+            path: `/private/games/${gameid}/turn`,
+            method: "GET",
+
+        })
+    }
+    getWinner(gameid) {
+        return this._request({
+            path: `/private/games/${gameid}/winner`,
+            method: "GET",
+
+        })
+    }
+    putMove(gameid,x) {
+        return this._request({
+            path: `/private/games/${gameid}/move`,
+            method: "POST",
+            body: {
+                x:x
+            }
+        })
+    }
+
+    makeDemoMove(gameId, coord) {
+        return this._request({
+            path: `/private/games/${gameId}/moves`,
+            method: "POST",
+            body: {
+                x: coord.x,
+                y: coord.y
+            }
+        })
     }
     resetPasswordFromToken(token, password) {
-        return this._verify(this._request({
+        return this._request({
             path: "/public/user/changepassword",
             method: "POST",
             body: {
                 token: token,
                 newpassword: password
             }
-        }))
+        })
     }
     getToken(username) {
-        return this._verify(this._request({
+        return this._request({
             path: "/public/user/sendresetemail",
             method: "POST",
             body: {
                 username: username
             }
-        }))
+        })
+    }
+    createUser(username, email) {
+        return this._request({
+            path: "/public/user",
+            method: "POST",
+            body: {
+                username: username,
+                email: email,
+                name:name
+            }
+        })
     }
     logout() {
         return this._logout()
@@ -118,33 +185,35 @@ export class Gateway {
         }
         let url = window.location.protocol + "//" + window.location.host
         let _this = this
-        return fetch(url + "/api" + path, opts).catch(e=>{console.log("Serious Network Issue"); return undefined})
+        return fetch(url + "/api" + path, opts).catch(e => { console.log("Serious Network Issue"); return undefined })
             .then(response => {
                 //Not the best solution, but out handlers get to catch a network error, which is kinda cool
                 //Maybe have this show a notification in the future, and then figure out how to break the promise chain.
-                if (!response){
-                    throw {cls:"error", msg:"Network Error", info:"Cannot reach server", code:500}
+                if (!response) {
+                    throw { cls: "error", msg: "Network Error", info: "Cannot reach server", code: 500 }
                 }
                 let body = response.json()
                 if (opts.verify) {
                     console.log("Verifying result")
                     // eslint-disable-next-line no-inner-declarations
-                    function err(e,c) {
+                    function err(e, c) {
                         console.log("Caught request error, gracefully handling")
-                        if (opts.red) {
-                            if (c==401){
+                        if (opts.red && false) {
+                            if (c == 401) {
                                 console.log("Attempting Logout")
-                                _this._logout()
+                                this.ns.danger("Forbidden", "You are not allowed to access that resource")
+                                //_this._logout()
                             }
-                            else if (c==404){
+                            else if (c == 404) {
                                 _this.router.navigate("notFound")
+                                this.ns.danger("Not Found", "That resource cannot be found")
                             }
                         }
                         return e.then(json => { throw json })
 
                     }
 
-                    if (body && body.code && (body.code>299)) {
+                    if (body && body.code && (body.code > 299)) {
                         return err(body, body.code)
                     }
                     else if (response.status > 299) {

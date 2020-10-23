@@ -128,6 +128,18 @@ export class App {
           visible:false,
         }
       }
+      ,
+      {
+        route: 'test',
+        name: 'test',
+        title: "Connect 4 Test",
+        nav: true,
+        moduleId: PLATFORM.moduleName("views/test"),
+        settings:{
+          visible:true,
+          auth:true
+        }
+      }
     ]);
   }
   run(f) {

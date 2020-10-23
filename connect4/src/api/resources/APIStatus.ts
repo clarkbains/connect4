@@ -41,7 +41,7 @@ export class ChangePasswordSuccess extends APISuccess {
 
 }
 export class TokenDebugRequest extends APISuccess {
-    token:string
+    token: string
     constructor(token) {
         super("Got Token", "Dev Token")
         this.token = token
@@ -50,7 +50,7 @@ export class TokenDebugRequest extends APISuccess {
 }
 export class LoginSuccess extends APISuccess {
     token: string
-    constructor(jwt:string) {
+    constructor(jwt: string) {
         super("Logged In", "Please Make a request")
         this.token = jwt
     }
@@ -58,9 +58,32 @@ export class LoginSuccess extends APISuccess {
 }
 export class GetUserSuccess extends APISuccess {
     user: string
-    constructor(user:object) {
+    constructor(user: object) {
         super("Got User", "")
         this.user = user
+    }
+}
+export class MatchCreationSuccess extends APISuccess {
+    matchid: number
+    constructor(matchid) {
+
+        super("Created Match", `Your match has been created`)
+        this.matchid = matchid
+    }
+
+}
+export class PromotionSuccess extends APISuccess {
+    gameid: number
+    constructor(gameid) {
+        super("Promoted Match", `You can now play game ${gameid}`)
+        this.gameid = gameid
+    }
+
+}
+export class AcceptAllSuccess extends APISuccess {
+    matchid: number
+    constructor() {
+        super("Accepted Match", `Your match has been Accepted, promote it to begin playing`)
     }
 
 }
@@ -71,7 +94,7 @@ export class LogoutSuccess extends APISuccess {
 
 }
 export class DeleteSuccess extends APISuccess {
-    constructor(type:string) {
+    constructor(type: string) {
         super("Deleted", `${type} has been deleted`)
     }
 
@@ -102,6 +125,21 @@ export class CredentialError extends APIError {
         super("Invalid Credentials", "Double Check your Login Credentials", 401)
     }
 }
+export class MatchCreateError extends APIError {
+    constructor() {
+        super("Could Not Create Match", "Double check settings or try again later", 400)
+    }
+}
+export class AcceptAllError extends APIError {
+    constructor() {
+        super("Could Not Accept Match", "Bad Request", 400)
+    }
+}
+export class PromoteError extends APIError {
+    constructor() {
+        super("Could Not Promote Match", "Bad Request", 400)
+    }
+}
 export class JWTError extends APIError {
     constructor() {
         super("Invalid JWT", "This JWT is not valid", 401)
@@ -112,24 +150,24 @@ export class NoPasswordSet extends APIError {
         super("No Password Set", "Please Verify your account", 401)
     }
 }
-export class MissingRequiredField extends APIError{
-    constructor (missingFields:string[]){
+export class MissingRequiredField extends APIError {
+    constructor(missingFields: string[]) {
         let map = []
-        for (let field of missingFields){
+        for (let field of missingFields) {
             map.push(`${field} field is required`)
         }
-            super("Field Error", map.join(", "), 400)
-        }
+        super("Field Error", map.join(", "), 400)
+    }
+
+}
+export class FieldsNotValidated extends APIError {
+    constructor() {
+        super("Fields Not Validated", "This request failed a verification step. Please check the Docs", 400)
 
     }
-export class FieldsNotValidated extends APIError{
-        constructor (){
-            super("Fields Not Validated", "This request failed a verification step. Please check the Docs", 400)
-    
-        }
-    }
+}
 export class NotFound extends APIError {
-    constructor(type: string){
+    constructor(type: string) {
         super(`Cannot Find ${type}`, `the resource cannot be found on the server`, 404)
     }
 }

@@ -1,28 +1,55 @@
-# Project Check in
+# Project Check in 2
 ---
 Clark Bains
 101149052
 
+Note that the original project readme has been removed at the request of the previous TA. All information can be found here now.
 
-I realize this project is very large and not very well organized. Hopefully this document guides you through as you mark my check in.
-I will sumarize the README, but if you are looking for more info that I don't cover in this document, please check that document.
+## Testing Code
+This code runs in several different environments. Here are instructions to view it in a variety of these environments
+### Locally
+#### Installing Dependencies
+- Run `npm install` to install all dependencies
+#### Building
+- Run `npm run build`. This will compile all the typescript and webpack the - front end. Built files are placed in connect4/dist
+### Running
+- Run `npm run deploy:local` Visit the running server at http://localhost:9000
+### Troubleshooting
+ - The build step doesn't do anything? Sometimes it hangs for a while. Restart it a few times and be patient, or use the command `npm run start` in place of the commands for building and running. This command has some of its own issues, but is generally much quicker. This starts a progressive "watch mode" build on both the api and ui, and updates the server on any changes.
+### Cloud
 
-BUILDING/RUNNING
-- `npm run build` and then `npm run deploy:local`. If you can't get it to work, check [here](https://78y43y3ghfo7tyfgh43o74fye7w87fghw7fy.2406.clarkbains.com/), 
-Login is `bar` and `barbarbar` in both systems, or you can use the reset password to change it
-I have set up a CI system.
+#### Openstack
+- The code should be running on openstack. It runs under a dockerized environment. 
+- Connect to the VPN/use access.scs.carleton.ca as a jump host, and then log into my openstack instance, `ssh student@134.117.131.57` with password `crackThisJohn`
+- I have generally left my application running, you can check if it is currently running with `docker ps | grep connect4`. No output means it is not running. 
+- If it isn't running, navigate to the repository with `cd connect4`, and run it in the foreground with `docker-compose up -d`. For you convenience, and because it takes several minutes to build on openstack, I will have prebuilt the image for you with `docker-compose build --parallel --no-cache`. 
+- The docker service binds to port 3000 on the openstack instance, so to view it, you will have to port tunnel this with the following command `ssh -L 9999:localhost:3000 os`. After that, you will be able to see the built instance at http://localhost:9999.
+- To kill the service, run `docker-compose kill && docker-compose rm`
 
-All the HTML and JS can be found in connect4/src/ui/views. I will polish it up as I go.
+#### CD System
+- I have set up a CD system, which means that you can visit [here](https://78y43y3ghfo7tyfgh43o74fye7w87fghw7fy.2406.clarkbains.com/) to see the latest version of the code, built and deployed on my own server.
+- Setup for this is lengthy and instructions are not provided. 
 
-A (not great) description of the files can be found in `./files.text`. A better, though less complete description can be found in `README.md`
-Responsiveness is not guaranteed, and should be viewed in a full screen browser. Aka the nav bar in hamburger mode is broken at the moment
+#### Seeded Data
+I have included the same database in my submission as in both the openstack and CI system on my server. This means you should be able to use the same credentials no matter which platform you chose to evaluate using.
+- Users
+    - `bar` / `barbarbar` This is the username and password for the generic testing user. 
 
-A rough outline of objects can be found as implemented classes in connect4/src/api/models/models.ts
-
-Added Functionality that hopefully gets be extra marks. 
-- API is like half implemented, supporting login, sessions, and "priveledged data" (Other user profiles).
-- I used a front end framework (Aurelia)
-- I added docker support (And a CI system that auto deploys it)
-- I wrote a script to auto generate SQL create table commands from TypeScript models
-- I set up a DB
-- I wrote a custom ORM, that supports async CRUD operations.
+## Extra Functionality and Testing instructions
+Note that I realize some of this is not possible for you to test, due to the time requirement, or it straight up not being compatible with your operating system.
+- Docker Support.
+    - I have made this into a containerized application. Follow the instructions to test on openstack to test that way.
+- CD System.
+    - A CD system allows for Continuous Delivery of the code. In this case, it allows me to use webhooks to automatically update the git repository on my server, run shell commands to build the app in a new dockerized container, and deploy it behind my custom reverse proxy. This adds the ssl certificate for https.
+    - It requires access to the git repo, a public server, among other things, so testing the system itself is not practical. However you can view the result of the system using the link in the CD section of testing
+- Custom Database Tooling
+    - As a very roundabout way yo not have to write sql for database interactions, I wrote an ORM that generates sql on the fly from models. For example, setting the userId attribute of a database model, and calling `.select()` on it, would return an array of all of the rows in the database with that userId. It supports `select()`,`update()`,`delete()` and `insert()`. These all work exactly the same as the provided example, except that `update` is able to check for the indexes in the given table, identify them, and use them as the `WHERE` clause in the generate SQL it runs. This logic is all in connect4/src/api/resources/databasehelpers.ts
+    - SQL Generator. The ORM works on the assumption that every column is named the exact same as the attribute in the models. Run `node tools/generateSql.js ./connect4/src/api/models/models.ts  Databasemove` in the root direcotry of this project, and you should see a constuctor for the typescript model and sql table create command appear. This all comes from the attribute names and attribute types in the typescript models. The code is a mess of regular expressions, so it's not the best for clarity, but it works. The results of this have been pasted into connect4/src/api/gateway.ts
+        - Supports foreign keys, defaults, types, and uniqueness constraints
+- Typescript API
+    - The API is built mostly with typescript, which helps it be less error prone and susceptible to bugs.
+- Front End Framework
+    - The front end is built on Aurelia, a front end framework
+    - Allows easy seperation of static resources and API resources, for better scaleability
+    - Reduces load on server.
+    - Uses WebPack to obfuscate code.
