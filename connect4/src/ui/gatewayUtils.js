@@ -1,4 +1,5 @@
 
+//Testing Dependency injection
 export class GatewayUtils{
     constructor(){
         this.data = ""

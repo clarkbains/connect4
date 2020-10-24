@@ -14,6 +14,8 @@ module.exports = class {
         this.games = {}
     }
     async fetchGame(gameid, userid) {
+        console.log("Retrieving Game id", gameid, "for",userid)
+
         let userAcceptances = await new models.DatabaseMatchAcceptance({
             userid: userid,
             status: 2,
@@ -30,7 +32,9 @@ module.exports = class {
         if (this.games[gameid]) {
             return this.games[gameid]
         }
-        this.games[gameid] = new Game(this.opts.gateway.db, gameid)
+        this.games[gameid] = new Game(this.opts.gateway, gameid)
+
+        return this.games[gameid]
     }
     setupApplication() {
         this.app.get("/", (req, res) => {
@@ -51,32 +55,95 @@ module.exports = class {
             //Get Game moves
         })
         this.app.get("/:gameid/board", APIHelpers.WrapRequest(async (req: express.Request, res: express.Response, success: Function) => {
-            let gameid = req.params.gameid
-            let game = await this.fetchGame(gameid,res.locals.userid)
-            success(await game.getBoard())
+            
+                let gameid = req.params.gameid
+                let game = await this.fetchGame(gameid,res.locals.user.userid)
+                let board = await game.getBoard()
+                //console.log("Got board",board)
+                success(new statuses.ResourceSuccess(board))
+
         }))
         this.app.get("/:gameid/turn", APIHelpers.WrapRequest(async (req: express.Request, res: express.Response, success: Function) => {
-            let gameid = req.params.gameid
-            let game = await this.fetchGame(gameid,res.locals.userid)
-            success(await game.turn(res.locals.userid))
+            let gameid = (req.params.gameid||"").match(/(\d*)/)
+            if (!gameid || !gameid[1]){
+                throw new statuses.MissingRequiredField(["gameid"])
+            }
+            gameid = gameid[1]
+            let game;
+            try {
+                game = await this.fetchGame(gameid,res.locals.user.userid)
+            } catch {
+                throw new statuses.ResourcePermissionError()
+            }
+            try {
+                let turn = await game.turn(res.locals.user.userid)
+                success(new statuses.TurnSuccess(turn) )
+
+            } catch (e){
+                throw new statuses.GenericErrorWrapper(e)
+            }
         }))
         this.app.get("/:gameid/winner", APIHelpers.WrapRequest(async (req: express.Request, res: express.Response, success: Function) => {
-            let gameid = req.params.gameid
-            let game = await this.fetchGame(gameid,res.locals.userid)
-            success(await game.getGameWinner())
+            let gameid = (req.params.gameid||"").match(/(\d*)/)
+            if (!gameid || !gameid[1]){
+                throw new statuses.MissingRequiredField(["gameid"])
+            }
+            gameid = gameid[1]
+            let game;
+            try {
+                game = await this.fetchGame(gameid,res.locals.user.userid)
+            } catch {
+                throw new statuses.ResourcePermissionError()
+            }
+            try{
+                let winner = await game.getGameWinner()
+                success(new statuses.WinnerSuccess(winner))
+            }catch (e){
+                throw new statuses.GenericErrorWrapper(e)
+            }
         }))
-        this.app.get("/:gameid/finished", APIHelpers.WrapRequest(async (req: express.Request, res: express.Response, success: Function) => {
-            let gameid = req.params.gameid
-            let game = await this.fetchGame(gameid,res.locals.userid)
-            success(await game.isGameFinished())
+        this.app.get("/:gameid/state", APIHelpers.WrapRequest(async (req: express.Request, res: express.Response, success: Function) => {
+            let gameid = (req.params.gameid||"").match(/(\d*)/)
+            if (!gameid || !gameid[1]){
+                throw new statuses.MissingRequiredField(["gameid"])
+            }
+            gameid = gameid[1]
+            let game;
+            try {
+                game = await this.fetchGame(gameid,res.locals.user.userid)
+            } catch {
+                throw new statuses.ResourcePermissionError()
+            }
+            try{
+                let finished = await game.isGameFinished()
+                success(new statuses.GameStateSuccess(finished))
+            }
+            catch (e){
+                throw new statuses.GenericErrorWrapper(e)
+            }
         }))
         //This is for the logical test of the game.
         this.app.post("/:gameid/move", APIHelpers.WrapRequest(async (req: express.Request, res: express.Response, success: Function) => {
             console.log("Got new move")
             let move = new models.RequestMove(req.body)
             let gameid = req.params.gameid
-            let game = await this.fetchGame(gameid,res.locals.userid)
-            success(await game.makeMove(res.locals.userid,move.x))
+            if (!gameid || !move.x){
+                throw new statuses.MissingRequiredField(["gameid","x"])
+            }
+            let game;
+            try{
+                game = await this.fetchGame(gameid,res.locals.user.userid)
+            } catch{
+                throw new statuses.ResourcePermissionError()
+            }
+            try {
+                await game.makeMove(res.locals.user.userid,move.x)
+                success(new statuses.GenericSuccess())
+            }
+            catch (e){
+                console.log(e)
+                throw new statuses.GenericErrorWrapper(e)
+            }
         }))
 
         //This is currently used for the demo of clicking on a cell on the interactive canvas

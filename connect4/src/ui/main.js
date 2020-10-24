@@ -9,7 +9,7 @@ export function configure(aurelia) {
       config.options({
         insert: true, // whether or not to insert new notifications as a stack or replace the latest one, default is true
         position: 'top-right', // the position on the page where to show the notifications, default is 'top-right'
-        timeout: 500000, // the TTL of the notification, default is 5000
+        timeout: 3000, // the TTL of the notification, default is 5000
         type: 'success' // the default style of the notification, default is 'info'
       });
     });

@@ -18,7 +18,7 @@ export default class Gateway {
           email:"clarkbains@gmail.com",
           username:"thelostelectron",
           name:"clark",
-          score:69})
+          score:71})
         mock.insert({db:this.db}).then(e=>mock.select({db:this.db})).then(r=>{console.log(r)})
         //mockgenerateUpdate('MatchAcceptances', mock).then((r) => { console.log(r) })
       })

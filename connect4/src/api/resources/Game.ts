@@ -14,7 +14,7 @@ export default class Game {
     finished:boolean
     constructor(db: Gateway, gameId: number) {
         this.db = db.db
-
+        this.gameId = gameId
         this.finished = false
     }
     static async createMatch(users: number[], creator: number, privacy: number, computer: boolean, db: Database): Promise<number> {
@@ -90,7 +90,6 @@ export default class Game {
     async _getInfo() {
 
         let s = await new models.DatabaseGame({ gameid: this.gameId }).select({ db: this.db, limit: 1 })
-        
         this.matchId = s.matchid
         let m = await new models.DatabaseMatch({ matchid: this.matchId }).select({ db: this.db, limit: 1 })
 
@@ -147,6 +146,12 @@ export default class Game {
         } else if (this.finished){
             throw new Error("You may not go.")
         }
+        try{
+            x = Number(x)
+        }
+        catch{
+            throw new Error("Could not convert x coord")
+        }
         let moves = await new models.DatabaseMove({
             gameid: this.gameId,
             x:x
@@ -196,6 +201,7 @@ export default class Game {
                     continue;
                 }
                 let result = await this.checkForLine(board,move.x,move.y, dx,dy,4)
+                console.log(result)
                 if (result!==false){
                     await this.finishGame(result)
                     return
@@ -212,11 +218,14 @@ export default class Game {
     async checkForLine(board:(number|undefined)[][], sx:number, sy:number, dx:number, dy:number, length:number){
         let row:number[] = []
         for (let i = -length; i< length; i++){
-            let x = sx + i * dx;
-            let y = sy + i * dy;
+            let x = sx + (i * dx);
+            let y = sy + (i * dy);
+            //console.log("Offsets are",x,y, sx,i,dx,sy,i,dy)
+
             if (x>=0 && x<board[0].length && y >=0 && y < board.length){
+                console.log(sx,sy,dx,dy,x,y,board[y][x])
                 row.push(board[y][x])
-                //console.log(sx,sy,dx,dy,x,y,board[y][x])
+                
             }
         }
         //row will be variable length with eg [undefined,0,0,1,0,0,0,0]
@@ -234,7 +243,7 @@ export default class Game {
             }
         } if (cnt !=0 )
             streaks.push([current,cnt])
-        //console.log(`Origin is x:${sx},y:${sy}), Started from (x:${sx  -4 * dx},y:${sy *-4 * dy}) going x:${dx} y: ${dy}`)
+        //console.log(`Origin is x:${sx},y:${sy}), Started from (x:${sx -(4*dx)},y:${sy -(4 * dy)}) , Ended at (x:${Number(sx +(4*dx))},y:${Number(sy+(4*dy))}) going x:${dx} y: ${dy}`)
         //console.log("Got Row: ", row)
         //console.log("Streaks: ", streaks)
         for (let streak of streaks){

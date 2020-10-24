@@ -84,13 +84,20 @@ export class Gateway {
     getBoard(gameid) {
         return this._request({
             path: `/private/games/${gameid}/board`,
-            method: "POST",
+            method: "GET",
 
         })
     }
     getTurn(gameid) {
         return this._request({
             path: `/private/games/${gameid}/turn`,
+            method: "GET",
+
+        })
+    }
+    getState(gameid) {
+        return this._request({
+            path: `/private/games/${gameid}/state`,
             method: "GET",
 
         })
@@ -112,16 +119,7 @@ export class Gateway {
         })
     }
 
-    makeDemoMove(gameId, coord) {
-        return this._request({
-            path: `/private/games/${gameId}/moves`,
-            method: "POST",
-            body: {
-                x: coord.x,
-                y: coord.y
-            }
-        })
-    }
+
     resetPasswordFromToken(token, password) {
         return this._request({
             path: "/public/user/changepassword",

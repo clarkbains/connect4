@@ -14,7 +14,7 @@ export class Test {
         this.accepted = undefined
         console.log(this)
     }
-    activate(){
+    activate() {
         console.log("Activating view", this)
     }
     showBoard() {
@@ -25,19 +25,19 @@ export class Test {
         let _this = this
         this.gateway.makeDemoMatch().then(e => {
             this.match = e.matchid
-            _this.ns.success(e.msg,e.info)
-        }).catch(e=>{
-            _this.ns.danger(e.msg,e.info)
+            _this.ns.success(e.msg, e.info)
+        }).catch(e => {
+            _this.ns.danger(e.msg, e.info)
         })
     }
 
     acceptDemo() {
         let _this = this
-        this.gateway.acceptDemo(this.match).then(e=>{
+        this.gateway.acceptDemo(this.match).then(e => {
             _this.ns.success(e.msg, e.info)
             _this.accepted = true
-        }).catch(e=>{
-            console.log("errord",e)
+        }).catch(e => {
+            console.log("errord", e)
             _this.ns.danger(e.msg, e.info)
         })
     }
@@ -47,26 +47,82 @@ export class Test {
         this.gateway.promoteDemoMatch(this.match).then(e => {
             this.game = e.gameid
             _this.ns.success(e.msg, e.info)
-        }).catch(e=>{_this.ns.danger("error","We ran into an issue while proting the match to a game. Did you create a match yet?")})
+        }).catch(e => { _this.ns.danger(e.msg, e.info) })
     }
-    getBoard(){
-        this.gateway.getBoard(this.game).then(e=>{console.log("Got boards", e)})
+    getBoard() {
+        let _this = this
+        this.gateway.getBoard(this.game).then(e => {
+            console.log("Got boards", e)
+            this.boardDisplay.textContent = this.prettyBoard(e.resource)
+        }).catch(e => {
+            console.error(e)
+            _this.ns.danger(e.msg, e.info)
+        })
+    }
+    prettyBoard(b) {
+        let r = ""
+        let xindex = []
+
+        console.log(b.reverse(), xindex)
+        for (let y of b) {
+            r += "|"
+            for (let x of y) {
+                let tsx = x ? String(x) : ""
+                r += tsx.padStart(3, " ").padEnd(4, " ")
+            }
+            r += "\r\n"
+        }
+        for (let i = 0; i < b[0].length; i++) {
+            r += String(i).padStart(3, " ").padEnd(4, " ")
+
+        }
+
+        return r
     }
 
-
-    isMyTurn() {
-        //Shows notif it is your turn or not
+    turn() {
+        let _this = this
+        this.gateway.getTurn(this.game).then(e => {
+            _this.ns.success(e.msg, e.info)
+        }).catch(e => {
+            _this.ns.danger(e.msg, e.info)
+        })
     }
 
-    getGameState() {
-        //Shows notif if game is running or not
+    finished() {
+        let _this = this
+        this.gateway.getState(this.game).then(e => {
+            _this.ns.success(e.msg, e.info)
+        }).catch(e => {
+            console.error(e)
+            _this.ns.danger(e.msg, e.info)
+        })
     }
 
-    makeMove() {
+    place() {
+        let _this = this
+        console.log(`Placing for ${this.game} on pos ${this.xc}`)
+        this.gateway.putMove(this.game, this.xc).then(e => {
+            _this.ns.success(e.msg, e.info)
+            _this.getBoard()
+        }).catch(e => {
+            console.error(e)
+            _this.ns.danger(e.msg, e.info)
+        })
         //Takes x coord, makes move, calles showBoard
     }
-    getWinner() {
-        //shows notif with the winner of the game
+    winner() {
+        let _this = this
+        this.gateway.getWinner(this.game).then(e => {
+            if (e.resource === null) {
+                _this.ns.info("Game Winner", "There is no winner, the game is not done yet")
+            } else {
+                _this.ns.success(e.msg, e.info)
+            }
+        }).catch(e => {
+            console.error(e)
+            _this.ns.danger(e.msg, e.info)
+        })
     }
 
     subscribeToEvent() {

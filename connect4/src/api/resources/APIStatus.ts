@@ -33,6 +33,13 @@ export class CreateUserSuccess extends APISuccess {
     }
 
 }
+export class GenericSuccess extends APISuccess {
+
+    constructor() {
+        super("Success", "This Action Succeeded")
+    }
+
+}
 export class ChangePasswordSuccess extends APISuccess {
 
     constructor() {
@@ -93,6 +100,38 @@ export class LogoutSuccess extends APISuccess {
     }
 
 }
+export class TurnSuccess extends APISuccess {
+    resource:number
+    constructor(turn:number) {
+        super("Turn", `It is the turn of userid: ${turn}`)
+        this.resource = turn
+    }
+
+}
+export class GameStateSuccess extends APISuccess {
+    resource:number
+    constructor(finished:number) {
+        super("Game State", `The Game is ${finished?"finished":"not finished"}`)
+        this.resource = finished
+    }
+
+}
+export class WinnerSuccess extends APISuccess {
+    resource:number
+    constructor(win:number) {
+        super("Game Winner", win===undefined?"The Game is tied":`The winner has the id ${win}`)
+        this.resource = win
+    }
+
+}
+export class ResourceSuccess extends APISuccess {
+    resource:any
+    constructor(thing:any) {
+        super("Got Resource", ``)
+        this.resource = thing
+    }
+
+}
 export class DeleteSuccess extends APISuccess {
     constructor(type: string) {
         super("Deleted", `${type} has been deleted`)
@@ -109,6 +148,11 @@ export class APIError extends APIStatus {
 export class AuthorizationError extends APIError {
     constructor() {
         super("Invalid Session", "You may need to sign in again", 401)
+    }
+}
+export class ResourceError extends APIError {
+    constructor() {
+        super("Resource Error", "Could not retrieve the given resource", 404)
     }
 }
 export class FieldError extends APIError {
@@ -128,6 +172,12 @@ export class CredentialError extends APIError {
 export class MatchCreateError extends APIError {
     constructor() {
         super("Could Not Create Match", "Double check settings or try again later", 400)
+    }
+}
+
+export class GenericErrorWrapper extends APIError {
+    constructor(e:Error) {
+        super("Error", e.message, 500)
     }
 }
 export class AcceptAllError extends APIError {

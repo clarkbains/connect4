@@ -1,9 +1,57 @@
 <template>
+    <h1>Explanation of the tester</h1>
+    <p>Below are two elements, used to show the matchid and gameid of the current view. Match id is the
+        id for the request for a match. Normally players would be able to accept this when they want to play.
+        Gameid represents the actual game object id, this is needed to be able to make moves.
+        Once you press those three buttons from top to bottom, the game should be ready. It is your turn first.
+        Click Update board to manually request a refresh. This will render a text based board. 
+        Enter an x coordinate to drop your piece in. You will likely be "2" if you used the bar/barbarbar login. 
+        Assuming the computer isn't under a very heavy load, you should see the bot placement (currently random),
+        represented by a -1, show up. If you don't, you can manually trigger a board refresh with the "Update Board" button.
+        The other 3 buttons should be self explanitory.
+        <br>
+        The states are not cleaned up, so you may see if complaining that it isn't your turn if you try and play after
+        the game has finished. 
+    </p>
     <p>Matchid ${match}</p>
     <p>Gameid ${game}</p>
-    <button click.delegate="createMatch()" class="btn btn-primary" disabled.bind="!!match">Create Match</button>
-    <button click.delegate="acceptDemo()" class="btn btn-primary" disabled.bind="!!accepted">Accept The Game</button>
+    <div class="container-fluid">
+        <div class="row p-2">
+            <button click.delegate="createMatch()" class="btn btn-primary btn-block" disabled.bind="!!match">Create
+                Match</button>
+            <button click.delegate="acceptDemo()" class="btn btn-primary btn-block" disabled.bind="!!accepted">Accept
+                All Match Entries and Set Match as Accepted</button>
+            <button click.delegate="startGame()" class="btn btn-primary btn-block" disabled.bind="!!game">Promote
+                Match To Game</button>
+        </div>
+        <div class="row">
+            <div class="col">
+                <code ref="boardDisplay" style="white-space: pre;"></code><br>
+                <button click.delegate="getBoard()" disabled.bind="!game" class="btn btn-secondary">Update
+                    Board</button>
+            </div>
+            <div class="col">
+                <div class="row m-2 p-2">
+                    <label for="x">X coordinate to drop piece</label>
+                    <input name="x" type="text" value.from-view="xc" class="form-control"></input>
+                    <button class="btn btn-outline-primary" click.delegate="place()">Drop Piece</button>
+                    
 
-    <button click.delegate="startGame()" class="btn btn-primary" disabled.bind="!!game">Create Game</button>
+                </div>
+                <div class="row m-2 p-2">
+                    <p>Check the turn. -1 is the comp, anything else is the user's id</p>
+                    <button class="btn btn-outline-info" click.delegate="turn()">Check Who's Turn</button>
+                </div>
+                <div class="row m-2 p-2">
+                    <button class="btn btn-outline-info" click.delegate="finished()">Get The State of the game</button>
+                    <button class="btn btn-outline-info" click.delegate="winner()">Get The winner</button>
+
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
 
 </template>
