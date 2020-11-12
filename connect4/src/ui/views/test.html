@@ -45,7 +45,11 @@
                 <div class="row m-2 p-2">
                     <button class="btn btn-outline-info" click.delegate="finished()">Get The State of the game</button>
                     <button class="btn btn-outline-info" click.delegate="winner()">Get The winner</button>
-
+                    <button class="btn btn-outline-info" click.delegate="socket()">Start a web socket</button>
+                    <button class="btn btn-outline-info" click.delegate="socketAuth()">Auth a web socket</button>
+                    <button class="btn btn-outline-info" click.delegate="socketDestroy()">Destroy the current web socket</button>
+                    <p>${sock}</p>
+                    
                 </div>
             </div>
 

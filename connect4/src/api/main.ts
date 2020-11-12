@@ -8,11 +8,18 @@ const app = express()
 import {Authenticator} from './resources/Auth'
 import Gateway from './gateway'
 import conf from './config'
+import { Socket } from "socket.io";
+import { APIError } from "./resources/APIStatus";
+import Bus from "./resources/bus";
 require('source-map-support').install();
+var server = require('http').createServer(app);
+var io = require('socket.io')(server);
+let bus = new Bus()
 const opts = {
     auth: new Authenticator(conf.JWTSigner),
     gateway: new Gateway(conf.dbFile, false),
-    conf: conf
+    conf: conf,
+    bus: bus
 }//s
 
 app.use(bodyParser.json())
@@ -43,10 +50,23 @@ console.debug(`Next Route id is ${maxid + 1}`)
 //Add Routes
 treeRoutes(apps, 0, app)
 app.use(mw.noRouteMiddleware).use(mw.errorMiddleware)
-app.listen(9000)
 console.log("Application has started")
 
-function treeRoutes(routes: Map<string, any>, parentId: number, currentApplcation: express.Application, depth: number = 0) {
+io.sockets.on("connection",(socket:Socket)=>{
+    bus.addNewWS(socket)
+})
+
+let num = 0
+setInterval(()=>{
+    num++;
+    bus.emit("counter_test", "counter is at " + num)
+},1000)
+
+
+server.listen(9000)
+
+
+function treeRoutes(routes: Map<string, any>, parentId: number, currentApplication: express.Application, depth: number = 0) {
     if (depth === 0) {
         console.log("Treeing Routes")
     }
@@ -63,9 +83,9 @@ function treeRoutes(routes: Map<string, any>, parentId: number, currentApplcatio
                 let r = new currRoute(opts)
                 treeRoutes(routes, currRoute.id, r.app, depth + 1)
                 if (currRoute.route)
-                    currentApplcation.use(currRoute.route, r.app)
+                    currentApplication.use(currRoute.route, r.app, io)
                 else //Both UI and API Handlers bind to root
-                    currentApplcation.use(r.app)
+                    currentApplication.use(r.app, io)
             }
             catch (e) {
                console.warn("An Error Occurred while adding the previous handler",e)

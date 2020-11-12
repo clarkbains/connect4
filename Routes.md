@@ -1,5 +1,5 @@
 # Routes
-The following is likeley not complete, while designing the front end I will run into issues where it makes more sense to change things up a bit
+The following is likley not complete, while designing the front end I will run into issues where it makes more sense to change things up a bit
 
 ├── private
 │   ├── games
@@ -23,7 +23,7 @@ The following is likeley not complete, while designing the front end I will run 
 │   └── users
 │       ├── DELETE/me                           Delete an account
 │       ├── GET/me                              Get your own info
-│       ├── get/me/friendrequests               Get your pending friend requests
+│       ├── GET/me/friendrequests               Get your pending friend requests
 │       ├── GET/me/friends                      Get your current friends
 │       ├── GET/:userid                         Get anothers users basic information if not private
 │       ├── PATCH/me                            Modify your own data

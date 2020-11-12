@@ -64,10 +64,33 @@ export class LoginSuccess extends APISuccess {
 
 }
 export class GetUserSuccess extends APISuccess {
-    user: string
+    user: object
     constructor(user: object) {
         super("Got User", "")
         this.user = user
+    }
+}
+export class GetFriendsSuccess extends APISuccess {
+    friends: number[]
+    constructor(friends: number[]) {
+        super("Got Friends", "")
+        this.friends = friends
+    }
+}
+export class GotPrivateUser extends APISuccess{
+    userid: number
+    constructor(id: number) {
+        super("Got Private Account", "")
+        this.userid = id
+    }
+}
+export class GetPendingFriends extends APISuccess {
+    incoming: number[]
+    outgoing: number[]
+    constructor(incoming: number[], outgoing: number[]) {
+        super("Got Requests", "")
+        this.incoming = incoming
+        this.outgoing = outgoing
     }
 }
 export class MatchCreationSuccess extends APISuccess {
@@ -92,7 +115,11 @@ export class AcceptAllSuccess extends APISuccess {
     constructor() {
         super("Accepted Match", `Your match has been Accepted, promote it to begin playing`)
     }
-
+}
+export class FriendRequestSuccess extends APISuccess {
+    constructor(){
+        super("Friend Request", "The operation has succeeded.")
+    }
 }
 export class LogoutSuccess extends APISuccess {
     constructor() {
@@ -172,6 +199,17 @@ export class CredentialError extends APIError {
 export class MatchCreateError extends APIError {
     constructor() {
         super("Could Not Create Match", "Double check settings or try again later", 400)
+    }
+}
+
+export class FriendError extends APIError {
+    constructor(){
+        super("Friend Error", "Ran into an error while doing this operation",500)
+    }
+}
+export class LonelyError extends APIError {
+    constructor(){
+        super("Lonely Error. :(", "This person is not your friend",400)
     }
 }
 

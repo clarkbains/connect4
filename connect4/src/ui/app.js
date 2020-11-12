@@ -2,7 +2,6 @@ import { PLATFORM } from "aurelia-framework";
 require('./app.css');
 require('bootstrap/dist/css/bootstrap.min.css');
 require('font-awesome/css/font-awesome.min.css');
-
 import { Gateway } from './gateway'
 import { inject } from 'aurelia-framework'
 import {Redirect} from 'aurelia-router';

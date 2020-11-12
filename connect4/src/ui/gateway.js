@@ -1,13 +1,14 @@
 import { inject } from 'aurelia-framework'
 import { Router } from 'aurelia-router';
 import { NotifierService } from 'aurelia-plugins-notifier';
-
+import {io} from 'socket.io-client'
 @inject(Router, NotifierService)
 export class Gateway {
     constructor(r, ns) {
         this.router = r
         this._logoutns = ns
         this.observers = []
+        console.log(this.socketStart)
     }
 
     addLoggedInObserver(f) {
@@ -27,6 +28,31 @@ export class Gateway {
             throw e
         })
     }
+    socketStart(event, func){
+        return new Promise((resolve, reject)=>{
+            
+                let socket = io.connect(window.location.protocol + "//" + window.location.host)
+                socket.on(event, func)
+                socket.on('connect', function () {
+                    resolve(socket)
+                });
+        })
+    
+
+    }
+    killSocket(socket){
+        socket.disconnect();
+    }
+    socketAuth(id){
+        return this._request({
+            path: "/private/socketAuth",
+            method: "POST",
+            body: {
+                id:id
+            }
+
+    })
+}
 
     login(username, password) {
         return this._request({

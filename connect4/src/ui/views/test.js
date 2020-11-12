@@ -11,6 +11,7 @@ export class Test {
         this.ns = ns
         this.match = undefined
         this.game = undefined
+        this.wssid = undefined
         this.accepted = undefined
         console.log(this)
     }
@@ -30,7 +31,23 @@ export class Test {
             _this.ns.danger(e.msg, e.info)
         })
     }
+    socket(){
+        let _this = this
+        this.gateway.socketStart("counter",(data)=>{console.log("WSSS sent: ", data);_this.sock = data}).then(socket=>{
+            this.wss = socket;
+            console.log("got id:", socket.id)
+        })
 
+    }
+    socketAuth(){
+        if (this.wss.id==undefined){
+            return console.log("You must start a socket before authing it")
+        }
+        this.gateway.socketAuth(this.wss.id)
+    }
+    socketDestroy(){
+        this.gateway.killSocket(this.wss)
+    }
     acceptDemo() {
         let _this = this
         this.gateway.acceptDemo(this.match).then(e => {

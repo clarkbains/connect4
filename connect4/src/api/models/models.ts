@@ -237,12 +237,31 @@ export class UserModifyRequest {
     }
 
 }
+export class FriendRequest {
+    userid: number
+
+    constructor(c:FriendRequest | object){
+        this.userid = c.userid
+    }
+    verify(){
+        return !!this.userid || this.userid===0
+    }
+}
+export class FriendRequestUserResponseRequest {
+    friendrequestid: number
+    constructor(c:FriendRequestUserResponseRequest | object){
+        this.friendrequestid = c.friendrequestid
+    }
+    verify(){
+        return !!this.friendrequestid || this.friendrequestid===0
+    }
+}
 
 
 
 
 
-
+//This gets inserted twice, once for each pair.
 export class DatabaseFriend extends DatabaseModel {
     friendid: number
     user1: number //fk:Users:userid:
@@ -255,6 +274,7 @@ export class DatabaseFriend extends DatabaseModel {
         this.user2 = f.user2
     }
 }
+
 export class DatabasePendingFriend extends DatabaseModel {
     pendingfriendid: number
     user1: number //fk:Users:userid:
