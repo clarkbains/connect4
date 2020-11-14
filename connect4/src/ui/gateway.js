@@ -1,16 +1,22 @@
 import { inject } from 'aurelia-framework'
 import { Router } from 'aurelia-router';
 import { NotifierService } from 'aurelia-plugins-notifier';
-import {io} from 'socket.io-client'
+import { io } from 'socket.io-client'
 @inject(Router, NotifierService)
 export class Gateway {
     constructor(r, ns) {
         this.router = r
+        this.id = undefined;
         this._logoutns = ns
         this.observers = []
-        console.log(this.socketStart)
-    }
 
+    }
+    setId(id) {
+        this.id = id
+    }
+    getId() {
+        return this.id
+    }
     addLoggedInObserver(f) {
         this.observers.push(f)
     }
@@ -28,31 +34,56 @@ export class Gateway {
             throw e
         })
     }
-    socketStart(event, func){
-        return new Promise((resolve, reject)=>{
-            
-                let socket = io.connect(window.location.protocol + "//" + window.location.host)
-                socket.on(event, func)
-                socket.on('connect', function () {
-                    resolve(socket)
-                });
+
+    connectSocket(event, func) {
+        return new Promise((resolve, reject) => {
+            let socket = io.connect(window.location.protocol + "//" + window.location.host)
+            socket.on(event, func)
+            socket.on('connect', function () {
+                resolve(socket)
+            });
         })
-    
+
 
     }
-    killSocket(socket){
+    emit(ws, event, msg) {
+        ws.emit(event, msg)
+    }
+    killSocket(socket) {
         socket.disconnect();
     }
-    socketAuth(id){
+    authGameSocket(gameid, id) {
         return this._request({
-            path: "/private/socketAuth",
+            path: `/private/games/${gameid}/moves/authorize`,
             method: "POST",
             body: {
-                id:id
+                responseTopic: "moves",
+                wsid: id
             }
 
-    })
-}
+        })
+    }
+    authMessageSocket(gameid, id) {
+        return this._request({
+            path: `/private/games/${gameid}/messages/authorize`,
+            method: "POST",
+            body: {
+                responseTopic: "messages",
+                wsid: id
+            }
+
+        })
+    }
+    sendMessage(gameid, msg) {
+        return this._request({
+            path: `/private/games/${gameid}/messages`,
+            method: "POST",
+            body: {
+                msg: msg,
+            }
+
+        })
+    }
 
     login(username, password) {
         return this._request({
@@ -65,6 +96,7 @@ export class Gateway {
             }
         }).then((e) => {
             this.observers.forEach(f => { f(true) })
+            return e
         })
     }
     getUser(id) {
@@ -85,25 +117,30 @@ export class Gateway {
             }
         })
     }
-    makeDemoMatch() {
+    makeMatch(person) {
         return this._request({
             path: `/private/games/requests`,
             method: "POST",
-            body: {}
+            body: {
+                participants: [person]
+            }
         })
     }
-    promoteDemoMatch(matchid) {
+    promoteMatch(matchid) {
+        let _this = this
         return this._request({
             path: `/private/games/requests/${matchid}/promote`,
             method: "POST",
             body: {}
         })
     }
-    acceptDemo(matchid) {
+    respondToMatch(matchid, status) {
         return this._request({
-            path: `/private/games/requests/${matchid}/acceptAll`,
+            path: `/private/games/requests/${matchid}/response`,
             method: "POST",
-            body: {}
+            body: {
+                status: status
+            }
         })
     }
 
@@ -118,7 +155,6 @@ export class Gateway {
         return this._request({
             path: `/private/games/${gameid}/turn`,
             method: "GET",
-
         })
     }
     getState(gameid) {
@@ -135,12 +171,12 @@ export class Gateway {
 
         })
     }
-    putMove(gameid,x) {
+    putMove(gameid, x) {
         return this._request({
             path: `/private/games/${gameid}/move`,
             method: "POST",
             body: {
-                x:x
+                x: x
             }
         })
     }
@@ -172,7 +208,7 @@ export class Gateway {
             body: {
                 username: username,
                 email: email,
-                name:name
+                name: name
             }
         })
     }

@@ -57,9 +57,11 @@ export class TokenDebugRequest extends APISuccess {
 }
 export class LoginSuccess extends APISuccess {
     token: string
-    constructor(jwt: string) {
+    userid: number
+    constructor(jwt: string, id: number) {
         super("Logged In", "Please Make a request")
         this.token = jwt
+        this.userid = id
     }
 
 }
@@ -128,10 +130,10 @@ export class LogoutSuccess extends APISuccess {
 
 }
 export class TurnSuccess extends APISuccess {
-    resource:number
+    userid:number
     constructor(turn:number) {
         super("Turn", `It is the turn of userid: ${turn}`)
-        this.resource = turn
+        this.userid = turn
     }
 
 }

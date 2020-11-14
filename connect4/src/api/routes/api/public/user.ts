@@ -1,3 +1,4 @@
+import { ResourceSuccess, MissingRequiredField } from '../../../resources/APIStatus';
 import express from 'express'
 import * as models from '../../../models/models'
 import * as statuses from '../../../resources/APIStatus'
@@ -16,7 +17,23 @@ module.exports = class {
             console.log("generate")
             res.send(this.opts.auth.createToken(req.params.token))
         })
+        this.app.get("/", APIHelpers.WrapRequest(async (req: express.Request, res: express.Response, success: Function) => {
 
+            //Not sure if this is case sensitive or not, but its 12:40 am and I don't really want to check rn
+            let dbObj = await new models.DatabaseUser({username:req.query.name, private:0}).select({db:this.opts.gateway.db})
+            success(new ResourceSuccess(dbObj.map(e=>{return e.username})))
+
+        }))
+        this.app.get("/:username", APIHelpers.WrapRequest(async (req: express.Request, res: express.Response, success: Function) => {
+
+            //Not sure if this is case sensitive or not, but its 12:40 am and I don't really want to check rn
+            if (!req.params.username){
+                throw new MissingRequiredField(["username"])
+            }
+            let dbObj = await new models.DatabaseUser({username:req.params.username, private:0}).select({db:this.opts.gateway.db})
+            success(new ResourceSuccess(dbObj))
+
+        }))
         this.app.post("/", APIHelpers.WrapRequest(async (req: express.Request, res: express.Response, success: Function) => {
 
             
@@ -46,7 +63,7 @@ module.exports = class {
             if (this.opts.auth.verifyPassword(loginRequest.password, creds[0].hash, creds[0].salt)) {
                 let jwt = this.opts.auth.createToken(creds[0].userid)
                 res.cookie('jwt', jwt, { maxAge: 3600000, domain: APIHelpers.GetDomain(req), path: "/" })
-                return success(new statuses.LoginSuccess(jwt))
+                return success(new statuses.LoginSuccess(jwt,u[0].userid))
             }
             throw new statuses.CredentialError()
 
@@ -123,7 +140,7 @@ module.exports = class {
         //TODO: Add mailgun Integration
         this.app.post("/sendresetemail", APIHelpers.WrapRequest(async (req: express.Request, res: express.Response, success: Function) => {
             let q = new models.RequestPasswordReset(req.body)
-            console.log(q,r, req.body)
+            console.log(q, req.body)
             q.verifyProperties()
             let r = new models.DatabaseUser(q)
             

@@ -2,6 +2,7 @@ import express from 'express'
 import Game from '../../../../resources/Game'
 import * as APIHelpers from '../../../../resources/APIHelpers'
 import { AcceptAllError, AcceptAllSuccess, MatchCreateError, MatchCreationSuccess, PromoteError, PromotionSuccess } from '../../../../resources/APIStatus'
+import { MatchStatusChangeRequest, RequestMatch } from '../../../../models/models'
 
 module.exports = class {
     app: express.Application
@@ -27,25 +28,15 @@ module.exports = class {
             let denied = req.params.denied
             //Get Request
         })
-        this.app.post("/request/:request/accept", (req, res) => {
-            let request = req.params.request
-            //accept Request
-        })
-        this.app.post("/request/:request/deny", (req, res) => {
-            let request = req.params.request
-            //deny Request
-        })
-        this.app.post("/request/accept", (req, res) => {
-            let request = req.query.id
-            //accept Request
-        })
-        this.app.post("/request/deny", (req, res) => {
-            let request = req.query.id
-            //accept Request
-        })
+        
         this.app.post("/", APIHelpers.WrapRequest(async (req: express.Request, res: express.Response, success: Function) => {
+            let r = new RequestMatch(req.body)
+            let s = new Set([res.locals.user.userid].concat(r.participants))
+            r.participants = Array.from(s)
+            
+            APIHelpers.VerifyProperties(r)
             try {
-                let game = await Game.createMatch([res.locals.user.userid], res.locals.user.userid, 0, true, this.opts.gateway.db)
+                let game = await Game.createMatch(r.participants, res.locals.user.userid, 0, r.computer, this.opts.gateway.db)
                 success(new MatchCreationSuccess(game))
             } catch {
                 throw new MatchCreateError();
@@ -61,12 +52,26 @@ module.exports = class {
                 throw new AcceptAllError()
             }
         }))
+        this.app.post("/:matchid/response",APIHelpers.WrapRequest(async (req: express.Request, res: express.Response, success: Function) => {
+            let r = new MatchStatusChangeRequest(req.body)
+            r.matchid = req.params.matchid
+            APIHelpers.VerifyProperties(r)
+            try {
+                //No ownership validation needed, query prevents user from changing things that aren't thiers.
+                await Game.setResponse(res.locals.user.userid, r.matchid, r.status,this.opts.gateway.db)
+                success(new AcceptAllSuccess())
+            } catch {
+                throw new AcceptAllError()
+            }
+        }))
+        
         this.app.post("/:matchid/promote", APIHelpers.WrapRequest(async (req: express.Request, res: express.Response, success: Function) => {
             try{
             let matchid = req.params.matchid
             let game = await Game.startGame(matchid, this.opts.gateway.db)
             success(new PromotionSuccess(game))
-        } catch{
+        } catch(e){
+            console.log(e)
                 throw new PromoteError()
             }
 

@@ -15,6 +15,8 @@ export class Login {
         this.g.checkSession()
             .then(r => {
                 console.log("Yes, logged in", r);
+                this.g.setId(r.userid)
+                console.log("ID:", this.g.getId())
                 this.redir()
             }).catch(e => {
                 console.log("Not logged in", JSON.stringify(e))
@@ -27,7 +29,7 @@ export class Login {
         let _this = this
         console.log("Logging in");
         this.g.login(this.username, this.password)
-            .then(e => { console.log("Looks Like We Logged In!"); this.redir() })
+            .then(e => { console.log("Looks Like We Logged In!", e); _this.g.setId(e.userid); this.redir() })
             .catch(e=>{
                 console.error("Ran into issue getting profile, notifying",e); 
                 _this.ns.danger(e.msg,e.info)

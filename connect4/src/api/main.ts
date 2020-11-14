@@ -83,9 +83,9 @@ function treeRoutes(routes: Map<string, any>, parentId: number, currentApplicati
                 let r = new currRoute(opts)
                 treeRoutes(routes, currRoute.id, r.app, depth + 1)
                 if (currRoute.route)
-                    currentApplication.use(currRoute.route, r.app, io)
+                    currentApplication.use(currRoute.route, r.app)
                 else //Both UI and API Handlers bind to root
-                    currentApplication.use(r.app, io)
+                    currentApplication.use(r.app)
             }
             catch (e) {
                console.warn("An Error Occurred while adding the previous handler",e)

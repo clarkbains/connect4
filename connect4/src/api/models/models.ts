@@ -1,5 +1,6 @@
 import { DatabaseModel} from '../resources/databaseHelpers'
 import * as statuses from '../resources/APIStatus'
+import { match } from 'minimatch'
 class Request {
     verifyProperties() {
 
@@ -129,13 +130,20 @@ export class ResponseGameIncremental extends ResponseGameBasic {
 
 //Used by a client to request for a game request to be opened
 export class RequestMatch {
-    size: number[]
+   // size: number[]
     name: string
     participants: number[]
+    computer:boolean
     constructor(m: RequestMatch | object) {
-        this.size = m.size
+        //this.size = m.size
         this.name = m.name
         this.participants = m.participants
+        this.computer = m.computer
+        this.participants = this.participants.filter(e=>!!e)
+
+    }
+    verify(){
+        return (this.participants.length>=1 && this.computer) || (this.participants.length>=2 && !this.computer)
     }
 }
 
@@ -171,6 +179,18 @@ export class ResponseMatch {
         this.participants = m.participants
     }
 }
+export class MatchStatusChangeRequest {
+    matchid: number
+    status:number
+    constructor(m: MatchStatusChangeRequest | object) {
+        this.matchid = m.matchid
+        this.status = m.status
+    }
+    verify(){
+        return this.matchid>=0 && this.status>0 && this.status<=2;
+    }
+}
+
 export abstract class RequestPasswordChange {
     newpassword: string
     email?: string
@@ -222,6 +242,20 @@ export class LoginRequest {
         this.password = l.password
         this.username = l.username
     }
+}
+
+export class EventSubscription {
+      wsid: string
+      topic: string
+      responseTopic: string
+      constructor(l: EventSubscription | object) {
+         this.wsid = l.wsid
+         this.topic = l.topic
+         this.responseTopic = l.responseTopic || this.topic
+  }
+  verify(){
+      return this.wsid && this.topic
+  }
 }
 
 export class UserModifyRequest {
@@ -405,6 +439,19 @@ export class DatabaseMatch extends DatabaseModel {
 
 
 
+}
+export class Message {
+    msg: string
+    userid: number
+    time: Date
+    constructor(m:Message|object){
+        this.msg = m.msg
+        this.userid = m.userid
+        this.time = new Date()
+    }
+    verify(){
+        return this.msg && this.msg.length < 3000 && this.userid
+    }
 }
 //Used to show a users acceptance or declanation of a match
 export class DatabaseMatchAcceptance extends DatabaseModel {

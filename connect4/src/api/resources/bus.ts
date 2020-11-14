@@ -1,5 +1,6 @@
 import express from 'express'
 import { Socket } from 'socket.io';
+import { DatabaseUser } from '../models/models';
 
 class event {
     event: any
@@ -13,10 +14,12 @@ class eventHandler {
     socket: Socket
     eventName: string
     filter: Function
-    constructor(name: string, socket: Socket, filter: Function) {
+    user:DatabaseUser
+    constructor(name: string, socket: Socket, filter: Function, user:DatabaseUser) {
         this.socket = socket
         this.filter = filter
         this.eventName = name
+        this.user = user
     }
 
 }
@@ -46,19 +49,27 @@ export default class Bus {
         }, 60000)
     }
     //Conne
-    promoteWS(id: string, event: string, clientName: string, filter: Function) {
+    promoteWS(user:DatabaseUser,id: string, event: string, clientName: string, filter: Function, listenerMaps: Map<String,Function>) {
+        console.log(id)
         let socket = this.sockets.get(id)
+        if (listenerMaps){
+            for (let event of Object.keys(listenerMaps))
+                socket.on(event, (data)=>{
+                    listenerMaps[event](data, user)
+                })
+        }
 
         if (!socket) {
             throw new Error("Cannot Find Socket")
         }
-
+        socket.user = user
         clearTimeout(socket.timeout)
+
         if (!this.handlers.has(event)) {
             this.handlers.set(event, [])
         }
         console.log(`Socket ${socket.id} accessing channel "${event}" using client name of "${clientName}"`)
-        this.handlers.get(event).push(new eventHandler(clientName, socket, filter))
+        this.handlers.get(event).push(new eventHandler(clientName, socket, filter,user))
     }
 
     emit(event: string, data: any) {

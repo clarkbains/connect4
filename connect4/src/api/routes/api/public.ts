@@ -23,6 +23,6 @@ module.exports = class {
 
 }
 module.exports.route = "/public"
-module.exports.description = "Just for folder structure"
+module.exports.description = "Public Routes, no auth needed"
 module.exports.parent = require('../api')
 module.exports.id = 4

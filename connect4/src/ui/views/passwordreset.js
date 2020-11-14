@@ -1,13 +1,14 @@
 import {inject} from 'aurelia-framework'
 import {Gateway} from '../gateway'
 import {Router} from 'aurelia-router';
-//import {NotifierService} from 'aurelia-plugins-notifier';
-@inject(Gateway, Router)
+import {NotifierService} from 'aurelia-plugins-notifier';
+@inject(Gateway, Router, NotifierService)
 //@inject(Router)
 export class PasswordReset{
-    constructor(g, r){
+    constructor(g, r,ns){
         this.gateway = g
         this.router = r
+        this.ns = ns
    
        // this.ns = ns
        // let x = new NotifierService()
@@ -15,8 +16,11 @@ export class PasswordReset{
        // c//onsole.log("Init password reset",g,r)
     }
     getToken(){
+        let _this = this
         this.gateway.getToken(this.username).then(r=>{
-            this.token = r.token
+            _this.token = r.token
+        }).catch(e=>{
+            _this.ns.danger(e.msg, e.info)
         })
     }
     updatePassword(){

@@ -25,8 +25,12 @@ module.exports = class {
         }))
         this.app.post("/socketAuth",APIHelpers.WrapRequest(async (req: express.Request, res: express.Response, success: Function) => {
             try{
-                this.opts.bus.promoteWS(req.body.id, "counter_test", "counter",undefined)
+                this.opts.bus.promoteWS(res.locals.user, req.body.id, "counter_test", "counter", 
+                undefined,{"client45":(data,user)=>{
+                    console.log("Recieved from client",user.email, data)
+                }})
             } catch(e){
+                console.log(e)
                 throw new statuses.NotFound("socket")
             }
             success(new statuses.GenericSuccess())
@@ -34,7 +38,7 @@ module.exports = class {
         
         this.app.get("/loginstatus", APIHelpers.WrapRequest(async (req: express.Request, res: express.Response, success: Function) => {
             await console.log("Getting status", req.locals)
-            success(new statuses.LoginSuccess(""))
+            success(new statuses.LoginSuccess("",res.locals.user.userid))
         }))
     }
 

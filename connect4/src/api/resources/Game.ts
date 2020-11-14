@@ -16,6 +16,7 @@ export default class Game {
         this.db = db.db
         this.gameId = gameId
         this.finished = false
+        this.playerIndex = 0;
     }
     static async createMatch(users: number[], creator: number, privacy: number, computer: boolean, db: Database): Promise<number> {
         let matchOpts = {
@@ -38,7 +39,7 @@ export default class Game {
                 userid: participant,
                 matchid: match.matchid,
                 //Auto Accept invites from own game.
-                status: participant===creator?2:0
+                status: participant===creator?1:0
             })
             await pending.insert({ db: db })
         }
@@ -46,7 +47,7 @@ export default class Game {
             await new models.DatabaseMatchAcceptance({
                 userid: -1,
                 matchid: match.matchid,
-                status: 2
+                status: 1
             }).insert({ db: db }) //Add computer Player
         return <number><unknown>match.matchid;
 
@@ -58,7 +59,7 @@ export default class Game {
         //Update works by identifying primary keys and using them as the where clause
         //We have no info about the prim keys, so we would have to select then call update otherwise.
         await new models.DatabaseMatchAcceptance({}).raw(db,{
-            sql:"UPDATE MatchAcceptances set status = 2 where matchid=?",
+            sql:"UPDATE MatchAcceptances set status = 1 where matchid=?",
             params:[matchid]
         })
 
@@ -69,19 +70,41 @@ export default class Game {
         
         return true;
     }
+    static async setResponse(userid:number, matchid: number, status:number, db: Database): Promise<boolean> {
+        //Set all pending requests to accepted, 
+
+        //Raw queueries are kinda bad to do with the orm.
+        //Update works by identifying primary keys and using them as the where clause
+        //We have no info about the prim keys, so we would have to select then call update otherwise.
+        await new models.DatabaseMatchAcceptance({}).raw(db,{
+            sql:"UPDATE MatchAcceptances set status = ? where matchid=? AND userid=?",
+            params:[status,matchid,userid]
+        })
+        
+        return true;
+    }
     static async startGame(matchid: number, db: Database): Promise<number> {
-        let matches = await new models.DatabaseMatch({ matchid: matchid, status: 1 }).select({ db: db })
+        let matches = await new models.DatabaseMatch({ matchid: matchid, status: 0 }).select({ db: db })
         if (matches.length == 0) {
             throw new Error("Could not find match to init")
         }
-        let personPlaying = await new models.DatabaseMatchAcceptance({
+        let accepted = await new models.DatabaseMatchAcceptance({
             matchid: matchid,
-            status: 2
-        }).select({ limit: 1, db: db })
+            status: 1
+        }).select({db: db })
+        let all = await new models.DatabaseMatchAcceptance({
+            matchid: matchid,
+        
+        }).select({db: db })
+
+        if (accepted.length != all.length){
+            throw new Error("Not everyone has accepted yet")
+        }
+
         
         let game = new models.DatabaseGame({
             matchid: matchid,
-            currentturn: personPlaying.userid
+            currentturn: accepted[0].userid
         })
         await game.insert({ db: db });
         let selected = await game.select({db:db, limit:1})
@@ -97,7 +120,7 @@ export default class Game {
         this.height = m.height
         let playing = await new models.DatabaseMatchAcceptance({
             matchid: this.matchId,
-            status: 2
+            status: 1
         }).select({db: this.db })
         this.players = []
         this.finished = s.gamefinished
@@ -118,6 +141,8 @@ export default class Game {
         return this.players[this.playerIndex] === userid
     }
     async turn(){
+        if (!this.players)
+            await this.getBoard();
         return this.players[this.playerIndex]
     }
     async _getBoard(): Promise<(number | undefined)[][]> {

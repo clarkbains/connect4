@@ -54,6 +54,15 @@ module.exports = class {
             let mode = req.query.mode
             //Get Game moves
         })
+        this.app.post("/:gameid/moves/authorize", APIHelpers.WrapRequest(async (req: express.Request, res: express.Response, success: Function) => {
+            let r = new models.EventSubscription(req.body)
+            r.topic="moves"+req.params.gameid
+            APIHelpers.VerifyProperties(r)
+            this.opts.bus.promoteWS(res.locals.user, r.wsid, r.topic, r.responseTopic)
+            success(new statuses.GenericSuccess())
+            
+        }))
+
         this.app.get("/:gameid/board", APIHelpers.WrapRequest(async (req: express.Request, res: express.Response, success: Function) => {
             
                 let gameid = req.params.gameid
@@ -80,8 +89,27 @@ module.exports = class {
                 success(new statuses.TurnSuccess(turn) )
 
             } catch (e){
+                console.log(e)
                 throw new statuses.GenericErrorWrapper(e)
             }
+        }))
+        this.app.post("/:gameid/messages", APIHelpers.WrapRequest(async (req: express.Request, res: express.Response, success: Function) => {
+            let r = new models.Message(req.body)
+            r.userid = res.locals.user.userid
+            console.log(r)
+            APIHelpers.VerifyProperties(r)
+            this.opts.bus.emit("messages"+req.params.gameid,r)
+            success(new statuses.GenericSuccess())
+
+        }))
+
+        this.app.post("/:gameid/messages/authorize", APIHelpers.WrapRequest(async (req: express.Request, res: express.Response, success: Function) => {
+            let r = new models.EventSubscription(req.body)
+            r.topic="messages"+req.params.gameid
+            APIHelpers.VerifyProperties(r)
+            this.opts.bus.promoteWS(res.locals.user, r.wsid, r.topic, r.responseTopic)
+            success(new statuses.GenericSuccess())
+            //Get All Request
         }))
         this.app.get("/:gameid/winner", APIHelpers.WrapRequest(async (req: express.Request, res: express.Response, success: Function) => {
             let gameid = (req.params.gameid||"").match(/(\d*)/)
@@ -138,6 +166,7 @@ module.exports = class {
             }
             try {
                 await game.makeMove(res.locals.user.userid,move.x)
+                this.opts.bus.emit("moves"+gameid,move)
                 success(new statuses.GenericSuccess())
             }
             catch (e){
