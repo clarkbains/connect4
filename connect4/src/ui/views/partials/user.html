@@ -1,0 +1,3 @@
+<template>
+    <a style="cursor: pointer;" click.delegate="nav()">${u.username}<i class="fa fa-heart" if.bind="u.isFriend && !u.isEditable"></i><i class="fa fa-user" if.bind="u.isEditable"></i></a>
+</template>   

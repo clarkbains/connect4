@@ -107,6 +107,52 @@ export class Gateway {
 
 
     }
+    editMe(patch){
+        return this._request({
+            path: "/private/user/me",
+            method: "PATCH",
+            body: patch
+        })
+    }
+    sendFriendRequest(userid) {
+        return this._request({
+            path: `/private/user/${userid}/friendrequests`,
+            method: "POST",
+        })
+    }
+    deleteFriend(userid){
+        return this._request({
+            path:`/private/user/me/friends/${userid}`,
+            method: "DELETE"
+        })
+    }
+    getFriendRequests(){
+        
+        return this._request({
+            path: `/private/user/me/friendrequests`,
+            method: "GET",
+        })
+    }
+    getFriends(){
+        return this._request({
+            path: `/private/user/me/friends`,
+            method: "GET",
+        })
+        
+    }
+    acceptFriendRequest(frid) {
+        return this._request({
+            path: `/private/user/me/friendrequests/${frid}/accept`,
+            method: "POST",
+        })
+    }
+    declineFriendRequest(frid) {
+        return this._request({
+            path: `/private/user/me/friendrequests/${frid}/deny`,
+            method: "POST",
+        })
+    }
+
     makeMove(gameId, coord) {
         return this._request({
             path: `/private/games/${gameId}/moves`,
@@ -141,6 +187,12 @@ export class Gateway {
             body: {
                 status: status
             }
+        })
+    }
+    getGamesForUser(id){
+        return this._request({
+            path: `/private/user/${id}/games`,
+            method: "GET",
         })
     }
 
@@ -201,7 +253,7 @@ export class Gateway {
             }
         })
     }
-    createUser(username, email) {
+    createUser(username, email, name) {
         return this._request({
             path: "/public/user",
             method: "POST",
@@ -222,7 +274,7 @@ export class Gateway {
     }
     _logout() {
         return this._request({
-            path: "/public/logout",
+            path: "/private/logout",
             method: "GET"
         }).then(e => {
             this.observers.forEach(f => { f(false) });

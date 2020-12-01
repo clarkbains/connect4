@@ -38,7 +38,6 @@ export class Test {
     activate() {
         this.pid = this.gateway.getId();
         console.log("Activating view", this)
-
     }
     toggleWs(status) {
         let _this = this

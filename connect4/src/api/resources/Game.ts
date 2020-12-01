@@ -101,6 +101,8 @@ export default class Game {
             throw new Error("Not everyone has accepted yet")
         }
 
+        let match = new models.DatabaseMatch({ matchid: matchid, status: 1 })
+        await match.update({ db: db })
         
         let game = new models.DatabaseGame({
             matchid: matchid,

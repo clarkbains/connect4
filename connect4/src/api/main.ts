@@ -10,6 +10,7 @@ import Gateway from './gateway'
 import conf from './config'
 import { Socket } from "socket.io";
 import { APIError } from "./resources/APIStatus";
+import  OnlineTracker  from "./resources/OnlineTracker"
 import Bus from "./resources/bus";
 require('source-map-support').install();
 var server = require('http').createServer(app);
@@ -19,8 +20,9 @@ const opts = {
     auth: new Authenticator(conf.JWTSigner),
     gateway: new Gateway(conf.dbFile, false),
     conf: conf,
-    bus: bus
-}//s
+    bus: bus,
+    tracker: new OnlineTracker(3600)
+}
 
 app.use(bodyParser.json())
 app.use(compression())

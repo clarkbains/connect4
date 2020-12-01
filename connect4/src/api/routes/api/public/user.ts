@@ -53,13 +53,13 @@ module.exports = class {
             let loginRequest = new models.LoginRequest(req.body)
             loginRequest
             let u = await new models.DatabaseUser(loginRequest).select({ db: this.opts.gateway.db })
-            console.log("Found User for Login:",u)
+            //console.log("Found User for Login:",u)
             if (u.length == 0)
                 throw new statuses.NotFound("User")
             let creds = await new models.DatabaseCredential(u[0]).select({ db: this.opts.gateway.db })
             if (creds.length == 0)
                 throw new statuses.NoPasswordSet()
-            console.log(creds)
+           // console.log(creds)
             if (this.opts.auth.verifyPassword(loginRequest.password, creds[0].hash, creds[0].salt)) {
                 let jwt = this.opts.auth.createToken(creds[0].userid)
                 res.cookie('jwt', jwt, { maxAge: 3600000, domain: APIHelpers.GetDomain(req), path: "/" })

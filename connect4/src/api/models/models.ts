@@ -20,19 +20,25 @@ class Request {
     
 }
 
-//Used by the server to send your own profile to you
+//Used by the server to send a profile to you
 export class ResponseUser {
     userid: number
-    name: string
+    username: string
     email: string
     score: number
+    private: number
+    isFriend: boolean
     isEditable: boolean
+    pendingFriend: boolean|number
     constructor(u: User | object) {
         this.userid = u.userid
-        this.name = u.name
+        this.username = u.username
         this.email = u.email
         this.score = u.score
-        this.isEditable = u.isEditable || true
+        this.private = u.private
+        this.isFriend = u.isFriend || false
+        this.isPendingFriend = u.isPendingFriend || false
+        this.isEditable = u.isEditable || false
     }
 }
 //Used by the server to send someone elses profile to you
@@ -344,6 +350,9 @@ export class DatabaseUser extends DatabaseModel {
         this.private = u.private
 
 
+    }
+    verify(){
+        return !!this.userid || this.userid === 0
     }
 }
 export class DatabaseCredential extends DatabaseModel {

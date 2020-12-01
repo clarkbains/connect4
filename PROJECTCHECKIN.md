@@ -28,7 +28,7 @@ This code runs in several different environments. Here are instructions to view 
 - I have generally left my application running, you can check if it is currently running with `docker ps | grep connect4`. No output means it is not running. 
 - If it isn't running, navigate to the repository with `cd connect4`, and run it in with `docker-compose up -d`. For you convenience, and because it takes several minutes to build on openstack, I will have prebuilt the image for you with `docker-compose build --parallel --no-cache`. 
 - The docker service binds to port 3000 on the openstack instance, so to view it, you will have to port tunnel this with the following command `ssh -L 9000:localhost:3000 student@134.117.131.57`. After that, you will be able to see the built instance at http://localhost:9000.
-- To kill the service, navigate to the connect4 folder and run `docker-compose kill && docker-compose rm` on the openstack instance.
+- To kill the service, navigate to the connect4 folder and run `docker-compose kill -f && docker-compose rm -f` on the openstack instance.
 - To view logs of the system, navigate to `~/connect4` and run `docker-compose logs`
 
 #### CD System
@@ -45,6 +45,8 @@ I have included the same database in my submission as in both the openstack and 
     - `username2` / `username22` This is the username and password for the generic testing user. 
 - Games
     - Matchid 1-5 corresponding with Gameid 1-5 are partially-completely finished games you can look at by choosing the secondary UI and entering the gameid.
+- Resetting.
+    - Follow the steps above and kill the server, for openstack,  copy ~/test to ~/data/test with `sudo cp ~/test ~/data/`
 
 ## Base Expectations
 - I have much of my code done in express

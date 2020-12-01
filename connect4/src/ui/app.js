@@ -143,6 +143,7 @@ export class App {
   }
   run(f) {
     return (navigationInstruction, next)=>{
+      window.scrollTo(0,0)
     if (navigationInstruction.getAllInstructions().some(i => i.config.settings.auth)) {
       if (!f()) {
         return next.cancel(new Redirect('login'));

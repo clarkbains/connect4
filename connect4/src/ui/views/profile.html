@@ -1,48 +1,151 @@
 <template>
-    <div class="container-fluid">
-        <div class="row">
-            <div class="col-12">
+    <div class="container-fluid m-1">
+        <div class="row ">
+            <div class="col">
+                <div class="card">
+                    <div class="card-body" ?>
 
-                        <div class="row">
-                            <div class="col-md-8 col-sm-8">
-                                <h2 class="card-title"><i class="fa fa-user"></i> ${profile.username}</h2>
-                                <p class="card-text"><i class="fa fa-envelope"></i> ${profile.email} </p>
-                                <p class="card-text"><i class="fa fa-trophy"></i> ${profile.score} placeholder score</p>
-                            
-                                <p><strong>Options: </strong>
-                                    <button class="btn btn-primary">Start Game</button>
-                                    <button class="btn btn-info">View Our Games</button>
-                                    <button class="btn btn-secondary" if.bind="!self && !friend" click.delegate="toggleFriend()">Request Friend</button>
-                                    <button class="btn btn-outline-danger" if.bind="friend" click.delegate="toggleFriend()">Unfriend</button>
-                                </p>
-                            </div>
-                            <div class="col-md-4 col-sm-4 text-center">
-                                <img src="../static/anon.png"
-                                    style="border-radius:50%; width: 200px;">
-                            </div>
+                        <div class="card-title">
 
+                            <h2><i class="fa fa-user" if.bind="profile.username"></i>
+                                ${!editing?profile.username:""}
+
+                                <input if.bind="editing" type="text" value.bind="usernameVal" />
+                            </h2>
+                        </div>
+                        <div class="card-text  ">
+                            <p class="card-text"><i class="fa fa-envelope" if.bind="profile.email"></i>
+                                ${!editing?profile.email:""}
+                                <input if.bind="editing" type="text" value.bind="emailVal" />
+
+                            </p>
+                            <p class="card-text"><i class="fa fa-trophy" if.bind="profile.score !== undefined"></i>
+                                ${profile.score}</p>
+                            <p class="card-text"><i class="fa fa-eye" if.bind="private !== undefined"></i>
+                                Visibility <i class="fa fa-${private?'lock':'globe'}"
+                                    click.delegate="togglePrivate()"></i>
+                            </p>
+
+                            <button class="btn btn-${editing?'primary':'secondary'}" if.bind="profile.isEditable"
+                                click.delegate="edit()" />
+                            <i class="fa fa-edit"></i> Edit
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div if.bind="!self" class="col">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="card-title">
+                            <h2>User Options</h2>
+                        </div>
+                        <div class="card-title">
+                            <h3>Friend Management</h2>
+                        </div>
+                        <div class="card-body">
+                            <div if.bind="!profile.isFriend">
+                                <button class="btn btn-secondary" if.bind="addButton"
+                                    click.delegate="requestFriend()">Request
+                                    Friend</button>
+                                <button class="btn btn-secondary" if.bind="pendingButton" disabled="true">Friend
+                                    Request
+                                    Pending</button>
+                                <button class="btn btn-secondary" if.bind="acceptButton"
+                                    click.delegate="acceptFriendRequest()">Accept Request</button>
+
+                            </div>
+                            <button class="btn btn-outline-danger" if.bind="removeButton"
+                                click.delegate="removeFriend()">Unfriend</button>
+
+                        </div>
+
+                        <div if.bind="profile.isFriend || profile.private==0">
+                            <div class="card-title">
+                                <h3>Game Management</h2>
+                            </div>
+                            <div class="card-body">
+                                <div class="form">
+                                    <div class="form-group">
+                                        <button class="btn btn-success">Start Game</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+                    </div>
                 </div>
             </div>
         </div>
 
-        <!--Todo: Make this into its own view-->
-            <h2 class="card-title"> Recent Games</h2>
-            <div class="card-body">
+        <div class="row mt-2" if.bind="self">
+            <div class="col" if.bind="totalFriends > 0">
+                <div class="card">
+                    <div class="card-body">
+                        <h2 class="card-title">My Friends <i class="fa fa-address-card o"></i></h2>
+                        <div class="card-text">
+                            <div if.bind="friendsOnline && friendsOnline.length > 0">
+                                <h5 class="card-title">Online <i class="fa fa-globe"></i></p>
+                                    <ul class="list-group list-group-flush">
+                                        <li repeat.for="fo of friendsOnline" class="list-group-item border-0">
+                                            <a href="/#/profile/${fo.userid}">
+                                                ${fo.username}</a>
 
-                <div class="row">
-                    <div class="col-12">
-                        <div class="card">
-                            <div class="card-block">
-                                <div class="row">
-                                    <div class="col-md-8 col-sm-8">
-                                        <h2 class="card-title text-danger"> Game Title</h2>
-                                        <p class="card-text"><i class="fa fa-user"></i> Opponent</p>
-                                        <p class="card-text"><i class="fa fa-trophy"></i> score delta</p>
-                                        <p><strong>Options: </strong>
-                                            <button class="btn btn-info">View Game</button>
-                                        </p>
-                                    </div>
-                                </div>
+                                        </li>
+                                    </ul>
+                            </div>
+                            <div if.bind="friendsOffline && friendsOffline.length > 0">
+                                <h5>Offline <i class="fa fa-circle-o-notch"></i></h5>
+                                <ul class="list-group list-group-flush">
+                                    <li repeat.for="f of friendsOffline" class="list-group-item border-0">
+                                        <a href="/#/profile/${f.userid}">
+                                            ${f.username}</a>
+
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+            </div>
+            <div class="col" if.bind="reqs && (reqs.incoming.length + reqs.outgoing.length) > 0">
+
+                <br>
+                <div if.bind="reqs.incoming && reqs.incoming.length > 0">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="card-title">
+                                <h2>Incoming Friends <i class="fa fa-arrow-left"></i></h2>
+                            </div>
+                            <div class="card-text">
+                                <ul class="list-group list-group-flush">
+                                    <li repeat.for="incoming of reqs.incoming" class="list-group-item border-0">
+                                        <a href="/#/profile/${incoming.userid}">
+                                            ${incoming.username}</a>
+
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div if.bind="reqs.outgoing && reqs.outgoing.length >0">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="card-title">
+                                <h2>Outgoing Friends <i class="fa fa-arrow-right"></i></h2>
+                            </div>
+                            <div class="card-text">
+                                <ul class="list-group list-group-flush">
+                                    <li repeat.for="outgoing of reqs.outgoing" class="list-group-item border-0">
+                                        <a href="/#/profile/${outgoing.userid}">
+                                            ${outgoing.username}</a>
+                                    </li>
+                                </ul>
                             </div>
                         </div>
                     </div>
@@ -51,39 +154,97 @@
 
             </div>
 
+        </div>
 
-            <div class="card-body">
+        <div class="row mt-2" if.bind="profile.isFriend || profile.private==0">
+            <div class="col">
+                <div class="card">
+                    <div class="card-body">
 
-                <div class="row">
-                    <div class="col-12">
-                        <div class="card">
-                            <div class="card-block">
-                                <div class="row">
-                                    <div class="col-md-8 col-sm-8">
-                                        <h2 class="card-title text-success"> Game Title</h2>
-                                        <p class="card-text"><i class="fa fa-user"></i> Opponent</p>
-                                        <p class="card-text"><i class="fa fa-trophy"></i> score delta</p>
-                                        <p><strong>Options: </strong>
-                                            <button class="btn btn-info">View Game</button>
-                                        </p>
-                                    </div>
-                                </div>
+
+                        <div class="card-title">
+                            <h2> Recent Games</h2>
+                        </div>
+                        <div if.bind="pendingGames && pendingGames.length > 0 ">
+                            <div class="card-title">
+                                <h3> Pending</h2>
+                            </div>
+                            <div class="card-text">
+
+                                <ul class="list-group list-group-flush">
+                                    <li repeat.for="pg of pendingGames" class="list-group-item border-0">
+                                        <compose view-model="./partials/gameSummary" view="./partials/gameSummary.html"
+                                            model.bind="{game:pg, pc:peopleCache}" />
+                                    </li>
+                                </ul>
+
+                            </div>
+                        </div>
+                        
+                        <div if.bind="myOpenGames&&myOpenGames.length>0">
+                            <div class="card-title">
+                                <h3> Active Games (With Me)</h2>
+                            </div>
+                            <div class="card-text">
+
+                                <ul class="list-group list-group-flush">
+                                    <li repeat.for="aog of myOpenGames" class="list-group-item border-0">
+                                        <compose view-model="./partials/gameSummary" view="./partials/gameSummary.html"
+                                            model.bind="{game:aog, pc:peopleCache}" />
+                                    </li>
+                                </ul>
+
+                            </div>
+                        </div>
+                        <div if.bind="openGames&&openGames.length>0">
+                            <div class="card-title">
+                                <h3> Active Games</h2>
+                            </div>
+                            <div class="card-text">
+
+                                <ul class="list-group list-group-flush">
+                                    <li repeat.for="og of openGames" class="list-group-item border-0">
+                                        <compose view-model="./partials/gameSummary" view="./partials/gameSummary.html"
+                                            model.bind="{game:og, pc:peopleCache}" />
+                                    </li>
+                                </ul>
+
+                            </div>
+                        </div>
+                        <div if.bind="closedGames && closedGames.length>0">
+                            <div class="card-title">
+                                <h3> Finished</h2>
+                            </div>
+                            <div class="card-text">
+
+                                <ul class="list-group list-group-flush">
+                                    <li repeat.for="cg of closedGames" class="list-group-item border-0">
+                                        <compose view-model="./partials/gameSummary" view="./partials/gameSummary.html"
+                                            model.bind="{game:cg, pc:peopleCache}" />
+                                    </li>
+                                </ul>
+
+                            </div>
+                        </div>
+                        <div if.bind="deniedGames && deniedGames.length >0">
+                            <div class="card-title">
+                                <h3> Denied</h2>
+                            </div>
+                            <div class="card-text">
+
+                                <ul class="list-group list-group-flush">
+                                    <li repeat.for="dg of deniedGames" class="list-group-item border-0">
+                                        <compose view-model="./partials/gameSummary" view="./partials/gameSummary.html"
+                                            model.bind="{game:dg, pc:peopleCache}" />
+                                    </li>
+                                </ul>
+
                             </div>
                         </div>
                     </div>
                 </div>
-
-
             </div>
-
-
-
-        
-        
-
-
+        </div>
     </div>
-
-
 
 </template>

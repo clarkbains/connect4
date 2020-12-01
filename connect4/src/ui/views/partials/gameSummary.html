@@ -1,0 +1,51 @@
+<template>
+    <div class="col">
+        <h5 class="${g.myTurn?'text-danger font-weight-bold':''}"> ${g.match.name} <i>${g.myTurn?" (Your turn)":""}</i>
+        </h5>
+        <i> ${g.match.msg}</i>
+
+
+        <div if.bind="g.finished">
+            <div class="row">
+                <button class="btn btn-info" click.delegate="view()">View Game</button>
+                &nbsp;
+                <div class="card-text pl-3"><i class="fa fa-trophy fa-2x"></i>
+                    <compose view-model="./user" view="./user.html" model.bind="pc[g.game.userid]" />
+                </div>
+            </div>
+     
+        </div>
+        <div if.bind="g.started && !g.finished && g.me">
+            <button class="btn btn-info" click.delegate="view()">View Game</button>
+            <div if.bind="!!g.me">
+                <button class="btn btn-danger" click.delegate="resign()">Resign</button>
+            </div>
+        </div>
+        <!--<div if.bind="g.denied">
+            This game has been denied by a player
+        </div>-->
+        <div if.bind="g.needToAccept">
+            <button class="btn btn-primary" click.delegate="accept()" disabled.bind="g.me && g.me.status===1">Accept
+                Request!</button>
+            <button class="btn btn-danger" click.delegate="deny()" disabled.bind="g.me && g.me.status===2">Deny
+                Request</button>
+
+        </div>
+        <div if.bind="g.readyToPromote">
+            <button class="btn btn-primary" click.delegate="promote()">Initialize Game!</button>
+            <button class="btn btn-danger" click.delegate="deny()" disabled.bind="g.me && g.me.status===2">Deny
+                Request</button>
+        </div>
+        <br>
+        <h5 class="card-text"><i class="fa fa-user"></i> Players:</h5>
+        <ul class="list-group list-group-flush list-group-horizontal">
+            <li class="list-group-item border-0 p-1" repeat.for="p of g.opponents">
+                <compose view-model="./user" view="./user.html" model.bind="pc[p.userid]" />
+            </li>
+        </ul>
+
+
+
+    </div>
+    <hr>
+</template>

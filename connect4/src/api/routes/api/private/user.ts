@@ -1,6 +1,7 @@
 
 import express from 'express'
-import { RequestUser, UserModifyRequest, DatabaseUser, DatabaseFriend, PublicResponseUser, FriendRequest, DatabasePendingFriend, FriendRequestUserResponseRequest } from '../../../models/models'
+import { sqlite3 } from 'sqlite3'
+import { RequestUser, UserModifyRequest, DatabaseUser, DatabaseFriend, PublicResponseUser, FriendRequest, DatabasePendingFriend, FriendRequestUserResponseRequest, ResponseUser, DatabaseMatchAcceptance, DatabaseGame, DatabaseMatch } from '../../../models/models'
 import * as APIHelpers from '../../../resources/APIHelpers'
 import * as statuses from '../../../resources/APIStatus'
 import { DatabaseModel } from '../../../resources/databaseHelpers'
@@ -14,32 +15,99 @@ module.exports = class {
         this.app = express()
         this.setupApplication()
     }
+    async getGamesForUser(userid, foruserid, db){
+        let priv = (await (new DatabaseUser({userid:userid}).select({db:db})))[0].private;
+        let matches = await new DatabaseMatchAcceptance({userid:userid}).select({db:db})
+        if (priv){
+            //Check if friends
+            let f = new DatabaseFriend({ user1: userid, user2: foruserid })
+            let friends = await f.select({ db: db });
+            if (!friends){
+                throw new statuses.FriendError()
+            }
+            //Get all the matches we are in
+            let userMatchesid = new Set(matches.map(e=>e.matchid))
+            //Get all the matches with the user requesting the data
+            let matchesWithUser = await new DatabaseMatchAcceptance({}).raw(db, {
+                sql: `SELECT matchid FROM MatchAcceptances WHERE userid=? AND matchid in (${[...userMatchesid].map((e)=>"?").join(",")})`,
+                params:[foruserid, ...userMatchesid],
+                model: DatabaseMatchAcceptance
+            })
+            //Discard everything that they aren't in
+            let matchesToKeep = {}
+            matchesWithUser.forEach((e)=>{
+                matchesToKeep[e.matchid] = true
+            })
+            matches = matches.filter((e)=>{
+                return !!matchesToKeep[e.matchid]
+            })
+        }
+        let items = []
+        for (let match of matches){
+            let mgame = await (new DatabaseGame({matchid:match.matchid})).select({db:db})
+            let oponents = await (new DatabaseMatchAcceptance({matchid:match.matchid})).select({db:db})
+            let m = (await (new DatabaseMatch({matchid:match.matchid})).select({db:db}))[0]
+            items.push({
+                match:m,
+                opponents: oponents,
+                game:mgame?mgame[0]:undefined
+            })
+        }
+        return items
+
+    }
+    async getUser(me, userid, db) {
+
+        let model = new DatabaseUser({ userid: userid })
+        APIHelpers.VerifyProperties(model)
+
+        let r = await model.select({ db: db })
+        if (r.length == 0) {
+            return null
+        }
+        let resp = new ResponseUser(r[0]);
+        if (me.userid != userid) {
+            let f = new DatabaseFriend({ user1: me.userid, user2: userid })
+            let friends = await f.select({ db: db });
+            if (friends.length == 0) {
+                let freqs = new DatabasePendingFriend({ user1: userid, user2: me.userid })
+                let freqs1 = new DatabasePendingFriend({ user2: userid, user1: me.userid })
+
+                let notFResp = new ResponseUser({ userid: userid, isFriend: false, username: r[0].username, private: r[0].private });
+                if (resp.private == 0) {
+                    notFResp = resp;
+                }
+                let freqsarr = [...(await freqs.select({ db: db })), ...(await freqs1.select({ db: db }))]
+                if (freqsarr.length > 0) {
+                    if (freqsarr[0].user1 !== me.userid) {
+                        notFResp.pendingFriend = freqsarr[0].pendingfriendid
+                    } else {
+                        notFResp.pendingFriend = true
+                    }
+                }
+                return notFResp;
+            }
+            resp.isFriend = true;
+            return resp
+        }
+        resp.isFriend = true;
+        resp.isEditable = true;
+        return resp;
+
+    }
     setupApplication() {
         this.app.get("/me", APIHelpers.WrapRequest(async (req: express.Request, res: express.Response, success: Function) => {
-            let resp = new statuses.GetUserSuccess(new RequestUser(res.locals.user))
-            console.log(resp)
+            let resp = new statuses.GetUserSuccess(
+                await this.getUser(res.locals.user, res.locals.user.userid, this.opts.gateway.db)
+            )
             success(resp)
         }))
         this.app.get("/:userid", APIHelpers.WrapRequest(async (req: express.Request, res: express.Response, success: Function) => {
-            let r = new DatabaseUser({ userid: req.params.userid })
-
-            let f = new DatabaseFriend({ user1: res.locals.userid, user2: r.userid })
-            let friends = await f.select({ db: this.opts.gateway.db });
-
-
-            let u = await r.select({ db: this.opts.gateway.db });
-            if (u.length == 0) {
+            let resp = await this.getUser(res.locals.user, req.params.userid, this.opts.gateway.db)
+            if (!resp) {
                 throw new statuses.NotFound("User")
             }
-            let foundUser = new PublicResponseUser(u[0]);
-
-            if (!friends && r.userid!==res.locals.user.userid && u[0].private){
-               foundUser = new PublicResponseUser(new PublicResponseUser({userid:r.userid}))
-            }
-
-            let resp = new statuses.GetUserSuccess(foundUser)
-            console.log(resp)
-            success(resp)
+            success(new statuses.GetUserSuccess(resp))
         }))
 
 
@@ -59,39 +127,52 @@ module.exports = class {
             res = await new DatabaseFriend({
                 user1: res.locals.user.userid,
             }).select({ db: this.opts.gateway.db })
-            let friends = res.map(e=>{return e.user2})
+            let _this = this
+            let f = await res.map(async e => {
+                return {
+                    userid: e.user2,
+                    username: (await (new DatabaseUser({ userid: e.user2 })).select({ db: _this.opts.gateway.db }))[0].username,
+                    online: this.opts.tracker.get(e.user2)
+                }
+            })
+            let friends = await Promise.all(f)
+            console.log(friends);
             success(new statuses.GetFriendsSuccess(friends))
-
         }))
         this.app.delete("/me/friends/:userid", APIHelpers.WrapRequest(async (req: express.Request, res: express.Response, success: Function) => {
-            let r = new FriendRequest({userid:req.params.userid})
-            try{
+            let r = new FriendRequest({ userid: req.params.userid })
+            try {
                 APIHelpers.VerifyProperties(r)
-            }catch{
+            } catch {
                 throw new statuses.MissingRequiredField(["userid"])
             }
             //Delete both sides
             await new DatabaseFriend({
                 user1: res.locals.user.userid,
-                user2:r.userid
+                user2: r.userid
             }).delete({ db: this.opts.gateway.db })
             await new DatabaseFriend({
                 user2: res.locals.user.userid,
-                user1:r.userid
+                user1: r.userid
             }).delete({ db: this.opts.gateway.db })
             success(new statuses.GenericSuccess())
 
 
         }))
         this.app.get("/me/friendrequests", APIHelpers.WrapRequest(async (req: express.Request, res: express.Response, success: Function) => {
+            
             let a = await new DatabasePendingFriend({
                 user1: res.locals.user.userid,
             }).select({ db: this.opts.gateway.db })
             let b = await new DatabasePendingFriend({
                 user2: res.locals.user.userid,
             }).select({ db: this.opts.gateway.db })
-            let friendsa = a.map(e=>{return e.user2})
-            let friendsb = b.map(e=>{return e.use12})
+            let _this = this
+            let friendsb = a.map(async e => { return (await (new DatabaseUser({userid:e.user2}).select({db:_this.opts.gateway.db})))[0] })
+            let friendsa = b.map(async e => { return (await (new DatabaseUser({userid:e.user1}).select({db:_this.opts.gateway.db})))[0] })
+            friendsa = await Promise.all(friendsa)
+            friendsb = await Promise.all(friendsb)
+
             success(new statuses.GetPendingFriends(friendsa, friendsb))
 
         }))
@@ -139,7 +220,11 @@ module.exports = class {
             success(new statuses.FriendRequestSuccess())
 
         }))
-
+        this.app.get("/:userid/games", APIHelpers.WrapRequest(async (req: express.Request, res: express.Response, success: Function) => {
+            let games = await this.getGamesForUser(req.params.userid, res.locals.user.userid, this.opts.gateway.db)
+            success(new statuses.ResourceSuccess(games))
+        })
+        
         this.app.post("/:userid/friendrequests", APIHelpers.WrapRequest(async (req: express.Request, res: express.Response, success: Function) => {
             let request = new FriendRequest({ userid: req.params.userid })
             APIHelpers.VerifyProperties(request)
@@ -162,9 +247,16 @@ module.exports = class {
                 console.log("Already have oposite friend request")
                 throw new statuses.FriendError()
             }
+            reverseRequested.user1 = reverseRequested.user2
+            reverseRequested.user2 = request.userid
+            preExisting = await reverseRequested.select({ db: this.opts.gateway.db })
+            if (preExisting.length > 0) {
+                console.log("Already have this friend request")
+                throw new statuses.FriendError()
+            }
             let pending = new DatabasePendingFriend(
                 {
-                    user2: req.params.userid,
+                    user2: request.userid,
                     user1: res.locals.user.userid
                 })
             await pending.insert({ db: this.opts.gateway.db });

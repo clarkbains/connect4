@@ -16,6 +16,7 @@ module.exports = class {
         this.app.use(APIHelpers.WrapMiddleware(async (req: express.Request, res: express.Response, next: Function) => {
             try {
                 await this.opts.auth.setUser(req, res, this.opts.gateway.db)
+                this.opts.tracker.update(res.locals.user.userid)
                 next()
             } catch (e) {
                 console.log("Ran into issue while validating")
@@ -35,9 +36,14 @@ module.exports = class {
             }
             success(new statuses.GenericSuccess())
         }))
+        this.app.get("/logout",APIHelpers.WrapRequest(async (req: express.Request, res: express.Response, success: Function) => {
+            this.opts.tracker.delete(res.locals.user.userid)
+            res.cookie('jwt',"",{domain: APIHelpers.GetDomain(req)})
+            success(new statuses.LogoutSuccess())
+        }))
         
         this.app.get("/loginstatus", APIHelpers.WrapRequest(async (req: express.Request, res: express.Response, success: Function) => {
-            await console.log("Getting status", req.locals)
+            //await console.log("Getting status", req.locals)
             success(new statuses.LoginSuccess("",res.locals.user.userid))
         }))
     }
