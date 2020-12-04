@@ -33,6 +33,7 @@ export class CreateUserSuccess extends APISuccess {
     }
 
 }
+
 export class GenericSuccess extends APISuccess {
 
     constructor() {
@@ -70,6 +71,13 @@ export class GetUserSuccess extends APISuccess {
     constructor(user: object) {
         super("Got User", "")
         this.user = user
+    }
+}
+export class GetUsersSuccess extends APISuccess {
+    users: object[]
+    constructor(user: object) {
+        super("Got Users", "")
+        this.users = user
     }
 }
 export class GetFriendsSuccess extends APISuccess {
@@ -129,6 +137,14 @@ export class LogoutSuccess extends APISuccess {
     }
 
 }
+export class JoinSuccess extends APISuccess {
+    matchid:number
+    constructor(id:number) {
+        super("Join", `Found you a match to join`)
+        this.matchid = id
+    }
+
+}
 export class TurnSuccess extends APISuccess {
     userid:number
     constructor(turn:number) {
@@ -173,6 +189,13 @@ export class APIError extends APIStatus {
     constructor(msg: string, info: string, code: number) {
         super("error", msg, info, code)
     }
+}
+export class CouldNotFindMatch extends APIError {
+
+    constructor() {
+        super("Could Not Find Match", "Please Try again later",404)
+    }
+
 }
 export class AuthorizationError extends APIError {
     constructor() {

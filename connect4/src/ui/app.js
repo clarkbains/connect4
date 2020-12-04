@@ -2,6 +2,7 @@ import { PLATFORM } from "aurelia-framework";
 require('./app.css');
 require('bootstrap/dist/css/bootstrap.min.css');
 require('font-awesome/css/font-awesome.min.css');
+require('bootstrap/dist/js/bootstrap.bundle.min.js')
 import { Gateway } from './gateway'
 import { inject } from 'aurelia-framework'
 import {Redirect} from 'aurelia-router';
@@ -68,19 +69,31 @@ export class App {
         nav: true,
         settings: {
           auth: true,
-          visible:true
+          visible:false
         }
       },
       {
-        route: ['games'],
-        name: 'games',
+        route: ['gamesSelection'],
+        name: 'gamesSelection',
         title: "Select Game",
         moduleId: PLATFORM.moduleName("views/selectgame"),
         nav: true,
 
         settings: {
           auth: true,
-          visible:false
+          visible:true
+        }
+      },
+      {
+        route: ['search'],
+        name: 'search',
+        title: "Search For User",
+        moduleId: PLATFORM.moduleName("views/search"),
+        nav: true,
+
+        settings: {
+          auth: true,
+          visible:true
         }
       },
       {

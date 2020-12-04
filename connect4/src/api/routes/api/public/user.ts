@@ -3,6 +3,7 @@ import express from 'express'
 import * as models from '../../../models/models'
 import * as statuses from '../../../resources/APIStatus'
 import * as APIHelpers from '../../../resources/APIHelpers'
+import { Database } from 'sqlite3';
 module.exports = class {
     app: express.Application
     opts: object
@@ -68,6 +69,7 @@ module.exports = class {
             throw new statuses.CredentialError()
 
         }))
+
 
         this.app.post("/changepassword", APIHelpers.WrapRequest(async (req: express.Request, res: express.Response, success: Function) => {
             let myRequest: models.RequestPasswordChange = undefined

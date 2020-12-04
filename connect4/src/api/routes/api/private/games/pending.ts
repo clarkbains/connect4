@@ -1,8 +1,8 @@
 import express from 'express'
 import Game from '../../../../resources/Game'
 import * as APIHelpers from '../../../../resources/APIHelpers'
-import { AcceptAllError, AcceptAllSuccess, MatchCreateError, MatchCreationSuccess, PromoteError, PromotionSuccess } from '../../../../resources/APIStatus'
-import { MatchStatusChangeRequest, RequestMatch } from '../../../../models/models'
+import { AcceptAllError, AcceptAllSuccess, CouldNotFindMatch, JoinSuccess, MatchCreateError, MatchCreationSuccess, PromoteError, PromotionSuccess } from '../../../../resources/APIStatus'
+import { DatabaseGame, JoinOpenMatch, MatchStatusChangeRequest, RequestMatch } from '../../../../models/models'
 
 module.exports = class {
     app: express.Application
@@ -36,9 +36,28 @@ module.exports = class {
             
             APIHelpers.VerifyProperties(r)
             try {
-                let game = await Game.createMatch(r.participants, res.locals.user.userid, 0, r.computer, this.opts.gateway.db)
+                //let game = await Game.createMatch(2, r.participants, res.locals.user.userid, 0, r.computer, this.opts.gateway.db)
+                let game = await Game.createMatch(r.name, r.participants, res.locals.user.userid, r.privacy, this.opts.gateway.db)
                 success(new MatchCreationSuccess(game))
-            } catch {
+            } catch (e){
+                console.log(e)
+                throw new MatchCreateError();
+            }
+
+        }))
+        this.app.post("/join", APIHelpers.WrapRequest(async (req: express.Request, res: express.Response, success: Function) => {
+            let r = new JoinOpenMatch(req.body)
+            console.log(r, req.body)
+            APIHelpers.VerifyProperties(r)
+            try {
+                let game = await Game.findMatchingMatchId(res.locals.user.userid, r.privacy, this.opts.gateway.db)
+                if (game === undefined){
+                    throw new CouldNotFindMatch()
+                }
+                console.log("Found Good Match", game)
+                success(new JoinSuccess(game))
+            } catch (e){
+                console.log(e)
                 throw new MatchCreateError();
             }
 
@@ -58,6 +77,11 @@ module.exports = class {
             APIHelpers.VerifyProperties(r)
             try {
                 //No ownership validation needed, query prevents user from changing things that aren't thiers.
+                let startedGames = await (new DatabaseGame({matchid:r.matchid})).select({db:this.opts.gateway.db})
+                if (startedGames.length>0){
+                    //Game has already been promoted
+                    throw new Error("Match Has already been promoted")
+                }
                 await Game.setResponse(res.locals.user.userid, r.matchid, r.status,this.opts.gateway.db)
                 success(new AcceptAllSuccess())
             } catch {

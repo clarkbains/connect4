@@ -30,7 +30,7 @@ export function CopyTo(obj:object, properties:string[][]):object{
 //Also passes helper function to send the responses defined in resources/APIStatuses.ts
 export function WrapRequest(func:Function) {
         
-    return async (req:express.Request, res:express.Response) => {
+    return async (req:express.Request, res:express.Response, next:express.Next) => {
         async function sendResponse (r:statuses.APIStatus){
           //  console.log("Response Callback fired with", r)
             if (r.code){
@@ -41,7 +41,7 @@ export function WrapRequest(func:Function) {
             }
         }
         try {
-            await func(req, res, sendResponse)
+            await func(req, res, sendResponse, next)
         } catch (e) {
             console.log("Thrown from Route wrapper", e)
             if (e && e.code) {

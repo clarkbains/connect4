@@ -28,7 +28,7 @@
 
                             <button class="btn btn-${editing?'primary':'secondary'}" if.bind="profile.isEditable"
                                 click.delegate="edit()" />
-                            <i class="fa fa-edit"></i> Edit
+                            <i class="fa fa-edit"></i> ${editing?'Save':'Edit'}
                             </button>
                         </div>
                     </div>

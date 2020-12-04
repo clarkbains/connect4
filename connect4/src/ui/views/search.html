@@ -1,0 +1,28 @@
+
+
+<template>
+    <div class="center">
+        <div class="form">
+            <div class="form-group">
+                <input type="text" class="form-control" value.bind="username"
+                    placeholder="Enter username">
+            </div>
+
+        </div>
+        <p>Note that you will only be able to see your friends, and users who have set themselves to public.</p>
+        <div if.bind="res.length">
+            <div repeat.for="p of res">
+                <compose view-model="./partials/user" view="./partials/user.html" model.bind="p" />
+    
+            </div>
+        </div>
+        <div if.bind="!res.length && username">
+            <h3>Oops, we couldn't find anything</h2>
+        </div>
+        <div if.bind="!res.length && !username">
+            <h3>Results will appear as you type.</h2>
+        </div>
+    </div>
+    </div>
+
+</template>

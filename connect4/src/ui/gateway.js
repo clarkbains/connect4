@@ -140,6 +140,13 @@ export class Gateway {
         })
         
     }
+    search(term){
+        return this._request({
+            path: `/private/user/search?term=${encodeURIComponent(term)}`,
+            method: "GET",
+        })
+        
+    }
     acceptFriendRequest(frid) {
         return this._request({
             path: `/private/user/me/friendrequests/${frid}/accept`,
@@ -168,7 +175,9 @@ export class Gateway {
             path: `/private/games/requests`,
             method: "POST",
             body: {
-                participants: [person]
+                participants: [person],
+                privacy:0,
+                name:"Created from client"
             }
         })
     }
@@ -306,7 +315,7 @@ export class Gateway {
                 }
                 let body = response.json()
                 if (opts.verify) {
-                    console.log("Verifying result")
+                   // console.log("Verifying result")
                     // eslint-disable-next-line no-inner-declarations
                     function err(e, c) {
                         console.log("Caught request error, gracefully handling")

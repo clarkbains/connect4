@@ -49,6 +49,7 @@ for (let key of apps.keys()) {
     }
 }
 console.debug(`Next Route id is ${maxid + 1}`)
+
 //Add Routes
 treeRoutes(apps, 0, app)
 app.use(mw.noRouteMiddleware).use(mw.errorMiddleware)
@@ -57,12 +58,6 @@ console.log("Application has started")
 io.sockets.on("connection",(socket:Socket)=>{
     bus.addNewWS(socket)
 })
-
-let num = 0
-setInterval(()=>{
-    num++;
-    bus.emit("counter_test", "counter is at " + num)
-},1000)
 
 
 server.listen(9000)

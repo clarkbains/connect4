@@ -139,19 +139,33 @@ export class RequestMatch {
    // size: number[]
     name: string
     participants: number[]
-    computer:boolean
+    privacy:number
+    //computer:boolean
     constructor(m: RequestMatch | object) {
         //this.size = m.size
         this.name = m.name
         this.participants = m.participants
-        this.computer = m.computer
-        this.participants = this.participants.filter(e=>!!e)
+        this.privacy = m.privacy
+        //this.computer = m.computer
+        this.participants = this.participants.filter(e=>!!e || e===0 || e==="0")
 
     }
     verify(){
-        return (this.participants.length>=1 && this.computer) || (this.participants.length>=2 && !this.computer)
+        //return true
+        return  this.participants && this.participants.length > 0 && this.participants.length <=2 && this.privacy>=0 && this.privacy <=2
     }
 }
+export class JoinOpenMatch {
+
+     privacy:number
+     constructor(m: JoinOpenMatch | object) {
+       this.privacy = m.privacy
+     }
+     verify(){
+         return  this.privacy>=0 && this.privacy <=2
+     }
+ }
+
 
 
 //Used for a client to indicate interest in a match
@@ -338,6 +352,7 @@ export class DatabaseUser extends DatabaseModel {
     username: string //unique
     email: string //unique
     score: number //def:0:
+    totalGames: number //def:0:
     private: boolean //def:0:
 
     constructor(u: DatabaseUser | object) {
@@ -346,10 +361,9 @@ export class DatabaseUser extends DatabaseModel {
         this.name = u.name
         this.username = u.username
         this.email = u.email
+        this.totalGames = u.totalGames
         this.score = u.score
         this.private = u.private
-
-
     }
     verify(){
         return !!this.userid || this.userid === 0
@@ -466,7 +480,7 @@ export class Message {
 export class DatabaseMatchAcceptance extends DatabaseModel {
     matcchacceptanceid: number
     matchid: number //correlated with match
-    userid: number //owner
+    userid: number | null //owner
     status: number //0:pending,1:accepted,2:denied def:0:
     msg: string | null //Optional Message for decliners
     constructor(ma: DatabaseMatchAcceptance | object) {
