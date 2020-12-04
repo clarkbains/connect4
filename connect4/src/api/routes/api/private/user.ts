@@ -253,7 +253,7 @@ module.exports = class {
         this.app.get("/:userid/games", APIHelpers.WrapRequest(async (req: express.Request, res: express.Response, success: Function) => {
             let games = await this.getGamesForUser(req.params.userid, res.locals.user.userid, this.opts.gateway.db)
             success(new statuses.ResourceSuccess(games))
-        })
+        }))
         
         this.app.post("/:userid/friendrequests", APIHelpers.WrapRequest(async (req: express.Request, res: express.Response, success: Function) => {
             let request = new FriendRequest({ userid: req.params.userid })
