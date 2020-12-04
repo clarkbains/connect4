@@ -56,6 +56,7 @@ export class Profile {
             })
         this.gateway.getGamesForUser(this.ac.id).then(g => {
             //Make the format of the data slightly more sane
+            _this.gameslen = g.resource.length
             g.resource = g.resource.map((e) => {
                 //Remove self from opponents
                 e.denied = e.opponents.filter(f => f.status == 2).length > 0;

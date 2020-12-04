@@ -156,7 +156,7 @@
 
         </div>
 
-        <div class="row mt-2" if.bind="profile.isFriend || profile.private==0">
+        <div class="row mt-2" if.bind="gameslen > 0 && (profile.isFriend || profile.private==0)">
             <div class="col">
                 <div class="card">
                     <div class="card-body">
