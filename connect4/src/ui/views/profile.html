@@ -16,7 +16,7 @@
                                 <input if.bind="editing" type="text" value.bind="emailVal" />
 
                             </p>
-                            <p class="card-text"><i class="fa fa-trophy" if.bind="profile.score !== undefined"></i>
+                            <p class="card-text" if.bind="profile.score !== undefined"><i class="fa fa-trophy" ></i>
                                 ${profile.score}/${profile.totalGames} ${profile.totalGames>0?("("+(profile.score*100/profile.totalGames).toFixed(2) + "%)"):''}</p>
                             <p class="card-text"><i class="fa fa-eye" if.bind="private !== undefined"></i>
                                 Visibility <i class="fa fa-${private?'lock':'globe'}"

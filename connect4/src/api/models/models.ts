@@ -476,7 +476,7 @@ export class Message {
         this.time = new Date()
     }
     verify(){
-        return this.msg && this.msg.length < 3000 && this.userid
+        return this.msg && this.msg.length < 1000 && this.userid
     }
 }
 //Used to show a users acceptance or declanation of a match

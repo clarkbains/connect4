@@ -4,7 +4,8 @@ import { Gateway } from '../../gateway'
 export class Msg {
 
     activate(o) {
-      this.msg = o
+      this.msg = o.msg
+      this.col = o.col
       this.time = this.updateTime(this.msg.time)
       setInterval(()=>{
         this.time = this.updateTime(this.msg.time)

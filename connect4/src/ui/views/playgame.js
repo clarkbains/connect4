@@ -10,10 +10,10 @@ export class PlayGame {
         this.router = r
         this.ns = n
         this.gameInfo = {}
-        this.rows = 10;
-        this.cols = 10;
+
         this.width = 100;
         this.height = 100;
+        this.history = false;
         this.def = []
         this.msgs = []
         this.pc = {}
@@ -38,6 +38,12 @@ export class PlayGame {
             }, 100)
         });
         try {
+            let mr = await this.gateway.getMatch(this.gameid)
+            console.log("Got MR", mr)
+            this.match = mr.match
+            this.width = this.match.width
+            this.height = this.match.height
+
             this.socket = await this.gateway.connectSocket()
             //await this.gateway.authGameSocket(this.gameid, this.socket)
             await Promise.all([
@@ -53,6 +59,7 @@ export class PlayGame {
             this.resyncMessages()
             this.getBoard()
         } catch (e) {
+            console.error(e)
             this.ns.danger("Private Game", "You are not allowed to see this game")
             this.router.navigateBack()
         }
@@ -101,9 +108,80 @@ export class PlayGame {
 
 
     }
+    async toggleLive() {
+        console.log("Toggling Live Modes")
+        if (this.history) {
+            this.history = undefined
+        }
+        else {
+            this.setupHist()
+            this.showHistBoard()
+        }
+    }
+    async histMove(type) {
+        console.log("Moving through hist with num")
+        if (type == 2 || (type == 1 && this.history.current + 2 > this.history.total)) {
+            await this.setupHist()
+        }
+        if (type == 2) {
+            this.history.current = this.history.total
+        } else if (type == 1) {
+            this.history.current++
+        }
+        else if (type == -1) {
+            this.history.current--
+        }
+        else if (type == -2) {
+            this.history.current = 0;
+        }
+        this.history.current = Math.max(0, Math.min(this.history.current, this.history.total))
+        this.history.prev = this.history.current > 0
+        console.log("Currently on Hist", this.history.current)
+
+        this.showHistBoard()
+    }
+    async showHistBoard() {
+        let board = []
+
+        for (let rowNum = 0; rowNum < this.rows; rowNum++) {
+            let r = []
+            for (let colNum = 0; colNum < this.cols; colNum++) {
+                r.push(null)
+            }
+            board.push(r)
+        }
+        console.log("Empty board", board)
+        for (let i = 0; i < this.history.current; i++) {
+            board[this.history.moves[i].y][this.history.moves[i].x] = this.history.moves[i].userid
+        }
+        console.log("Filled board", board)
+        this.update(board)
+    }
+
+    async setupHist() {
+        console.log("Setting up history")
+        let moveresp = await this.gateway.getIncrementalMoves(this.gameid)
+        console.log("Got Incremental moves")
+        let idex = this.history ? this.history.current : 0
+        this.history = {
+            moves: moveresp.moves,
+            total: moveresp.moves.length,
+            current: idex,
+
+            //next:idex<moveresp.moves.length-1
+        }
+        if (this.history.total == 0) {
+            this.history = undefined;
+            this.ns.info("History Mode", "Cannot go into history mode on game with no moves")
+        }
+    }
 
     onMove() {
-        console.log("On Moved", this)
+        //Don't act on wss if in history mode
+        if (this.history) {
+            return
+        }
+        console.log("On Move", this)
         this.getBoard()
     }
 
@@ -150,7 +228,6 @@ export class PlayGame {
 
                 if (data && data.length > 0) {
                     let co = data[this.rows - rowNum - 1][colNum]
-                    console.log(co)
                     if (typeof co !== "number")
                         this.context.fillStyle = "white"
                     else
@@ -160,12 +237,12 @@ export class PlayGame {
                 }
                 if (this.spectate) {
                     this.context.strokeStyle = 'gray';
-        
+
                 } else {
                     this.context.strokeStyle = 'black';
-        
+
                 }
-                
+
 
                 this.context.beginPath();
                 this.context.ellipse(
@@ -284,19 +361,7 @@ export class PlayGame {
             _this.ns.danger(e.msg, e.info)
         })
     }
-    winner() {
-        let _this = this
-        this.gateway.getWinner(this.gameid).then(e => {
-            if (e.resource === null) {
-                _this.ns.info("Game Winner", "There is no winner, the game is not done yet")
-            } else {
-                _this.ns.success(e.msg, e.info)
-            }
-        }).catch(e => {
-            console.error(e)
-            _this.ns.danger(e.msg, e.info)
-        })
-    }
+
     finished() {
         let _this = this
         this.gateway.getState(this.gameid).then(e => {

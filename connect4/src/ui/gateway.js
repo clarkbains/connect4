@@ -9,6 +9,7 @@ export class Gateway {
         this.id = undefined;
         this._logoutns = ns
         this.observers = []
+        this.userSocket;
 
     }
     setId(id) {
@@ -16,6 +17,12 @@ export class Gateway {
     }
     getId() {
         return this.id
+    }
+    getUserSocket(){
+        return this.userSocket
+    }
+    setUserSocket(s){
+        this.userSocket = s
     }
     addLoggedInObserver(f) {
         this.observers.push(f)
@@ -36,11 +43,17 @@ export class Gateway {
     }
 
     connectSocket() {
+        let _this = this
         return new Promise((resolve, reject) => {
-            let socket = io.connect(window.location.protocol + "//" + window.location.host)
-            socket.on('connect', function () {
-                resolve(socket)
-            });
+            try {
+                let socket = io.connect(window.location.protocol + "//" + window.location.host)
+                socket.on('connect', function () {
+                    resolve(socket)
+                });
+            }
+            catch (e) {
+                reject(e)
+            }
         })
 
 
@@ -49,9 +62,20 @@ export class Gateway {
         ws.emit(event, msg)
     }
     killSocket(socket) {
-        socket.disconnect();
+        if (socket)
+            socket.disconnect();
     }
+    authUserSocket(topic, userid, socket) {
+        return this._request({
+            path: `/private/user/${userid}/refreshes/authorize`,
+            method: "POST",
+            body: {
+                responseTopic: topic,
+                wsid: socket.id
+            }
 
+        })
+    }
 
     authGameSocket(gameid, socket) {
         return this._request({
@@ -73,7 +97,8 @@ export class Gateway {
                 wsid: socket.id
             }
 
-        })    }
+        })
+    }
     authParticipantsSocket(gameid, socket) {
         return this._request({
             path: `/private/games/${gameid}/participants/authorize`,
@@ -85,7 +110,7 @@ export class Gateway {
 
         })
     }
-    getParticipants(gameid){
+    getParticipants(gameid) {
         return this._request({
             path: `/private/games/${gameid}/participants`,
             method: "GET"
@@ -124,13 +149,12 @@ export class Gateway {
             return e
         })
     }
+
     getUser(id) {
         return this._request({
             path: "/private/user/" + id,
             method: "GET",
         })
-
-
     }
     editMe(patch) {
         return this._request({
@@ -259,12 +283,6 @@ export class Gateway {
 
         })
     }
-    getTurn(gameid) {
-        return this._request({
-            path: `/private/games/${gameid}/turn`,
-            method: "GET",
-        })
-    }
     getState(gameid) {
         return this._request({
             path: `/private/games/${gameid}/state`,
@@ -272,13 +290,21 @@ export class Gateway {
 
         })
     }
-    getWinner(gameid) {
+    getMatch(gameid) {
         return this._request({
-            path: `/private/games/${gameid}/winner`,
+            path: `/private/games/${gameid}/match`,
             method: "GET",
 
         })
     }
+    getIncrementalMoves(gameid) {
+        return this._request({
+            path: `/private/games/${gameid}/moves`,
+            method: "GET",
+
+        })
+    }
+
     putMove(gameid, x) {
         return this._request({
             path: `/private/games/${gameid}/move`,
@@ -309,6 +335,14 @@ export class Gateway {
             }
         })
     }
+    getMatchInfo(gameid){
+        return this._request({
+            path: `/private/games/${gameid}/match`,
+            method: "GET",
+
+        })
+    }
+
     createUser(username, email, name) {
         return this._request({
             path: "/public/user",

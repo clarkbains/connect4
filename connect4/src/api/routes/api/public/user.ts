@@ -21,27 +21,27 @@ module.exports = class {
         this.app.get("/", APIHelpers.WrapRequest(async (req: express.Request, res: express.Response, success: Function) => {
 
             //Not sure if this is case sensitive or not, but its 12:40 am and I don't really want to check rn
-            let dbObj = await new models.DatabaseUser({username:req.query.name, private:0}).select({db:this.opts.gateway.db})
-            success(new ResourceSuccess(dbObj.map(e=>{return e.username})))
+            let dbObj = await new models.DatabaseUser({ username: req.query.name, private: 0 }).select({ db: this.opts.gateway.db })
+            success(new ResourceSuccess(dbObj.map(e => { return e.username })))
 
         }))
         this.app.get("/:username", APIHelpers.WrapRequest(async (req: express.Request, res: express.Response, success: Function) => {
 
             //Not sure if this is case sensitive or not, but its 12:40 am and I don't really want to check rn
-            if (!req.params.username){
+            if (!req.params.username) {
                 throw new MissingRequiredField(["username"])
             }
-            let dbObj = await new models.DatabaseUser({username:req.params.username, private:0}).select({db:this.opts.gateway.db})
+            let dbObj = await new models.DatabaseUser({ username: req.params.username, private: 0 }).select({ db: this.opts.gateway.db })
             success(new ResourceSuccess(dbObj))
 
         }))
         this.app.post("/", APIHelpers.WrapRequest(async (req: express.Request, res: express.Response, success: Function) => {
 
-            
+
             let dbObj = new models.DatabaseUser(
                 new models.UserModifyRequest(req.body)
             )
-            if (!dbObj.email || ! dbObj.username){
+            if (!dbObj.email || !dbObj.username) {
                 throw new statuses.MissingRequiredField(["email", "username", "name"])
             }
             await dbObj.insert({ db: this.opts.gateway.db })
@@ -60,11 +60,11 @@ module.exports = class {
             let creds = await new models.DatabaseCredential(u[0]).select({ db: this.opts.gateway.db })
             if (creds.length == 0)
                 throw new statuses.NoPasswordSet()
-           // console.log(creds)
+            // console.log(creds)
             if (this.opts.auth.verifyPassword(loginRequest.password, creds[0].hash, creds[0].salt)) {
                 let jwt = this.opts.auth.createToken(creds[0].userid)
                 res.cookie('jwt', jwt, { maxAge: 3600000, domain: APIHelpers.GetDomain(req), path: "/" })
-                return success(new statuses.LoginSuccess(jwt,u[0].userid))
+                return success(new statuses.LoginSuccess(jwt, u[0].userid))
             }
             throw new statuses.CredentialError()
 
@@ -98,8 +98,13 @@ module.exports = class {
                 let c = await new models.DatabaseCredential({ userid: u[0].userid }).select({ db: this.opts.gateway.db })
                 if (c.length == 0)
                     throw new statuses.NoPasswordSet()
+                let passwordValid;
+                try {
+                    passwordValid = this.opts.auth.verifyPassword(m.oldpassword, c[0].hash, c[0].salt)
+                } catch {
+                    throw new statuses.AuthorizationError()
+                }
 
-                let passwordValid = this.opts.auth.verifyPassword(m.oldpassword, c[0].hash, c[0].salt)
                 if (!passwordValid) {
                     throw new statuses.CredentialError()
                 }
@@ -119,19 +124,19 @@ module.exports = class {
             let cred = this.opts.auth.hashPassword(myRequest.newpassword)
             let oldCreds = await new models.DatabaseCredential({ userid: userid })
                 .select({ db: this.opts.gateway.db })
-            console.log("Changing creds from",oldCreds)
-            let updatedCreds = new models.DatabaseCredential(oldCreds&&oldCreds[0]?oldCreds[0]:{})
+            console.log("Changing creds from", oldCreds)
+            let updatedCreds = new models.DatabaseCredential(oldCreds && oldCreds[0] ? oldCreds[0] : {})
             updatedCreds.hash = cred.hash
             updatedCreds.salt = cred.salt
             updatedCreds.userid = userid
             console.log(updatedCreds)
-            if (oldCreds.length == 0){
-                console.log("Inserting new User Creds",updatedCreds)
+            if (oldCreds.length == 0) {
+                console.log("Inserting new User Creds", updatedCreds)
                 await updatedCreds.insert({ db: this.opts.gateway.db })
 
             }
-            else{
-                console.log("Updating Current Creds",updatedCreds)
+            else {
+                console.log("Updating Current Creds", updatedCreds)
                 await updatedCreds.update({ db: this.opts.gateway.db })
 
             }
@@ -145,8 +150,8 @@ module.exports = class {
             console.log(q, req.body)
             q.verifyProperties()
             let r = new models.DatabaseUser(q)
-            
-            
+
+
             let user = await r.select({ db: this.opts.gateway.db })
             if (user.length == 0)
                 throw new statuses.NotFound("User")

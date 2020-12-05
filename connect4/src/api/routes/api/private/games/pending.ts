@@ -2,7 +2,7 @@ import express from 'express'
 import Game from '../../../../resources/Game'
 import * as APIHelpers from '../../../../resources/APIHelpers'
 import { AcceptAllError, AcceptAllSuccess, CouldNotFindMatch, JoinSuccess, MatchCreateError, MatchCreationSuccess, PromoteError, PromotionSuccess } from '../../../../resources/APIStatus'
-import { DatabaseGame, JoinOpenMatch, MatchStatusChangeRequest, RequestMatch } from '../../../../models/models'
+import { DatabaseGame, DatabaseMatchAcceptance, JoinOpenMatch, MatchStatusChangeRequest, RequestMatch } from '../../../../models/models'
 
 module.exports = class {
     app: express.Application
@@ -20,14 +20,7 @@ module.exports = class {
 
     }
     setupApplication() {
-        /*this.app.get("/", (req, res) => {
-            //Get All Request
-        })
-        this.app.get("/request/:request", (req, res) => {
-            let request = req.params.request
-            let denied = req.params.denied
-            //Get Request
-        })*/
+
 
         this.app.post("/", APIHelpers.WrapRequest(async (req: express.Request, res: express.Response, success: Function) => {
             let r = new RequestMatch(req.body)
@@ -39,12 +32,18 @@ module.exports = class {
                 //let game = await Game.createMatch(2, r.participants, res.locals.user.userid, 0, r.computer, this.opts.gateway.db)
                 let game = await Game.createMatch(r.name, r.participants, res.locals.user.userid, r.privacy, this.opts.gateway.db)
                 success(new MatchCreationSuccess(game))
+                
+                let acc = await new DatabaseMatchAcceptance({matchid:game}).select({db:this.opts.gateway.db})
+                for (let p of acc){
+                    this.opts.bus.emit("user"+p.userid,{})
+                }
             } catch (e) {
                 console.log(e)
                 throw new MatchCreateError();
             }
 
         }))
+        //Join an existing match
         this.app.post("/join", APIHelpers.WrapRequest(async (req: express.Request, res: express.Response, success: Function) => {
             let r = new JoinOpenMatch(req.body)
             console.log(r, req.body)
@@ -54,11 +53,15 @@ module.exports = class {
             if (game === undefined) {
                 throw new CouldNotFindMatch()
             }
+
             console.log("Found Good Match", game)
             success(new JoinSuccess(game))
-
-
+            let acc = await new DatabaseMatchAcceptance({matchid:game}).select({db:this.opts.gateway.db})
+            for (let p of acc){
+                this.opts.bus.emit("user"+p.userid,{})
+            }
         }))
+        //Force Users to mark as accepted
         /*this.app.post("/:matchid/acceptAll", APIHelpers.WrapRequest(async (req: express.Request, res: express.Response, success: Function) => {
             try {
                 let matchid = req.params.matchid
@@ -68,6 +71,7 @@ module.exports = class {
                 throw new AcceptAllError()
             }
         }))*/
+        //Set your response
         this.app.post("/:matchid/response", APIHelpers.WrapRequest(async (req: express.Request, res: express.Response, success: Function) => {
             let r = new MatchStatusChangeRequest(req.body)
             r.matchid = req.params.matchid
@@ -86,6 +90,10 @@ module.exports = class {
                 console.error(e)
                 throw new AcceptAllError()
             }
+            let acc = await new DatabaseMatchAcceptance({matchid:r.matchid}).select({db:this.opts.gateway.db})
+            for (let p of acc){
+                this.opts.bus.emit("user"+p.userid,{})
+            }
         }))
 
         this.app.post("/:matchid/promote", APIHelpers.WrapRequest(async (req: express.Request, res: express.Response, success: Function) => {
@@ -97,7 +105,10 @@ module.exports = class {
                 console.log(e)
                 throw new PromoteError()
             }
-
+            let acc = await new DatabaseMatchAcceptance({matchid:matchid}).select({db:this.opts.gateway.db})
+            for (let p of acc){
+                this.opts.bus.emit("user"+p.userid,{})
+            }
         }))
     }
 

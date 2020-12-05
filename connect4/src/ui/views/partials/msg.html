@@ -1,6 +1,4 @@
 <template>
-
-         <span class="text-wrap" style="width:20rem">${msg.msg} ${time} ago from <compose view-model="./user" view="./user.html" model.bind="msg.user" ></compose>.</span> 
+         <span class="text-wrap">${msg.msg} <br>${time} ago from <compose view-model="./user" view="./user.html" model.bind="{user:msg.user,col:col}" ></compose>.</span> 
         <br>
-        
 </template>   

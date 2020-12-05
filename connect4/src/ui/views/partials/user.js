@@ -20,9 +20,17 @@ export class UserPartial {
 
         if (!o){
             this.unknown = true;
+            console.log("Unknown User")
+            return;
         }
-        this.u = o;
-        //console.log("Activated with user",o)
+        if (o.col){
+            this.col = o.col
+            this.u = o.user
+            
+        } else {
+            this.u = o;
+        }
+        console.log("User With", this)
 
     }
     nav(){

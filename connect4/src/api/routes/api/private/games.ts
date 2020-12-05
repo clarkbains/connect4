@@ -7,106 +7,28 @@ import { Database } from 'sqlite3'
 module.exports = class {
     app: express.Application
     opts: object
-    games: object
     constructor(opts: object) {
         this.opts = opts
         this.app = express()
         this.setupApplication()
-        this.games = {}
-    }
-    async fetchGameNoPerms(gameid) {
-
-        if (this.games[gameid]) {
-            return this.games[gameid]
-        }
-        this.games[gameid] = new Game(this.opts.gateway, gameid)
-
-        return this.games[gameid]
-    }
-    async isInGame(gameid, userid){
-        if (!gameid && gameid!==0){
-            throw new Error("Gameid Not provided")
-        }
-        let m = await new models.DatabaseGame({gameid:gameid}).select({db:this.opts.gateway.db})
-        if (!m){
-           throw new Error("Cannot Find Game")
-        }
-        if (!userid && userid!==0){
-            throw new Error("Userid not provided")
-         }
-        let player = await new models.DatabaseMatchAcceptance(
-            {status:1,
-            matchid:m[0].matchid,
-            userid:userid
-        }).select({db:this.opts.gateway.db})
-        return player.length > 0
-    }
-    async fetchGame(gameid, userid) {
-        if (!gameid && gameid!==0){
-            return undefined
-        }
-        console.log("Retrieving Game id", gameid, "for", userid)
-
-        let game = await (new models.DatabaseGame({gameid:gameid})).select({db:this.opts.gateway.db})
-        if (game.length == 0){
-           return undefined 
-        }
-        let m = await new models.DatabaseMatch({}).raw(this.opts.gateway.db,
-            {
-                sql: `SELECT Matchs.privacylevel, Matchs.matchid from Games LEFT JOIN Matchs on Games.matchid = Matchs.matchid WHERE Games.gameid=?`,
-                params: [gameid],
-                single:true,
-                model:models.DatabaseMatch
-            })
- 
-        if (m.privacylevel >= 1){
-
-            //The User is not playing the game
-            if (!this.isInGame(gameid, userid)){
-                if (m.privacylevel == 2){
-                    console.log("Private Game viewed by non playing member")
-                    return undefined;
-                    
-                }
-                let players = await new models.DatabaseMatchAcceptance({
-                    matchid:m.matchid,
-                    status:1,
-                }).select({db:this.opts.gateway.db})
-
-                let foundFriend = false;
-                for (let p of players){
-                    let friends = await new models.DatabaseFriend({
-                        user1: p.userid,
-                        user2: userid
-                    }).select({db:this.opts.gateway.db})
-                    if (friends){
-                        foundFriend = true
-                        break;
-                    }
-                }
-                if (!foundFriend){
-                    console.log("Friends only game loaded by non-friend")
-                    return undefined;
-                }
-            }
-
-
-        }
-        return this.fetchGameNoPerms(gameid)
         
-
-
     }
+    
     setupApplication() {
-        /*this.app.get("/", (req, res) => {
-            let detail = req.query.detail
-            let active = req.query.active
-            let won = req.query.won
-            //Get Games
-            throw new statuses.ResourcePermissionError()
-        })*/
+
+        //Gets all people in game
+        this.app.get("/:gameid/match", APIHelpers.WrapRequest(async (req: express.Request, res: express.Response, success: Function) => {
+            let g:Game = await APIHelpers.fetchGame(req.params.gameid, res.locals.user.userid, this.opts.gateway.db)
+            if (!g){
+                throw new statuses.ResourcePermissionError()
+            }
+            let m:models.DatabaseMatch = (await (new models.DatabaseMatch({matchid:await g.getMatchId()}).select({db:this.opts.gateway.db})))[0]
+            console.log("Found Match!", m,await g.getMatchId())
+            success(new statuses.GetMatchSuccess(m))
+
+        }))
         this.app.get("/:gameid/players", APIHelpers.WrapRequest(async (req: express.Request, res: express.Response, success: Function) => {
-            let g:Game = await this.fetchGame(req.params.gameid, res.locals.user.userid)
+            let g:Game = await APIHelpers.fetchGame(req.params.gameid, res.locals.user.userid, this.opts.gateway.db)
             if (!g){
                 throw new statuses.ResourcePermissionError()
             }
@@ -117,13 +39,9 @@ module.exports = class {
 
         }))
 
-        /*this.app.get("/:gameid/moves", (req, res) => {
-            let gameid = req.params.gameid
-            let mode = req.query.mode
-            //Get Game moves
-        })*/
+        //Authorizes ws for observing move events
         this.app.post("/:gameid/moves/authorize", APIHelpers.WrapRequest(async (req: express.Request, res: express.Response, success: Function) => {
-            let g:Game = await this.fetchGame(req.params.gameid, res.locals.user.userid)
+            let g:Game = await APIHelpers.fetchGame(req.params.gameid, res.locals.user.userid, this.opts.gateway.db)
             if (!g){
                 throw new statuses.ResourcePermissionError()
             }
@@ -137,9 +55,9 @@ module.exports = class {
             success(new statuses.GenericSuccess())
 
         }))
-
+        //Authorizes ws for viewing list of participants
         this.app.post("/:gameid/participants/authorize", APIHelpers.WrapRequest(async (req: express.Request, res: express.Response, success: Function) => {
-            let g:Game = await this.fetchGame(req.params.gameid, res.locals.user.userid)
+            let g:Game = await APIHelpers.fetchGame(req.params.gameid, res.locals.user.userid, this.opts.gateway.db)
             if (!g){
                 throw new statuses.ResourcePermissionError()
             }
@@ -149,25 +67,25 @@ module.exports = class {
             APIHelpers.VerifyProperties(r)
             
             let _this = this
-
+            //Set this user as online
             g.tracker.update(res.locals.user.userid)
 
             this.opts.bus.promoteWS(res.locals.user, r.wsid, r.topic, r.responseTopic, {
+                //Set the user as offline
                 'disconnect': async (data, user, socket) => {
-                    let game: Game = await _this.fetchGame(req.params.gameid, user.userid)
+                    let game: Game = await APIHelpers.fetchGame(req.params.gameid, user.userid,this.opts.gateway.db)
                     game.tracker.delete(user.userid)
                     console.log("User has stopped watching the game.")
                     _this.opts.bus.emit("participants" + req.params.gameid, {})
-
                 }
             })
             this.opts.bus.emit("participants" +  req.params.gameid, {})
             success(new statuses.GenericSuccess())
 
         }))
-
+        //Get a list of all participants
         this.app.get("/:gameid/participants", APIHelpers.WrapRequest(async (req: express.Request, res: express.Response, success: Function) => {
-            let g:Game = await this.fetchGame(req.params.gameid, res.locals.user.userid)
+            let g:Game = await APIHelpers.fetchGame(req.params.gameid, res.locals.user.userid,this.opts.gateway.db)
             if (!g){
                 throw new statuses.ResourcePermissionError()
             }
@@ -189,7 +107,7 @@ module.exports = class {
         this.app.get("/:gameid/board", APIHelpers.WrapRequest(async (req: express.Request, res: express.Response, success: Function) => {
 
             let gameid = req.params.gameid
-            let game = await this.fetchGame(gameid, res.locals.user.userid)
+            let game = await APIHelpers.fetchGame(gameid, res.locals.user.userid,this.opts.gateway.db)
             let board = await game.getBoard()
             //console.log("Got board",board)
             success(new statuses.ResourceSuccess(board))
@@ -198,9 +116,19 @@ module.exports = class {
         this.app.post("/:gameid/resign", APIHelpers.WrapRequest(async (req: express.Request, res: express.Response, success: Function) => {
 
             let gameid = req.params.gameid
-            let game = await this.fetchGame(gameid, res.locals.user.userid)
+            let game:Game = await APIHelpers.fetchGame(gameid, res.locals.user.userid, this.opts.gateway.db)
+
+            if (!game){
+                throw new statuses.ResourcePermissionError();
+            }
+            //Prevent Other users from repeatedly resigning to boost points for other users
+            if (game.isGameFinished()){
+                throw new statuses.GameStateSuccess(1)
+            }
+            
             let winners = await game.getUsersWhoArent(res.locals.user.userid)
-            console.log(winners)
+            game.finishGame(winners[0])
+            
 
             let d = new models.DatabaseGameMessage({
                 gameid:gameid,
@@ -209,9 +137,15 @@ module.exports = class {
                 time: +new Date()
             });
             await d.insert({ db: this.opts.gateway.db })
+
             success(new statuses.ResignationSuccess())
+            
             this.opts.bus.emit("moves" + gameid, {})
             this.opts.bus.emit("messages" + req.params.gameid, d)
+            let acc = await new models.DatabaseMatchAcceptance({matchid:await game.getMatchId()}).select({db:this.opts.gateway.db})
+            for (let p of acc){
+                this.opts.bus.emit("user"+p.userid,{})
+            }
 
         }))
         this.app.get("/:gameid/turn", APIHelpers.WrapRequest(async (req: express.Request, res: express.Response, success: Function) => {
@@ -222,7 +156,7 @@ module.exports = class {
             gameid = gameid[1]
             let game;
             try {
-                game = await this.fetchGame(gameid, res.locals.user.userid)
+                game = await APIHelpers.fetchGame(gameid, res.locals.user.userid,this.opts.gateway.db)
             } catch {
                 throw new statuses.ResourcePermissionError()
             }
@@ -240,7 +174,7 @@ module.exports = class {
             r.userid = res.locals.user.userid
             APIHelpers.VerifyProperties(r)
             
-            if (!await this.isInGame(req.params.gameid, r.userid)){
+            if (!await APIHelpers.isInGame(req.params.gameid, r.userid,this.opts.gateway.db)){
                 throw new statuses.ResourcePermissionError()
             }
 
@@ -254,8 +188,8 @@ module.exports = class {
 
         }))
         this.app.get("/:gameid/messages", APIHelpers.WrapRequest(async (req: express.Request, res: express.Response, success: Function) => {
-            let game:Game = await this.fetchGame(req.params.gameid, res.locals.user.userid)
-            //let game = await this.isInGame(req.params.gameid, r.userid)
+            let game:Game = await APIHelpers.fetchGame(req.params.gameid, res.locals.user.userid,this.opts.gateway.db)
+            //let game = await APIHelpers.isInGame(req.params.gameid, r.userid,this.opts.gateway.db)
             if (!game){
                 throw new statuses.ResourcePermissionError()
             }
@@ -268,8 +202,8 @@ module.exports = class {
             let r = new models.EventSubscription(req.body)
             r.topic = "messages" + req.params.gameid
             APIHelpers.VerifyProperties(r)
-            let game:Game = await this.fetchGame(req.params.gameid, res.locals.user.userid)
-            //let game = await this.isInGame(req.params.gameid, r.userid)
+            let game:Game = await APIHelpers.fetchGame(req.params.gameid, res.locals.user.userid,this.opts.gateway.db)
+            //let game = await APIHelpers.isInGame(req.params.gameid, r.userid,this.opts.gateway.db)
 
             if (!game){
                 throw new statuses.ResourcePermissionError()
@@ -279,28 +213,9 @@ module.exports = class {
             success(new statuses.GenericSuccess())
             //Get All Request
         }))
-        this.app.get("/:gameid/winner", APIHelpers.WrapRequest(async (req: express.Request, res: express.Response, success: Function) => {
-            let gameid = (req.params.gameid || "").match(/(\d*)/)
-            if (!gameid || !gameid[1]) {
-                throw new statuses.MissingRequiredField(["gameid"])
-            }
-            gameid = gameid[1]
-            let game;
-            try {
-                game = await this.fetchGame(gameid, res.locals.user.userid)
-            } catch {
-                throw new statuses.ResourcePermissionError()
-            }
-            try {
-                let winner = await game.getGameWinner()
-                success(new statuses.WinnerSuccess(winner))
-            } catch (e) {
-                throw new statuses.GenericErrorWrapper(e)
-            }
-        }))
         this.app.get("/:gameid/state", APIHelpers.WrapRequest(async (req: express.Request, res: express.Response, success: Function) => {
-            let game:Game = await this.fetchGame(req.params.gameid, res.locals.user.userid)
-            //let game = await this.isInGame(req.params.gameid, r.userid)
+            let game:Game = await APIHelpers.fetchGame(req.params.gameid, res.locals.user.userid,this.opts.gateway.db)
+            //let game = await APIHelpers.isInGame(req.params.gameid, r.userid,this.opts.gateway.db)
             let r = new statuses.GetStateSuccess({
                 currentTurn: await game.turn(),
                 finished: await game.isGameFinished()
@@ -311,7 +226,7 @@ module.exports = class {
                
             success(r)
         }))
-        //This is for the logical test of the game.
+
         this.app.post("/:gameid/move", APIHelpers.WrapRequest(async (req: express.Request, res: express.Response, success: Function) => {
             console.log("Got new move")
             let move = new models.RequestMove(req.body)
@@ -321,7 +236,7 @@ module.exports = class {
             }
             let game;
             try {
-                game = await this.fetchGame(gameid, res.locals.user.userid)
+                game = await APIHelpers.fetchGame(gameid, res.locals.user.userid, this.opts.gateway.db)
             } catch {
                 throw new statuses.ResourcePermissionError()
             }
@@ -334,6 +249,17 @@ module.exports = class {
                 console.log(e)
                 throw new statuses.GenericErrorWrapper(e)
             }
+        }))
+        this.app.get("/:gameid/moves", APIHelpers.WrapRequest(async (req: express.Request, res: express.Response, success: Function) => {
+            let game:Game;
+            try {
+                game = await APIHelpers.fetchGame(req.params.gameid, res.locals.user.userid, this.opts.gateway.db)
+            } catch {
+                throw new statuses.ResourcePermissionError()
+            }
+            let moves = await new models.DatabaseMove({gameid: game.gameId}).select({db:this.opts.gateway.db})
+            success(new statuses.IncrementalMovesSuccess(moves))
+            
         }))
 
 

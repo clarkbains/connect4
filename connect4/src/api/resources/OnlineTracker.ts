@@ -6,7 +6,6 @@ export default class OnlineTracker{
         this.people = new Map();
     }
     update(userid:number){
-        console.log(`Seen ${userid}`)
         this.people.set(userid, new Date())
     }
     delete(userid:number){

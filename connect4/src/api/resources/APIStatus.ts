@@ -1,4 +1,4 @@
-import { DatabaseGameMessage, ResponseUser } from "../models/models"
+import { DatabaseGameMessage, DatabaseMatch, DatabaseMove, ResponseUser } from "../models/models"
 
 //MAIN
 export class APIStatus {
@@ -147,6 +147,13 @@ export class PromotionSuccess extends APISuccess {
     }
 
 }
+export class GetMatchSuccess extends APISuccess {
+    match: DatabaseMatch
+    constructor(m) {
+        super("Got Match", ``)
+        this.match = m
+    }
+}
 export class AcceptAllSuccess extends APISuccess {
     matchid: number
     constructor() {
@@ -193,6 +200,14 @@ export class WinnerSuccess extends APISuccess {
     constructor(win:number) {
         super("Game Winner", win===undefined?"The Game is tied":`The winner has the id ${win}`)
         this.resource = win
+    }
+
+}
+export class IncrementalMovesSuccess extends APISuccess {
+    moves:DatabaseMove[]
+    constructor(m:DatabaseMove[]) {
+        super("Moves", "Here are current moves")
+        this.moves = m;
     }
 
 }

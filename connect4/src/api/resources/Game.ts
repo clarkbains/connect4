@@ -14,8 +14,8 @@ export default class Game {
     playerIndex: number
     finished: boolean
     tracker: OnlineTracker
-    constructor(db: Gateway, gameId: number) {
-        this.db = db.db
+    constructor(db: Database, gameId: number) {
+        this.db = db
         this.gameId = gameId
         this.finished = false
         this.playerIndex = 0;
@@ -157,11 +157,11 @@ export default class Game {
         let selected = await game.select({ db: db, limit: 1 })
         return selected.gameid
     }
-    async getPlayers(){
+    async getPlayers() {
         await this._getInfo()
         return this.players
     }
-    async getMatchId():Promise<number>{
+    async getMatchId(): Promise<number> {
         await this._getInfo()
         return this.matchId
     }
@@ -169,16 +169,21 @@ export default class Game {
 
         let s = await new models.DatabaseGame({ gameid: this.gameId }).select({ db: this.db, limit: 1 })
         this.matchId = s.matchid
-        let m = await new models.DatabaseMatch({ matchid: this.matchId }).select({ db: this.db, limit: 1 })
+        if (!this.width || !this.height) {
+            let m = await new models.DatabaseMatch({ matchid: this.matchId }).select({ db: this.db, limit: 1 })
 
-        this.width = m.width
-        this.height = m.height
+            this.width = m.width
+            this.height = m.height
+        }
+
         let playing = await new models.DatabaseMatchAcceptance({
             matchid: this.matchId,
             status: 1
         }).select({ db: this.db })
+
         this.players = []
         this.finished = s.gamefinished
+        
         for (let elm of <models.DatabaseMatchAcceptance[]>playing) {
             this.players.push(elm.userid)
         }
@@ -369,11 +374,11 @@ export default class Game {
     async isGameFinished() {
         return this.finished
     }
-    async getUsersWhoArent(userid: number):Promise<number[]>{
+    async getUsersWhoArent(userid: number): Promise<number[]> {
         await this._getInfo();
-        let found:number[] = []
-        for (let user of this.players){
-            if (user !== userid){
+        let found: number[] = []
+        for (let user of this.players) {
+            if (user !== userid) {
                 found.push(user)
             }
         }

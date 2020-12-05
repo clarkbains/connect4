@@ -1,7 +1,7 @@
 
 import express from 'express'
 import { sqlite3 } from 'sqlite3'
-import { RequestUser, UserModifyRequest, DatabaseUser, DatabaseFriend, PublicResponseUser, FriendRequest, DatabasePendingFriend, FriendRequestUserResponseRequest, ResponseUser, DatabaseMatchAcceptance, DatabaseGame, DatabaseMatch } from '../../../models/models'
+import { RequestUser, UserModifyRequest, DatabaseUser, DatabaseFriend, PublicResponseUser, FriendRequest, DatabasePendingFriend, FriendRequestUserResponseRequest, ResponseUser, DatabaseMatchAcceptance, DatabaseGame, DatabaseMatch, EventSubscription } from '../../../models/models'
 import * as APIHelpers from '../../../resources/APIHelpers'
 import * as statuses from '../../../resources/APIStatus'
 import { DatabaseModel } from '../../../resources/databaseHelpers'
@@ -80,7 +80,8 @@ module.exports = class {
             }).delete({ db: this.opts.gateway.db })
             success(new statuses.GenericSuccess())
 
-
+            this.opts.bus.emit("user"+r.userid,{})
+            this.opts.bus.emit("user"+res.locals.user.userid,{})
         }))
         this.app.get("/me/friendrequests", APIHelpers.WrapRequest(async (req: express.Request, res: express.Response, success: Function) => {
 
@@ -123,7 +124,10 @@ module.exports = class {
                 user2: res.locals.user.userid,
                 user1: otherUser
             }).insert({ db: this.opts.gateway.db })
+
             success(new statuses.FriendRequestSuccess())
+            this.opts.bus.emit("user"+otherUser,{})
+            this.opts.bus.emit("user"+res.locals.user.userid,{})
         }))
         this.app.post("/me/friendrequests/:friendrequest/deny", APIHelpers.WrapRequest(async (req: express.Request, res: express.Response, success: Function) => {
             //Make sure they don't do a wildcard db search if not defined.
@@ -138,10 +142,10 @@ module.exports = class {
             if (pending.length < 1) {
                 throw new statuses.LonelyError()
             }
-
             await pending[0].delete({ db: this.opts.gateway.db })
             success(new statuses.FriendRequestSuccess())
-
+            this.opts.bus.emit("user"+pending[0].user1,{})
+            this.opts.bus.emit("user"+res.locals.user.userid,{})
         }))
         this.app.get("/search", APIHelpers.WrapRequest(async (req: express.Request, res: express.Response, success: Function) => {
             let friends = await (new DatabaseFriend({ user1: res.locals.user.userid })).select({ db: this.opts.gateway.db })
@@ -174,6 +178,17 @@ module.exports = class {
         this.app.get("/:userid/games", APIHelpers.WrapRequest(async (req: express.Request, res: express.Response, success: Function) => {
             let games = await APIHelpers.GetGamesForUser(req.params.userid, res.locals.user.userid, this.opts.gateway.db)
             success(new statuses.ResourceSuccess(games))
+        }))
+        this.app.post("/:userid/refreshes/authorize", APIHelpers.WrapRequest(async (req: express.Request, res: express.Response, success: Function) => {
+            let r = new EventSubscription(req.body)
+            r.topic = "user" + req.params.userid
+            APIHelpers.VerifyProperties(r)
+            let u = await APIHelpers.GetUser(res.locals.user.userid,req.params.userid,this.opts.gateway.db)
+            if (!u){
+                throw new statuses.ResourcePermissionError()
+            }
+            this.opts.bus.promoteWS(res.locals.user, r.wsid, r.topic, r.responseTopic)
+            success(new statuses.GenericSuccess())
         }))
         
         this.app.post("/:userid/friendrequests", APIHelpers.WrapRequest(async (req: express.Request, res: express.Response, success: Function) => {
@@ -212,6 +227,8 @@ module.exports = class {
                 })
             await pending.insert({ db: this.opts.gateway.db });
             success(new statuses.FriendRequestSuccess())
+            this.opts.bus.emit("user"+request.userid,{})
+            this.opts.bus.emit("user"+res.locals.user.userid,{})
 
         }))
 

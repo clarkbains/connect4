@@ -5,8 +5,21 @@
                 <div if.bind="!spectate">
                     It is ${myTurn?'':'not '}your turn
                 </div>
+                <div>
+                    You are currently in ${history?"historical":"live"} mode, click <button class="btn btn-link" click.delegate="toggleLive()"> here </button> to change modes.
+                    <div if.bind="!!history">
+                        <button class="btn btn-link" click.delegate="histMove(-2)" disabled.bind="!history.prev">&lt &lt</button>
+                        <button class="btn btn-link" click.delegate="histMove(-1)"  disabled.bind="!history.prev">&lt</button>
+                        ${history.current}/${history.total}
+                        <button class="btn btn-link" click.delegate="histMove(1)" >&gt</button>
+                        <button class="btn btn-link" click.delegate="histMove(2)" >&gt &gt</button>
+                    </div>
+                </div>
                 <div class="row">
                     <canvas id="game" ref="game" class="game"></canvas>
+                </div>
+                <div if.bind="history">
+                    
                 </div>
             </div>
             <div class="col-md">
@@ -32,8 +45,8 @@
                         </div>
                         <div class="card-body">
                             <div class="overflow-auto" value.bind="messages">
-                                <div repeat.for="m of msgs" style="width: 10rem ;">
-                                    <compose view-model="./partials/msg" view="./partials/msg.html" model.bind="m" />
+                                <div repeat.for="m of msgs">
+                                    <compose view-model="./partials/msg" view="./partials/msg.html" model.bind="{msg:m,col:colourMap[m.userid]}" />
                                 </div>
                             </div>
 
@@ -52,8 +65,7 @@
                             <h4>Players</h4>
                             <div class="overflow-auto">
                                 <div repeat.for="pl of players">
-                                    <i class="fa fa-circle" style.bind="{color: colourMap[pl.userid]}"></i>
-                                    <compose view-model="./partials/user" view="./partials/user.html" model.bind="pl" />
+                                    <compose view-model="./partials/user" view="./partials/user.html" model.bind="{user:pl,col:colourMap[pl.userid]}" />
 
                                 </div>
                             </div>

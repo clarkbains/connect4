@@ -1,5 +1,5 @@
 const jwt = require("jsonwebtoken");
-const crypto = require("jsonwebtoken");
+import crypto from 'crypto'
 import express from "express"
 import * as statuses from './APIStatus'
 import { DatabaseUser } from "../models/models";
@@ -30,16 +30,23 @@ export class Authenticator {
         }, this.secret, { expiresIn: '24h' });
     }
     verifyPassword(password: string, hash: string, salt: string) {
-        if (!password || !hash || !salt){
-            return false
+        let h = crypto.createHash('sha256')
+        h.update(password + salt,'utf8')
+        let d = h.digest('hex')
+        console.log(d)
+        if (d===hash){
+            return true
         }
-        console.log("Checking Password", password)
-        return hash == password && password == salt
+        console.log("Checking Password")
+        return false
     }
     hashPassword(password: string) {
+        let s = crypto.randomBytes(10).toString()
+        let h = crypto.createHash('sha256')
+        h.update(password + s,'utf8')
         return {
-            hash: password,
-            salt: password
+            hash: h.digest('hex'),
+            salt: s
         }
     }
     _getTokens(req: express.Request, res: express.Response, allowOther: boolean): string[] {
