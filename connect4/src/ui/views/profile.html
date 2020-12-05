@@ -4,12 +4,9 @@
             <div class="col">
                 <div class="card">
                     <div class="card-body" ?>
-
                         <div class="card-title">
-
                             <h2><i class="fa fa-user" if.bind="profile.username"></i>
                                 ${!editing?profile.username:""}
-
                                 <input if.bind="editing" type="text" value.bind="usernameVal" />
                             </h2>
                         </div>
@@ -20,7 +17,7 @@
 
                             </p>
                             <p class="card-text"><i class="fa fa-trophy" if.bind="profile.score !== undefined"></i>
-                                ${profile.score}</p>
+                                ${profile.score}/${profile.totalGames} ${profile.totalGames>0?("("+(profile.score*100/profile.totalGames).toFixed(2) + "%)"):''}</p>
                             <p class="card-text"><i class="fa fa-eye" if.bind="private !== undefined"></i>
                                 Visibility <i class="fa fa-${private?'lock':'globe'}"
                                     click.delegate="togglePrivate()"></i>
@@ -68,7 +65,7 @@
                             <div class="card-body">
                                 <div class="form">
                                     <div class="form-group">
-                                        <button class="btn btn-success">Start Game</button>
+                                        <button class="btn btn-success" click.delegate="startGame()">Start Game</button>
                                     </div>
                                 </div>
                             </div>
@@ -156,7 +153,7 @@
 
         </div>
 
-        <div class="row mt-2" if.bind="gameslen > 0 && (profile.isFriend || profile.private==0)">
+        <div class="row mt-2" if.bind="(profile.isFriend || profile.private==0)">
             <div class="col">
                 <div class="card">
                     <div class="card-body">

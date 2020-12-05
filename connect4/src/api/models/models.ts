@@ -28,6 +28,7 @@ export class ResponseUser {
     score: number
     private: number
     isFriend: boolean
+    totalGames: number
     isEditable: boolean
     pendingFriend: boolean|number
     constructor(u: User | object) {
@@ -35,6 +36,7 @@ export class ResponseUser {
         this.username = u.username
         this.email = u.email
         this.score = u.score
+        this.totalGames = u.totalGames
         this.private = u.private
         this.isFriend = u.isFriend || false
         this.isPendingFriend = u.isPendingFriend || false
@@ -458,6 +460,7 @@ export class DatabaseMatch extends DatabaseModel {
         this.msg = m.msg
         this.name = m.name
         this.status = m.status
+        this.privacylevel = m.privacylevel
     }
 
 

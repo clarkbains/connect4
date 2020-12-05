@@ -69,11 +69,12 @@ export class Profile {
                     e.me = e.opponents.filter(f => f.userid === _this.gateway.getId())[0]
 
                     e.meWon = !!(e.game && e.game.gamefinished && e.game.userid === _this.gateway.getId());
-                    e.finished = !!(e.game && e.game.gamefinished);
+                   
                     e.needToAccept = e.me.status !== 1
                     e.myTurn = !e.finished && !!(e.game && e.game.currentturn === _this.gateway.getId());
 
                 }
+                e.finished = !!(e.game && e.game.gamefinished);
                 
                 
                 //e.opponents = fixedOpp;
@@ -94,7 +95,7 @@ export class Profile {
             let pCache = {}
             g.resource.forEach(o => {
                 o.opponents.forEach(p => {
-                    if (!pCache[p.userid]) {
+                    if (typeof p.userid == "number" && !pCache[p.userid]) {
                         pCache[p.userid] = _this.gateway.getUser(p.userid)
                     }
                 })
@@ -114,6 +115,9 @@ export class Profile {
         })
 
     }
+    startGame(){
+        this.r.navigate(`/gameSelection/${this.profile.userid}`)
+    }
     requestFriend() {
         let _this = this
         this.gateway.sendFriendRequest(this.profile.userid).then((e) => { console.log("Requested", e); _this.activate() }).catch(e => {
@@ -132,6 +136,7 @@ export class Profile {
             _this.ns.danger(e.msg, e.info)
         })
     }
+
 
     togglePrivate() {
         if (!this.editing)

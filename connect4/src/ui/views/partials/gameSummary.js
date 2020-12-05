@@ -30,6 +30,16 @@ export class gameSummary {
                 _this.ns.danger(e.msg, e.info)
         })
     }
+    resign(){
+        let _this = this
+        this.gateway.resign(this.g.game.gameid).then((e) => {
+            _this.ns.info(e.msg, e.info)
+            _this.parent.reload()
+        }).catch(e => {
+            console.log(e)
+            _this.ns.danger(e.msg, e.info)
+        })
+    }
     accept() {
         let _this = this
         this.gateway.respondToMatch(this.g.match.matchid, 1).then(() => {
@@ -52,6 +62,9 @@ export class gameSummary {
         })
     }
     view() {
+        this.r.navigate("games/" + this.g.game.gameid + "?mode=spectate")
+    }
+    play() {
         this.r.navigate("games/" + this.g.game.gameid)
     }
 

@@ -1,9 +1,6 @@
 
 <template>
-  <require from="./views/nav-bar.html"></require>
-
-  <nav-bar router.bind="router", ></nav-bar>
-
+  <compose view-model="./views/partials/nav-bar" view="./views/partials/nav-bar.html"/>
   <div class="main-view">
     <router-view></router-view>
   </div>

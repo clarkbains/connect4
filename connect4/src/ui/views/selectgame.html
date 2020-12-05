@@ -10,23 +10,26 @@
                         <div class="input-group">
                             <input disabled type="text" class="form-control" placeholder="User to Play against"
                                 value.bind="username" />
-                            <div class="input-group-prepend">
-                                <i class="fa fa-user"></i>
-                            </div>
                         </div>
 
                     </div>
                     <div class="form-group">
                         <label>Select privacy level for the game</label>
 
-                        <select class="form-control" id="sel1">
+                        <select class="form-control" value.bind = "selPriv">
                             <option>Private</option>
                             <option>Friends Only</option>
                             <option>Public</option>
                         </select>
                     </div>
                     <div class="form-group">
-                        <button click.delegate="sampleGame()" class="btn btn-outline-primary">Send Request</button>
+                        <label>Add a game name</label>
+                        <div class="input-group">
+                            <input type="text" value.bind="knownMsg"/>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <button click.delegate="createWithUser()" class="btn btn-primary">Send Request</button>
                     </div>
 
 
@@ -44,9 +47,30 @@
                             <option>Public</option>
                         </select>
                     </div>
-                    <div class="form-group">
-                        <button click.delegate="sampleGame()" class="btn btn-outline-secondary">Send Request</button>
+                    <div class="row">
+                        <div class="col">
+                            <div class="form-group" >
+                                <button click.delegate="joinExisting()" class="btn btn-primary">Join ${randPriv} Game With Random User</button>
+    
+                            </div>
+                        </div>
+                        <div class="col-xs border-left" if.bind="triedJoining"></div>
+                        <div if.bind="triedJoining" class="col">
+                            <div class="form-group" >
+                                <label>Add A Game Name (Only Required for Creating a new Game)</label>
+                                <div class="input-group">
+                                    <input type="text", value.bind="randGameName"/>
+        
+                                </div>
+                            </div>
+                            <button click.delegate="createPublic()" class="btn btn-secondary">Create ${randPriv} Game With Random User</button>
+    
+    
+                        </div>
+  
                     </div>
+                    
+
                 </div>
             </div>
         </div>

@@ -1,3 +1,5 @@
+import { DatabaseGameMessage, ResponseUser } from "../models/models"
+
 //MAIN
 export class APIStatus {
     cls: string
@@ -75,9 +77,20 @@ export class GetUserSuccess extends APISuccess {
 }
 export class GetUsersSuccess extends APISuccess {
     users: object[]
-    constructor(user: object) {
+    constructor(user: object[]) {
         super("Got Users", "")
         this.users = user
+    }
+}
+export class GetStateSuccess extends APISuccess {
+    currentTurn: number
+    finished:boolean
+    winner:number|undefined
+    constructor(o: GetStateSuccess|object) {
+        super("Got State", "")
+        this.currentTurn = o.currentTurn
+        this.finished = o.finished
+        this.winner = o.winner
     }
 }
 export class GetFriendsSuccess extends APISuccess {
@@ -94,6 +107,11 @@ export class GotPrivateUser extends APISuccess{
         this.userid = id
     }
 }
+export class ResignationSuccess  extends APISuccess{
+    constructor() {
+        super("Resigned", "You have resigned from this game")
+    }
+}
 export class GetPendingFriends extends APISuccess {
     incoming: number[]
     outgoing: number[]
@@ -101,6 +119,15 @@ export class GetPendingFriends extends APISuccess {
         super("Got Requests", "")
         this.incoming = incoming
         this.outgoing = outgoing
+    }
+}
+export class GameWatchers extends APISuccess {
+    players: ResponseUser[]
+    watchers: ResponseUser[]
+    constructor(players: ResponseUser[], watchers: ResponseUser[]) {
+        super("Got Watchers", "")
+        this.players = players
+        this.watchers = watchers
     }
 }
 export class MatchCreationSuccess extends APISuccess {
@@ -177,6 +204,14 @@ export class ResourceSuccess extends APISuccess {
     }
 
 }
+export class MesageSuccess extends APISuccess {
+    messages:DatabaseGameMessage[]
+    constructor(thing:any) {
+        super("Got Messages", ``)
+        this.messages = thing
+    }
+
+}
 export class DeleteSuccess extends APISuccess {
     constructor(type: string) {
         super("Deleted", `${type} has been deleted`)
@@ -193,7 +228,7 @@ export class APIError extends APIStatus {
 export class CouldNotFindMatch extends APIError {
 
     constructor() {
-        super("Could Not Find Match", "Please Try again later",404)
+        super("Could Not Find Open Match", "Please Try again later, or make one yourself",404)
     }
 
 }

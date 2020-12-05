@@ -1,29 +1,83 @@
 <template>
     <div class="container-fluid">
-        <div class="row ">
-            <h1>Playing Game ${gameid}.</h1>
-        </div>
         <div class="row">
-            <p><button click.delegate="reset()" class="btn btn-link">reset</button>the canvas (dev)</p>
+            <div class="col-lg-7 col-md-12" ref="widthDiv">
+                <div if.bind="!spectate">
+                    It is ${myTurn?'':'not '}your turn
+                </div>
+                <div class="row">
+                    <canvas id="game" ref="game" class="game"></canvas>
+                </div>
+            </div>
+            <div class="col-md">
+
+                <div class="card mt-4">
+                    <div class="card-body">
+                        <div class="card-title">
+                            <h2>Messaging</h2>
+                        </div>
+                        <div class="card-body" if.bind="!spectate">
+                            <div class="form-group">
+                                <div class="input-group">
+                                    <input type="text" value.from-view="wsMsg" placeholder="Type Your Message Here">
+                                    <div class="input-group-append">
+                                        <button class="btn btn-dark" click.delegate="sendMessage()"><i
+                                                class="fa fa-send"></i></button>
+                                    </div>
+
+                                </div>
+
+
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="overflow-auto" value.bind="messages">
+                                <div repeat.for="m of msgs" style="width: 10rem ;">
+                                    <compose view-model="./partials/msg" view="./partials/msg.html" model.bind="m" />
+                                </div>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+                <div class="card mt-4" if.bind="players.length > 0 || spectators.length > 0">
+                    <div class="card-body">
+                        <div class="card-title">
+                            <h2>Active Users</h2>
+                        </div>
+
+                        <div class="card-body" if.bind="players.length >0">
+                            <h4>Players</h4>
+                            <div class="overflow-auto">
+                                <div repeat.for="pl of players">
+                                    <i class="fa fa-circle" style.bind="{color: colourMap[pl.userid]}"></i>
+                                    <compose view-model="./partials/user" view="./partials/user.html" model.bind="pl" />
+
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="card-body" if.bind="spectators.length >0">
+                            <h4>Spectators</h4>
+                            <div class="overflow-auto">
+                                <div repeat.for="su of spectators">
+                                    <compose view-model="./partials/user" view="./partials/user.html" model.bind="su" />
+
+                                </div>
+                            </div>
+
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+
+
+            <!--Do Not remove. This is used to calculate the size for the canvas to be grown to-->
+
         </div>
-        <div class="row p-2">
-
-            <button class="btn btn-primary btn-block">Message Opponent</button>
-            <button class="btn btn-secondary btn-block">Request To Add Friend</button>
-            <button class="btn btn-info btn-block">View Profile</button>
-
-
-            <button class="btn btn-outline-danger btn-block">Resign From Game</button>
-
-
-
-        </div>
-
-        <!--Do Not remove. This is used to calculate the size for the canvas to be grown to-->
-        <div style="width:100%" ref="widthDiv"></div>
-        <div class="row">
-            <canvas id="game" ref="game" class="game"></canvas>
-        </div>
-    </div>
 
 </template>

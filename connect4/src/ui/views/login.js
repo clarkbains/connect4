@@ -9,9 +9,12 @@ export class Login {
         this.g = g
         this.router = r
         this.ns = ns
+        
     }
-    activate() {
-        console.log("Checking if logged in")
+    activate(params, routeConfig, navigationInstruction) {
+        this.after = navigationInstruction.queryParams.redir || "profile"
+        console.log("After logging in we will go to", this.after)
+        
         this.g.checkSession()
             .then(r => {
                 console.log("Yes, logged in", r);
@@ -36,7 +39,7 @@ export class Login {
             })
         }
     redir() {
-        this.router.navigate("profile")
+        this.router.navigate(this.after)
     }
     reset() {
         this.router.navigate("resetpassword")

@@ -2,7 +2,6 @@ import { PLATFORM } from "aurelia-framework";
 require('./app.css');
 require('bootstrap/dist/css/bootstrap.min.css');
 require('font-awesome/css/font-awesome.min.css');
-require('bootstrap/dist/js/bootstrap.bundle.min.js')
 import { Gateway } from './gateway'
 import { inject } from 'aurelia-framework'
 import {Redirect} from 'aurelia-router';
@@ -73,8 +72,9 @@ export class App {
         }
       },
       {
-        route: ['gamesSelection'],
-        name: 'gamesSelection',
+        route: 'gameSelection/:id?',
+        name: 'Game',
+        href:'#/gameSelection',
         title: "Select Game",
         moduleId: PLATFORM.moduleName("views/selectgame"),
         nav: true,
@@ -157,9 +157,10 @@ export class App {
   run(f) {
     return (navigationInstruction, next)=>{
       window.scrollTo(0,0)
+      
     if (navigationInstruction.getAllInstructions().some(i => i.config.settings.auth)) {
       if (!f()) {
-        return next.cancel(new Redirect('login'));
+        return next.cancel(new Redirect(`login${!navigationInstruction.fragment.match(/login/)?"?redir=" + encodeURIComponent(navigationInstruction.fragment):""}`));
       }
     }
 

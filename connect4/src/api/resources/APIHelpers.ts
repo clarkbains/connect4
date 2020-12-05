@@ -1,9 +1,94 @@
 import * as statuses from './APIStatus'
 import express from 'express'
+import {DatabaseUser,DatabaseMatchAcceptance, ResponseUser, DatabasePendingFriend,DatabaseFriend, DatabaseGame, DatabaseMatch} from '../models/models'
+
+
+
+export async function GetGamesForUser(userid, foruserid, db) {
+    let priv = (await (new DatabaseUser({ userid: userid }).select({ db: db })))[0].private;
+    let matches = await new DatabaseMatchAcceptance({ userid: userid }).select({ db: db })
+    if (priv) {
+        //Check if friends
+        let f = new DatabaseFriend({ user1: userid, user2: foruserid })
+        let friends = await f.select({ db: db });
+        if (!friends) {
+            throw new statuses.FriendError()
+        }
+        //Get all the matches we are in
+        let userMatchesid = new Set(matches.map(e => e.matchid))
+        //Get all the matches with the user requesting the data
+        let matchesWithUser = await new DatabaseMatchAcceptance({}).raw(db, {
+            sql: `SELECT matchid FROM MatchAcceptances WHERE userid=? AND matchid in (${[...userMatchesid].map((e) => "?").join(",")})`,
+            params: [foruserid, ...userMatchesid],
+            model: DatabaseMatchAcceptance
+        })
+        //Discard everything that they aren't in
+        let matchesToKeep = {}
+        matchesWithUser.forEach((e) => {
+            matchesToKeep[e.matchid] = true
+        })
+        matches = matches.filter((e) => {
+            return !!matchesToKeep[e.matchid]
+        })
+    }
+    let items = []
+    for (let match of matches) {
+        let mgame = await (new DatabaseGame({ matchid: match.matchid })).select({ db: db })
+        let oponents = await (new DatabaseMatchAcceptance({ matchid: match.matchid })).select({ db: db })
+        let m = (await (new DatabaseMatch({ matchid: match.matchid })).select({ db: db }))[0]
+        items.push({
+            match: m,
+            opponents: oponents,
+            game: mgame ? mgame[0] : undefined
+        })
+    }
+    return items
+
+}
+export async function GetUser(me, userid, db) {
+
+    let model = new DatabaseUser({ userid: userid })
+    VerifyProperties(model)
+
+    let r = await model.select({ db: db })
+    if (r.length == 0) {
+        return null
+    }
+    let resp = new ResponseUser(r[0]);
+    if (me.userid != userid) {
+        let f = new DatabaseFriend({ user1: me.userid, user2: userid })
+        let friends = await f.select({ db: db });
+        if (friends.length == 0) {
+            let freqs = new DatabasePendingFriend({ user1: userid, user2: me.userid })
+            let freqs1 = new DatabasePendingFriend({ user2: userid, user1: me.userid })
+
+            let notFResp = new ResponseUser({ userid: userid, isFriend: false, username: r[0].username, private: r[0].private });
+            if (resp.private == 0) {
+                notFResp = resp;
+            }
+            let freqsarr = [...(await freqs.select({ db: db })), ...(await freqs1.select({ db: db }))]
+            if (freqsarr.length > 0) {
+                if (freqsarr[0].user1 !== me.userid) {
+                    notFResp.pendingFriend = freqsarr[0].pendingfriendid
+                } else {
+                    notFResp.pendingFriend = true
+                }
+            }
+            return notFResp;
+        }
+        resp.isFriend = true;
+        return resp
+    }
+    resp.isFriend = true;
+    resp.isEditable = true;
+    return resp;
+}
+
 export function VerifyProperties(obj:object): object{
 
         if (!obj.verify){
-            return console.error("Verify Called for Model with no verify attribute", obj)
+            console.error("Verify Called for Model with no verify attribute", obj)
+            return {}
         }
         else if (!obj.verify()){
             throw new statuses.FieldsNotValidated()

@@ -15,9 +15,8 @@ class eventHandler {
     eventName: string
     filter: Function
     user:DatabaseUser
-    constructor(name: string, socket: Socket, filter: Function, user:DatabaseUser) {
+    constructor(name: string, socket: Socket, user:DatabaseUser) {
         this.socket = socket
-        this.filter = filter
         this.eventName = name
         this.user = user
     }
@@ -48,14 +47,13 @@ export default class Bus {
             this.sockets.delete(socket.id)
         }, 60000)
     }
-    //Conne
-    promoteWS(user:DatabaseUser,id: string, event: string, clientName: string, filter: Function, listenerMaps: Map<String,Function>) {
+    promoteWS(user:DatabaseUser,id: string, event: string, clientName: string, listenerMaps: Map<String,Function>) {
         console.log(id)
         let socket = this.sockets.get(id)
         if (listenerMaps){
             for (let event of Object.keys(listenerMaps))
                 socket.on(event, (data)=>{
-                    listenerMaps[event](data, user)
+                    listenerMaps[event](data, user, socket)
                 })
         }
 
@@ -69,7 +67,7 @@ export default class Bus {
             this.handlers.set(event, [])
         }
         console.log(`Socket ${socket.id} accessing channel "${event}" using client name of "${clientName}"`)
-        this.handlers.get(event).push(new eventHandler(clientName, socket, filter,user))
+        this.handlers.get(event).push(new eventHandler(clientName, socket, user))
     }
 
     emit(event: string, data: any) {

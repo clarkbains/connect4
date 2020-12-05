@@ -24,18 +24,6 @@ module.exports = class {
             }
 
         }))
-        this.app.post("/socketAuth",APIHelpers.WrapRequest(async (req: express.Request, res: express.Response, success: Function) => {
-            try{
-                this.opts.bus.promoteWS(res.locals.user, req.body.id, "counter_test", "counter", 
-                undefined,{"client45":(data,user)=>{
-                    console.log("Recieved from client",user.email, data)
-                }})
-            } catch(e){
-                console.log(e)
-                throw new statuses.NotFound("socket")
-            }
-            success(new statuses.GenericSuccess())
-        }))
         this.app.get("/logout",APIHelpers.WrapRequest(async (req: express.Request, res: express.Response, success: Function) => {
             this.opts.tracker.delete(res.locals.user.userid)
             res.cookie('jwt',"",{domain: APIHelpers.GetDomain(req)})

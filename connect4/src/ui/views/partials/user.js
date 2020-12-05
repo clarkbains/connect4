@@ -16,6 +16,11 @@ export class UserPartial {
     }
 
     activate(o) {
+        this.unknown = false;
+
+        if (!o){
+            this.unknown = true;
+        }
         this.u = o;
         //console.log("Activated with user",o)
 

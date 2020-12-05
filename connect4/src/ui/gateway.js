@@ -35,10 +35,9 @@ export class Gateway {
         })
     }
 
-    connectSocket(event, func) {
+    connectSocket() {
         return new Promise((resolve, reject) => {
             let socket = io.connect(window.location.protocol + "//" + window.location.host)
-            socket.on(event, func)
             socket.on('connect', function () {
                 resolve(socket)
             });
@@ -52,28 +51,48 @@ export class Gateway {
     killSocket(socket) {
         socket.disconnect();
     }
-    authGameSocket(gameid, id) {
+
+
+    authGameSocket(gameid, socket) {
         return this._request({
             path: `/private/games/${gameid}/moves/authorize`,
             method: "POST",
             body: {
                 responseTopic: "moves",
-                wsid: id
+                wsid: socket.id
             }
 
         })
     }
-    authMessageSocket(gameid, id) {
+    authMessageSocket(gameid, socket) {
         return this._request({
             path: `/private/games/${gameid}/messages/authorize`,
             method: "POST",
             body: {
                 responseTopic: "messages",
-                wsid: id
+                wsid: socket.id
+            }
+
+        })    }
+    authParticipantsSocket(gameid, socket) {
+        return this._request({
+            path: `/private/games/${gameid}/participants/authorize`,
+            method: "POST",
+            body: {
+                responseTopic: "participants",
+                wsid: socket.id
             }
 
         })
     }
+    getParticipants(gameid){
+        return this._request({
+            path: `/private/games/${gameid}/participants`,
+            method: "GET"
+
+        })
+    }
+
     sendMessage(gameid, msg) {
         return this._request({
             path: `/private/games/${gameid}/messages`,
@@ -82,6 +101,12 @@ export class Gateway {
                 msg: msg,
             }
 
+        })
+    }
+    getMessage(gameid) {
+        return this._request({
+            path: `/private/games/${gameid}/messages`,
+            method: "GET",
         })
     }
 
@@ -107,7 +132,7 @@ export class Gateway {
 
 
     }
-    editMe(patch){
+    editMe(patch) {
         return this._request({
             path: "/private/user/me",
             method: "PATCH",
@@ -120,32 +145,32 @@ export class Gateway {
             method: "POST",
         })
     }
-    deleteFriend(userid){
+    deleteFriend(userid) {
         return this._request({
-            path:`/private/user/me/friends/${userid}`,
+            path: `/private/user/me/friends/${userid}`,
             method: "DELETE"
         })
     }
-    getFriendRequests(){
-        
+    getFriendRequests() {
+
         return this._request({
             path: `/private/user/me/friendrequests`,
             method: "GET",
         })
     }
-    getFriends(){
+    getFriends() {
         return this._request({
             path: `/private/user/me/friends`,
             method: "GET",
         })
-        
+
     }
-    search(term){
+    search(term) {
         return this._request({
             path: `/private/user/search?term=${encodeURIComponent(term)}`,
             method: "GET",
         })
-        
+
     }
     acceptFriendRequest(frid) {
         return this._request({
@@ -170,14 +195,29 @@ export class Gateway {
             }
         })
     }
-    makeMatch(person) {
+    getPlayers(gameId) {
+        return this._request({
+            path: `/private/games/${gameId}/players`,
+            method: "GET"
+        })
+    }
+    makeMatch(person, msg, privacy) {
         return this._request({
             path: `/private/games/requests`,
             method: "POST",
             body: {
                 participants: [person],
-                privacy:0,
-                name:"Created from client"
+                privacy: privacy,
+                name: msg ? msg : "We live in a society"
+            }
+        })
+    }
+    joinMatch(privacy) {
+        return this._request({
+            path: `/private/games/requests/join`,
+            method: "POST",
+            body: {
+                privacy: privacy,
             }
         })
     }
@@ -198,7 +238,7 @@ export class Gateway {
             }
         })
     }
-    getGamesForUser(id){
+    getGamesForUser(id) {
         return this._request({
             path: `/private/user/${id}/games`,
             method: "GET",
@@ -209,6 +249,13 @@ export class Gateway {
         return this._request({
             path: `/private/games/${gameid}/board`,
             method: "GET",
+
+        })
+    }
+    resign(gameid) {
+        return this._request({
+            path: `/private/games/${gameid}/resign`,
+            method: "POST",
 
         })
     }
@@ -315,7 +362,7 @@ export class Gateway {
                 }
                 let body = response.json()
                 if (opts.verify) {
-                   // console.log("Verifying result")
+                    // console.log("Verifying result")
                     // eslint-disable-next-line no-inner-declarations
                     function err(e, c) {
                         console.log("Caught request error, gracefully handling")
