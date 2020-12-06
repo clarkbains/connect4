@@ -95,13 +95,15 @@ export class Profile {
             _this.deniedGames = g.resource.filter(o => !o.started && o.denied)
 
             _this.openGames = g.resource.filter(o => o.started && !o.finished && !o.me)
-            if (this.profile.userid!==this.gateway.getId()){
-                _this.openGames = _this.openGames.slice(0, Math.min(_this.openGames.length, 5))
-
-            }
             _this.myOpenGames = g.resource.filter(o => o.started && !o.finished && o.me)
 
             _this.closedGames = g.resource.filter(o => o.started && o.finished)
+            if (this.profile.userid!==this.gateway.getId()){
+                _this.openGames = _this.openGames.slice(0, Math.min(_this.openGames.length, 5))
+                _this.closedGames = _this.closedGames.slice(0, Math.min(_this.closedGames.length, 5))
+
+            }
+
 
 
             let pCache = {}
