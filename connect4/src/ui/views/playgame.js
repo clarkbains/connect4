@@ -315,7 +315,9 @@ export class PlayGame {
 
     sendMessage() {
         let _this = this
-        this.gateway.sendMessage(this.gameid, this.wsMsg).catch(e => {
+        this.gateway.sendMessage(this.gameid, this.wsMsg).then(e=>{
+            _this.wsMsg = ""
+        }).catch(e => {
             console.error(e)
             _this.ns.warning("Message", "Must contain content")
         })

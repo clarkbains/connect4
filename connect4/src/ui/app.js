@@ -140,7 +140,7 @@ export class App {
           visible:false,
         }
       }
-      ,
+      /*,
       {
         route: 'test',
         name: 'test',
@@ -151,7 +151,7 @@ export class App {
           visible:true,
           auth:true
         }
-      }
+      }*/
     ]);
   }
   run(f) {

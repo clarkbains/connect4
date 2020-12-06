@@ -30,18 +30,21 @@
                             <h2>Messaging</h2>
                         </div>
                         <div class="card-body" >
-                            <div class="form-group">
-                                <div class="input-group">
-                                    <input type="text" value.from-view="wsMsg" placeholder="Type Your Message Here">
-                                    <div class="input-group-append">
-                                        <button class="btn btn-dark" click.delegate="sendMessage()"><i
-                                                class="fa fa-send"></i></button>
+                            <form roll="for" submit.delagate="sendMessage()">
+                                <div class="form-group">
+                                    <div class="input-group">
+                                        <input type="text" value.bind="wsMsg" placeholder="Type Your Message Here">
+                                        <div class="input-group-append">
+                                            <button type="submit" class="btn btn-dark" click.delegate="sendMessage()"><i
+                                                    class="fa fa-send"></i></button>
+                                        </div>
+    
                                     </div>
-
+    
+    
                                 </div>
-
-
-                            </div>
+                            </form>
+   
                         </div>
                         <div class="card-body">
                             <div class="overflow-auto" value.bind="messages">
