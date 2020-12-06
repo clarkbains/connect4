@@ -34,7 +34,7 @@
                 Request</button>
 
         </div>
-        <div if.bind="g.readyToPromote">
+        <div if.bind="g.readyToPromote && !!g.me">
             <button class="btn btn-primary" click.delegate="promote()">Initialize Game!</button>
             <button class="btn btn-danger" click.delegate="deny()" disabled.bind="g.me && g.me.status===2">Deny
                 Request</button>

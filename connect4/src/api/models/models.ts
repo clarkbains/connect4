@@ -291,6 +291,9 @@ export class UserModifyRequest {
         this.username = c.username
         this.private = c.private
     }
+    verify(){
+        return this.email.match(/.+@.+\..*/) && this.name && this.email
+    }
 
 }
 export class FriendRequest {

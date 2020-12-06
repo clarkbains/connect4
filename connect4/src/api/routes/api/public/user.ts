@@ -37,13 +37,14 @@ module.exports = class {
         }))
         this.app.post("/", APIHelpers.WrapRequest(async (req: express.Request, res: express.Response, success: Function) => {
 
-
-            let dbObj = new models.DatabaseUser(
-                new models.UserModifyRequest(req.body)
-            )
+            let uc = new models.UserModifyRequest(req.body)
+            
+            let dbObj = new models.DatabaseUser(uc)
             if (!dbObj.email || !dbObj.username) {
                 throw new statuses.MissingRequiredField(["email", "username", "name"])
             }
+            
+            APIHelpers.VerifyProperties(uc)
             await dbObj.insert({ db: this.opts.gateway.db })
                 .catch(e => { throw new statuses.DatabaseError() })
             await success(new statuses.CreateUserSuccess())
