@@ -25,6 +25,11 @@ export class Profile {
     reload() {
         this.activate(this.ac)
     }
+    detached(){
+     if (this.socketsConnected)
+      this.gateway.getUserSocket().removeListener("user"+this.profile.userid)
+     this.socketConnected=false;
+    }
     async activate(obj) {
         let _this = this
         this.ac = obj || this.ac
