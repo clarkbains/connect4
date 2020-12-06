@@ -372,6 +372,7 @@ export default class Game {
         return r ? r.userid : undefined;
     }
     async isGameFinished() {
+        await this._getInfo()
         return this.finished
     }
     async getUsersWhoArent(userid: number): Promise<number[]> {

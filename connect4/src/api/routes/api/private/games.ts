@@ -122,11 +122,12 @@ module.exports = class {
                 throw new statuses.ResourcePermissionError();
             }
             //Prevent Other users from repeatedly resigning to boost points for other users
-            if (game.isGameFinished()){
+            if (await game.isGameFinished()){
                 throw new statuses.GameStateSuccess(1)
             }
             
             let winners = await game.getUsersWhoArent(res.locals.user.userid)
+            console.log()
             game.finishGame(winners[0])
             
 

@@ -34,7 +34,7 @@ export async function isInMatch(matchid, userid, db) {
     }
     let player = await new models.DatabaseMatchAcceptance(
         {
-            status: 1,
+            //status: 1,
             matchid: matchid,
             userid: userid
         }).select({ db: db })
@@ -44,7 +44,6 @@ export async function fetchGame(gameid, userid, db: Database) {
     if (!gameid && gameid !== 0) {
         return undefined
     }
-    console.log("Retrieving Game id", gameid, "for", userid)
 
     let game = await (new models.DatabaseGame({ gameid: gameid })).select({ db: db })
     if (game.length == 0) {
@@ -57,6 +56,7 @@ export async function fetchGame(gameid, userid, db: Database) {
 }
 
 export async function checkMatchPerms(matchid, userid, db: Database) {
+    console.log
     if (!matchid && matchid !== 0) {
         console.log("Matchid is invalid")
 
@@ -142,8 +142,8 @@ export async function GetGamesForUser(userid, foruserid, db) {
         let mgame = await (new DatabaseGame({ matchid: match.matchid })).select({ db: db })
         let oponents = await (new DatabaseMatchAcceptance({ matchid: match.matchid })).select({ db: db })
         let m = (await (new DatabaseMatch({ matchid: match.matchid })).select({ db: db }))[0]
+        
         let perm = await checkMatchPerms(m.matchid, foruserid, db)
-
         if (perm) {
             items.push({
                 match:m,

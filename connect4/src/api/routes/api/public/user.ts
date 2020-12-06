@@ -124,19 +124,16 @@ module.exports = class {
             let cred = this.opts.auth.hashPassword(myRequest.newpassword)
             let oldCreds = await new models.DatabaseCredential({ userid: userid })
                 .select({ db: this.opts.gateway.db })
-            console.log("Changing creds from", oldCreds)
             let updatedCreds = new models.DatabaseCredential(oldCreds && oldCreds[0] ? oldCreds[0] : {})
             updatedCreds.hash = cred.hash
             updatedCreds.salt = cred.salt
             updatedCreds.userid = userid
             console.log(updatedCreds)
             if (oldCreds.length == 0) {
-                console.log("Inserting new User Creds", updatedCreds)
                 await updatedCreds.insert({ db: this.opts.gateway.db })
 
             }
             else {
-                console.log("Updating Current Creds", updatedCreds)
                 await updatedCreds.update({ db: this.opts.gateway.db })
 
             }

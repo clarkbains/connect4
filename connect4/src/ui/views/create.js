@@ -16,6 +16,11 @@ export class Create {
     goBack(){
         this.router.navigateBack()
     }
+    seed(){
+        for (let i = 0; i<10; i++){
+            this.g.createUser("username"+i, "username"+i+"@gmail.com", "User "+i)
+        }
+    }
     createAccount() {
         let _this = this
         this.g.createUser(this.username, this.email, this.name).then((e)=>{

@@ -33,11 +33,9 @@ export class Authenticator {
         let h = crypto.createHash('sha256')
         h.update(password + salt,'utf8')
         let d = h.digest('hex')
-        console.log(d)
         if (d===hash){
             return true
         }
-        console.log("Checking Password")
         return false
     }
     hashPassword(password: string) {

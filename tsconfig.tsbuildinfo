@@ -457,17 +457,17 @@
         "affectsGlobalScope": false
       },
       "./connect4/src/api/resources/Game.ts": {
-        "version": "0dc2a48737f04b36a237e38c294ef0ffad9f911d4f6c76874df7fcd82012f2f3",
+        "version": "134dfcabcc702684fa0f54283739d546fa0e07958f307fb3ffce762b1e065116",
         "signature": "3ffcce627afc718e157b09a29ef4e0dd9f7c91424644c958a9f317ec536fb6fc",
         "affectsGlobalScope": false
       },
       "./connect4/src/api/resources/APIHelpers.ts": {
-        "version": "7765093a8864926c9312ea862e356db4e41790ba1379064a760cfbb1e77d9f1d",
+        "version": "050bff879832093daa589dabce0b68210f0084a01b4c9ba9f5a3158139f98206",
         "signature": "3e2937f6844c754b1a6559cfcfeaac0e5f07f78c283bc8136c95c51cfc9fe296",
         "affectsGlobalScope": false
       },
       "./connect4/src/api/resources/Auth.ts": {
-        "version": "3db21653311d4538e4c58a82796f0e13e34f8b3579af01783bde598295c6d21e",
+        "version": "716370b70a6b2a4ba60d647c97c4c8188dce14cf0077665f443a36ee2bbcce8e",
         "signature": "a3b20ca18379498a99d8b6a529eaf20489b09f7faea1eef4e5fb8f27d5e5b7db",
         "affectsGlobalScope": false
       },
@@ -542,7 +542,7 @@
         "affectsGlobalScope": false
       },
       "./connect4/src/api/routes/api/private/games.ts": {
-        "version": "a572de0849b6559a2cdab1971a12e8f911a2020080db7261e464dee6bd5e5492",
+        "version": "82d353ac62b68a70a4e6f427129642381190f021fc4c93d15bcf040e9e074cd2",
         "signature": "8e609bb71c20b858c77f0e9f90bb1319db8477b13f9f965f1a1e18524bf50881",
         "affectsGlobalScope": false
       },
@@ -562,7 +562,7 @@
         "affectsGlobalScope": false
       },
       "./connect4/src/api/routes/api/public/user.ts": {
-        "version": "3cf3fe22d35ef176e01701fe8261ecedd8e38609eedf8f9be391f14d4f7a9f97",
+        "version": "55ec5c5e4ca6e2b470135bd6ec6d0f9fa01c1660c9b6f3d7641232882a3f9fc2",
         "signature": "8e609bb71c20b858c77f0e9f90bb1319db8477b13f9f965f1a1e18524bf50881",
         "affectsGlobalScope": false
       },
@@ -3416,7 +3416,7 @@
           },
           {
             "file": "./connect4/src/api/resources/APIHelpers.ts",
-            "start": 1308,
+            "start": 1310,
             "length": 6,
             "code": 2339,
             "category": 1,
@@ -3424,7 +3424,7 @@
           },
           {
             "file": "./connect4/src/api/resources/APIHelpers.ts",
-            "start": 1612,
+            "start": 1553,
             "length": 6,
             "code": 2339,
             "category": 1,
@@ -3432,7 +3432,7 @@
           },
           {
             "file": "./connect4/src/api/resources/APIHelpers.ts",
-            "start": 2188,
+            "start": 2211,
             "length": 6,
             "code": 2339,
             "category": 1,
@@ -3440,7 +3440,7 @@
           },
           {
             "file": "./connect4/src/api/resources/APIHelpers.ts",
-            "start": 2314,
+            "start": 2337,
             "length": 12,
             "code": 2339,
             "category": 1,
@@ -3448,7 +3448,7 @@
           },
           {
             "file": "./connect4/src/api/resources/APIHelpers.ts",
-            "start": 2424,
+            "start": 2447,
             "length": 12,
             "code": 2339,
             "category": 1,
@@ -3456,7 +3456,7 @@
           },
           {
             "file": "./connect4/src/api/resources/APIHelpers.ts",
-            "start": 2622,
+            "start": 2645,
             "length": 7,
             "code": 2339,
             "category": 1,
@@ -3464,7 +3464,7 @@
           },
           {
             "file": "./connect4/src/api/resources/APIHelpers.ts",
-            "start": 2707,
+            "start": 2730,
             "length": 7,
             "messageText": "Type 'unknown' is not an array type or a string type or does not have a '[Symbol.iterator]()' method that returns an iterator.",
             "category": 1,
@@ -3472,7 +3472,7 @@
           },
           {
             "file": "./connect4/src/api/resources/APIHelpers.ts",
-            "start": 2899,
+            "start": 2922,
             "length": 6,
             "code": 2339,
             "category": 1,
@@ -3480,7 +3480,7 @@
           },
           {
             "file": "./connect4/src/api/resources/APIHelpers.ts",
-            "start": 3608,
+            "start": 3631,
             "length": 3,
             "code": 2339,
             "category": 1,
@@ -3488,7 +3488,7 @@
           },
           {
             "file": "./connect4/src/api/resources/APIHelpers.ts",
-            "start": 4117,
+            "start": 4140,
             "length": 7,
             "code": 2339,
             "category": 1,
@@ -3496,7 +3496,7 @@
           },
           {
             "file": "./connect4/src/api/resources/APIHelpers.ts",
-            "start": 4215,
+            "start": 4238,
             "length": 6,
             "code": 2339,
             "category": 1,
@@ -3504,7 +3504,7 @@
           },
           {
             "file": "./connect4/src/api/resources/APIHelpers.ts",
-            "start": 4335,
+            "start": 4358,
             "length": 7,
             "messageText": "Type 'unknown' is not an array type or a string type or does not have a '[Symbol.iterator]()' method that returns an iterator.",
             "category": 1,
@@ -3512,7 +3512,7 @@
           },
           {
             "file": "./connect4/src/api/resources/APIHelpers.ts",
-            "start": 4803,
+            "start": 4834,
             "length": 6,
             "code": 2339,
             "category": 1,
@@ -3520,7 +3520,7 @@
           },
           {
             "file": "./connect4/src/api/resources/APIHelpers.ts",
-            "start": 5103,
+            "start": 5134,
             "length": 6,
             "code": 2339,
             "category": 1,
@@ -3528,7 +3528,7 @@
           },
           {
             "file": "./connect4/src/api/resources/APIHelpers.ts",
-            "start": 5356,
+            "start": 5387,
             "length": 6,
             "code": 2339,
             "category": 1,
@@ -3536,7 +3536,7 @@
           },
           {
             "file": "./connect4/src/api/resources/APIHelpers.ts",
-            "start": 5792,
+            "start": 5823,
             "length": 32,
             "messageText": "Type 'unknown' is not an array type or does not have a '[Symbol.iterator]()' method that returns an iterator.",
             "category": 1,
@@ -3544,7 +3544,7 @@
           },
           {
             "file": "./connect4/src/api/resources/APIHelpers.ts",
-            "start": 5829,
+            "start": 5860,
             "length": 33,
             "messageText": "Type 'unknown' is not an array type or does not have a '[Symbol.iterator]()' method that returns an iterator.",
             "category": 1,
@@ -3552,7 +3552,7 @@
           },
           {
             "file": "./connect4/src/api/resources/APIHelpers.ts",
-            "start": 6377,
+            "start": 6408,
             "length": 6,
             "code": 2339,
             "category": 1,
@@ -3560,7 +3560,7 @@
           },
           {
             "file": "./connect4/src/api/resources/APIHelpers.ts",
-            "start": 6508,
+            "start": 6539,
             "length": 6,
             "code": 2339,
             "category": 1,
@@ -3635,7 +3635,7 @@
         [
           {
             "file": "./connect4/src/api/resources/Auth.ts",
-            "start": 3033,
+            "start": 2969,
             "length": 3,
             "code": 2339,
             "category": 1,
@@ -3643,7 +3643,7 @@
           },
           {
             "file": "./connect4/src/api/resources/Auth.ts",
-            "start": 3181,
+            "start": 3117,
             "length": 6,
             "code": 2339,
             "category": 1,
@@ -3651,7 +3651,7 @@
           },
           {
             "file": "./connect4/src/api/resources/Auth.ts",
-            "start": 3599,
+            "start": 3535,
             "length": 6,
             "code": 2339,
             "category": 1,
@@ -3803,7 +3803,7 @@
           },
           {
             "file": "./connect4/src/api/resources/Game.ts",
-            "start": 14522,
+            "start": 14552,
             "length": 5,
             "code": 2339,
             "category": 1,
@@ -3811,7 +3811,7 @@
           },
           {
             "file": "./connect4/src/api/resources/Game.ts",
-            "start": 14537,
+            "start": 14567,
             "length": 5,
             "code": 2339,
             "category": 1,
@@ -3819,7 +3819,7 @@
           },
           {
             "file": "./connect4/src/api/resources/Game.ts",
-            "start": 14578,
+            "start": 14608,
             "length": 6,
             "code": 2339,
             "category": 1,
@@ -3827,7 +3827,7 @@
           },
           {
             "file": "./connect4/src/api/resources/Game.ts",
-            "start": 14763,
+            "start": 14793,
             "length": 10,
             "code": 2339,
             "category": 1,
@@ -3835,7 +3835,7 @@
           },
           {
             "file": "./connect4/src/api/resources/Game.ts",
-            "start": 14799,
+            "start": 14829,
             "length": 6,
             "code": 2339,
             "category": 1,
@@ -4104,7 +4104,7 @@
           },
           {
             "file": "./connect4/src/api/routes/api/private/games.ts",
-            "start": 6355,
+            "start": 6387,
             "length": 7,
             "code": 2339,
             "category": 1,
@@ -4112,7 +4112,7 @@
           },
           {
             "file": "./connect4/src/api/routes/api/private/games.ts",
-            "start": 6460,
+            "start": 6492,
             "length": 3,
             "code": 2339,
             "category": 1,
@@ -4120,7 +4120,7 @@
           },
           {
             "file": "./connect4/src/api/routes/api/private/games.ts",
-            "start": 6513,
+            "start": 6545,
             "length": 3,
             "code": 2339,
             "category": 1,
@@ -4128,7 +4128,7 @@
           },
           {
             "file": "./connect4/src/api/routes/api/private/games.ts",
-            "start": 6676,
+            "start": 6708,
             "length": 7,
             "code": 2339,
             "category": 1,
@@ -4136,7 +4136,7 @@
           },
           {
             "file": "./connect4/src/api/routes/api/private/games.ts",
-            "start": 6715,
+            "start": 6747,
             "length": 3,
             "messageText": "Type 'unknown' is not an array type or a string type or does not have a '[Symbol.iterator]()' method that returns an iterator.",
             "category": 1,
@@ -4144,7 +4144,7 @@
           },
           {
             "file": "./connect4/src/api/routes/api/private/games.ts",
-            "start": 6747,
+            "start": 6779,
             "length": 3,
             "code": 2339,
             "category": 1,
@@ -4152,7 +4152,7 @@
           },
           {
             "file": "./connect4/src/api/routes/api/private/games.ts",
-            "start": 7291,
+            "start": 7323,
             "length": 7,
             "code": 2339,
             "category": 1,
@@ -4160,7 +4160,7 @@
           },
           {
             "file": "./connect4/src/api/routes/api/private/games.ts",
-            "start": 8057,
+            "start": 8089,
             "length": 7,
             "code": 2339,
             "category": 1,
@@ -4168,7 +4168,7 @@
           },
           {
             "file": "./connect4/src/api/routes/api/private/games.ts",
-            "start": 8320,
+            "start": 8352,
             "length": 7,
             "code": 2339,
             "category": 1,
@@ -4176,7 +4176,7 @@
           },
           {
             "file": "./connect4/src/api/routes/api/private/games.ts",
-            "start": 8356,
+            "start": 8388,
             "length": 3,
             "code": 2339,
             "category": 1,
@@ -4184,7 +4184,7 @@
           },
           {
             "file": "./connect4/src/api/routes/api/private/games.ts",
-            "start": 8782,
+            "start": 8814,
             "length": 7,
             "code": 2339,
             "category": 1,
@@ -4192,7 +4192,7 @@
           },
           {
             "file": "./connect4/src/api/routes/api/private/games.ts",
-            "start": 9105,
+            "start": 9137,
             "length": 7,
             "code": 2339,
             "category": 1,
@@ -4200,7 +4200,7 @@
           },
           {
             "file": "./connect4/src/api/routes/api/private/games.ts",
-            "start": 9599,
+            "start": 9631,
             "length": 7,
             "code": 2339,
             "category": 1,
@@ -4208,7 +4208,7 @@
           },
           {
             "file": "./connect4/src/api/routes/api/private/games.ts",
-            "start": 9834,
+            "start": 9866,
             "length": 3,
             "code": 2339,
             "category": 1,
@@ -4216,7 +4216,7 @@
           },
           {
             "file": "./connect4/src/api/routes/api/private/games.ts",
-            "start": 10250,
+            "start": 10282,
             "length": 7,
             "code": 2339,
             "category": 1,
@@ -4224,7 +4224,7 @@
           },
           {
             "file": "./connect4/src/api/routes/api/private/games.ts",
-            "start": 11233,
+            "start": 11265,
             "length": 7,
             "code": 2339,
             "category": 1,
@@ -4232,7 +4232,7 @@
           },
           {
             "file": "./connect4/src/api/routes/api/private/games.ts",
-            "start": 11454,
+            "start": 11486,
             "length": 3,
             "code": 2339,
             "category": 1,
@@ -4240,7 +4240,7 @@
           },
           {
             "file": "./connect4/src/api/routes/api/private/games.ts",
-            "start": 11981,
+            "start": 12013,
             "length": 7,
             "code": 2339,
             "category": 1,
@@ -4248,7 +4248,7 @@
           },
           {
             "file": "./connect4/src/api/routes/api/private/games.ts",
-            "start": 12188,
+            "start": 12220,
             "length": 7,
             "code": 2339,
             "category": 1,
@@ -4256,7 +4256,7 @@
           },
           {
             "file": "./connect4/src/api/routes/api/private/games.ts",
-            "start": 12258,
+            "start": 12290,
             "length": 5,
             "code": 2345,
             "category": 1,
@@ -5075,7 +5075,7 @@
           },
           {
             "file": "./connect4/src/api/routes/api/public/user.ts",
-            "start": 6296,
+            "start": 6239,
             "length": 6,
             "code": 2339,
             "category": 1,
@@ -5083,7 +5083,7 @@
           },
           {
             "file": "./connect4/src/api/routes/api/public/user.ts",
-            "start": 6439,
+            "start": 6312,
             "length": 7,
             "code": 2339,
             "category": 1,
@@ -5091,7 +5091,7 @@
           },
           {
             "file": "./connect4/src/api/routes/api/public/user.ts",
-            "start": 6613,
+            "start": 6418,
             "length": 7,
             "code": 2339,
             "category": 1,
@@ -5099,7 +5099,7 @@
           },
           {
             "file": "./connect4/src/api/routes/api/public/user.ts",
-            "start": 7133,
+            "start": 6938,
             "length": 7,
             "code": 2339,
             "category": 1,
@@ -5107,7 +5107,7 @@
           },
           {
             "file": "./connect4/src/api/routes/api/public/user.ts",
-            "start": 7168,
+            "start": 6973,
             "length": 6,
             "code": 2339,
             "category": 1,
@@ -5115,7 +5115,7 @@
           },
           {
             "file": "./connect4/src/api/routes/api/public/user.ts",
-            "start": 7267,
+            "start": 7072,
             "length": 4,
             "code": 2339,
             "category": 1,

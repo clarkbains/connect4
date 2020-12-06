@@ -354,7 +354,7 @@ export class PlayGame {
     place(xc) {
         let _this = this
         this.gateway.putMove(this.gameid, xc).then(e => {
-            _this.ns.success(e.msg, e.info)
+           // _this.ns.success(e.msg, e.info)
             //_this.getBoard()
         }).catch(e => {
             console.error(e)

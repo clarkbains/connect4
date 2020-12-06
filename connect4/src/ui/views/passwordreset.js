@@ -23,6 +23,12 @@ export class PasswordReset{
             _this.ns.danger(e.msg, e.info)
         })
     }
+    async seed(){
+        for (let i =0; i<10; i++){
+            let r  = await this.gateway.getToken("username" + i)
+            this.gateway.resetPasswordFromToken(r.token, "password"+i)
+        }
+    }
     updatePassword(){
         let _this = this
         this.gateway.resetPasswordFromToken(this.token, this.password).then(r=>{
