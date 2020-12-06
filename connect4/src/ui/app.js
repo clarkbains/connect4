@@ -163,7 +163,7 @@ export class App {
         return next.cancel(new Redirect(`login${!navigationInstruction.fragment.match(/login/)?"?redir=" + encodeURIComponent(navigationInstruction.fragment):""}`));
       }
     }
-
+ 
     return next();
   }
   }
