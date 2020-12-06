@@ -1,0 +1,1 @@
+Databases are stored here. This file exists so git can keep track of this folder

@@ -49,12 +49,20 @@
             <div class="col">
                 <div class="card">
                     <div class="card-body">
-                        <h2 class="card-title">COVID-19 Free</h2>
+                        <h2 class="card-title">Free and Open Source</h2>
 
                         <div class="container-fluid">
                             <div class="row">
                                 <div class="col-8">
-                                    I mean, am I wrong? No covid on this site. No mask required either. Take a break from the outside.
+                                   This is open <a href="https://github.com/clarkbains/connect4">source</a> software. Closed source is only for the faint of heart. Don't be constrained by the products of capitalistic companies, trying to get steal your precious information and sell it. 
+                                   Fight the resistance! Join open source. Be Better. 
+                                   <div if.bind="!!os">
+                                    <br>
+                                    <br>
+                                    <div if.bind="good">You probably support open source already, so good on you, you ${os} user. <br>(This message only shows on Linux/UNIX based systems)</div>
+                                        <div else>${os} is going to steal all your data anyways!1!1! <br>(This message shows on non Linux/UNIX based systems)</div>
+
+                                    </div>
                                 </div>
                                 <div class="col-4">
                                     <i class="fa fa-thermometer-full fa-5x"></i>

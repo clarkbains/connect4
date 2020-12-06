@@ -9,7 +9,6 @@ import {Authenticator} from './resources/Auth'
 import Gateway from './gateway'
 import conf from './config'
 import { Socket } from "socket.io";
-import { APIError } from "./resources/APIStatus";
 import  OnlineTracker  from "./resources/OnlineTracker"
 import Bus from "./resources/bus";
 require('source-map-support').install();
