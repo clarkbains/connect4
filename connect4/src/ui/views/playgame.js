@@ -43,6 +43,7 @@ export class PlayGame {
             this.match = mr.match
             this.width = this.match.width
             this.height = this.match.height
+            this.msg = mr.match.msg
 
             this.socket = await this.gateway.connectSocket()
             //await this.gateway.authGameSocket(this.gameid, this.socket)

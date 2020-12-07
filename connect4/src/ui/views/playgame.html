@@ -2,7 +2,8 @@
     <div class="container-fluid">
         <div class="row">
             <div class="col-lg-7 col-md-12" ref="widthDiv">
-                <h2 if.bind="spectate">You are spectating a game</h2>
+                <h2>Game: ${msg}</h2>
+                <h3 if.bind="spectate">You are spectating a game</h3>
                 <div if.bind="!spectate">
                     It is ${myTurn?'':'not '}your turn
                 </div>
