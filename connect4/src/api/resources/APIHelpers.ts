@@ -120,7 +120,8 @@ export async function GetGamesForUser(userid, foruserid, db) {
         if (!friends) {
             throw new statuses.FriendError()
         }
-        //Get all the matches we are in
+    }
+        /*//Get all the matches we are in
         let userMatchesid = new Set(matches.map(e => e.matchid))
         //Get all the matches with the user requesting the data
         let matchesWithUser = await new DatabaseMatchAcceptance({}).raw(db, {
@@ -136,7 +137,7 @@ export async function GetGamesForUser(userid, foruserid, db) {
         matches = matches.filter((e) => {
             return !!matchesToKeep[e.matchid]
         })
-    }
+    }*/
     let items = []
     for (let match of matches) {
         let mgame = await (new DatabaseGame({ matchid: match.matchid })).select({ db: db })

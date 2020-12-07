@@ -462,7 +462,7 @@
         "affectsGlobalScope": false
       },
       "./connect4/src/api/resources/APIHelpers.ts": {
-        "version": "149308aa9ba98c8056d7cbf9460b975c399a976a5fec907ecab717dae47c31ff",
+        "version": "95a80b15f97e422372c0a520bc8ca9d5eb8196c5a253b6bfdb44717a8d723f06",
         "signature": "3e2937f6844c754b1a6559cfcfeaac0e5f07f78c283bc8136c95c51cfc9fe296",
         "affectsGlobalScope": false
       },
@@ -606,7 +606,6 @@
       "emitDecoratorMetadata": true,
       "skipLibCheck": true,
       "forceConsistentCasingInFileNames": true,
-      "watch": true,
       "configFilePath": "./tsconfig.json"
     },
     "referencedMap": {
@@ -3400,171 +3399,6 @@
                 }
               ]
             }
-          }
-        ]
-      ],
-      [
-        "./connect4/src/api/resources/APIHelpers.ts",
-        [
-          {
-            "file": "./connect4/src/api/resources/APIHelpers.ts",
-            "start": 778,
-            "length": 6,
-            "code": 2339,
-            "category": 1,
-            "messageText": "Property 'length' does not exist on type 'unknown'."
-          },
-          {
-            "file": "./connect4/src/api/resources/APIHelpers.ts",
-            "start": 1310,
-            "length": 6,
-            "code": 2339,
-            "category": 1,
-            "messageText": "Property 'length' does not exist on type 'unknown'."
-          },
-          {
-            "file": "./connect4/src/api/resources/APIHelpers.ts",
-            "start": 1553,
-            "length": 6,
-            "code": 2339,
-            "category": 1,
-            "messageText": "Property 'length' does not exist on type 'unknown'."
-          },
-          {
-            "file": "./connect4/src/api/resources/APIHelpers.ts",
-            "start": 2145,
-            "length": 6,
-            "code": 2339,
-            "category": 1,
-            "messageText": "Property 'length' does not exist on type 'unknown'."
-          },
-          {
-            "file": "./connect4/src/api/resources/APIHelpers.ts",
-            "start": 2271,
-            "length": 12,
-            "code": 2339,
-            "category": 1,
-            "messageText": "Property 'privacylevel' does not exist on type 'unknown'."
-          },
-          {
-            "file": "./connect4/src/api/resources/APIHelpers.ts",
-            "start": 2381,
-            "length": 12,
-            "code": 2339,
-            "category": 1,
-            "messageText": "Property 'privacylevel' does not exist on type 'unknown'."
-          },
-          {
-            "file": "./connect4/src/api/resources/APIHelpers.ts",
-            "start": 2579,
-            "length": 7,
-            "code": 2339,
-            "category": 1,
-            "messageText": "Property 'matchid' does not exist on type 'unknown'."
-          },
-          {
-            "file": "./connect4/src/api/resources/APIHelpers.ts",
-            "start": 2664,
-            "length": 7,
-            "messageText": "Type 'unknown' is not an array type or a string type or does not have a '[Symbol.iterator]()' method that returns an iterator.",
-            "category": 1,
-            "code": 2549
-          },
-          {
-            "file": "./connect4/src/api/resources/APIHelpers.ts",
-            "start": 2856,
-            "length": 6,
-            "code": 2339,
-            "category": 1,
-            "messageText": "Property 'length' does not exist on type 'unknown'."
-          },
-          {
-            "file": "./connect4/src/api/resources/APIHelpers.ts",
-            "start": 3565,
-            "length": 3,
-            "code": 2339,
-            "category": 1,
-            "messageText": "Property 'map' does not exist on type 'unknown'."
-          },
-          {
-            "file": "./connect4/src/api/resources/APIHelpers.ts",
-            "start": 4074,
-            "length": 7,
-            "code": 2339,
-            "category": 1,
-            "messageText": "Property 'forEach' does not exist on type 'unknown'."
-          },
-          {
-            "file": "./connect4/src/api/resources/APIHelpers.ts",
-            "start": 4172,
-            "length": 6,
-            "code": 2339,
-            "category": 1,
-            "messageText": "Property 'filter' does not exist on type 'unknown'."
-          },
-          {
-            "file": "./connect4/src/api/resources/APIHelpers.ts",
-            "start": 4292,
-            "length": 7,
-            "messageText": "Type 'unknown' is not an array type or a string type or does not have a '[Symbol.iterator]()' method that returns an iterator.",
-            "category": 1,
-            "code": 2549
-          },
-          {
-            "file": "./connect4/src/api/resources/APIHelpers.ts",
-            "start": 4768,
-            "length": 6,
-            "code": 2339,
-            "category": 1,
-            "messageText": "Property 'length' does not exist on type 'unknown'."
-          },
-          {
-            "file": "./connect4/src/api/resources/APIHelpers.ts",
-            "start": 5068,
-            "length": 6,
-            "code": 2339,
-            "category": 1,
-            "messageText": "Property 'length' does not exist on type 'unknown'."
-          },
-          {
-            "file": "./connect4/src/api/resources/APIHelpers.ts",
-            "start": 5321,
-            "length": 6,
-            "code": 2339,
-            "category": 1,
-            "messageText": "Property 'length' does not exist on type 'unknown'."
-          },
-          {
-            "file": "./connect4/src/api/resources/APIHelpers.ts",
-            "start": 5757,
-            "length": 32,
-            "messageText": "Type 'unknown' is not an array type or does not have a '[Symbol.iterator]()' method that returns an iterator.",
-            "category": 1,
-            "code": 2548
-          },
-          {
-            "file": "./connect4/src/api/resources/APIHelpers.ts",
-            "start": 5794,
-            "length": 33,
-            "messageText": "Type 'unknown' is not an array type or does not have a '[Symbol.iterator]()' method that returns an iterator.",
-            "category": 1,
-            "code": 2548
-          },
-          {
-            "file": "./connect4/src/api/resources/APIHelpers.ts",
-            "start": 6342,
-            "length": 6,
-            "code": 2339,
-            "category": 1,
-            "messageText": "Property 'verify' does not exist on type 'object'."
-          },
-          {
-            "file": "./connect4/src/api/resources/APIHelpers.ts",
-            "start": 6473,
-            "length": 6,
-            "code": 2339,
-            "category": 1,
-            "messageText": "Property 'verify' does not exist on type 'object'."
           }
         ]
       ],
