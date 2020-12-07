@@ -1,6 +1,6 @@
-import { DatabaseUser, DatabaseGame, DatabaseMove, DatabaseMatch } from './../../../models/models';
+import { DatabaseUser, DatabaseGame, DatabaseMove, DatabaseMatch, DatabaseMatchAcceptance } from './../../../models/models';
 import { Database } from 'sqlite3';
-import { ResourceSuccess, MissingRequiredField } from '../../../resources/APIStatus';
+import { ResourceSuccess, MissingRequiredField, NotFound } from '../../../resources/APIStatus';
 import express from 'express'
 
 import * as APIHelpers from '../../../resources/APIHelpers'
@@ -17,24 +17,89 @@ module.exports = class {
 
         //Currently only works for matches that are won, I need to come up with a query that joins three tables before I can get this to spec.
         this.app.get("/", APIHelpers.WrapRequest(async (req: express.Request, res: express.Response, success: Function) => {
-            let userid = undefined;
-            if (req.query.player){
-                let user = await new DatabaseUser({username:req.query.player}).select({db:this.opts.gateway.db})
-
-                userid = user.length>=1?user[0].userid:undefined;
+            let username = req.query.player;
+            let matchIds = []
+            if (!!username){
+                let terms = [`${username}%`, `%${username}`, `%${username}%`]
+                let found;
+                for (let i = 0; i < terms.length && !found; i++) {
+                    let resp = await new DatabaseUser({}).raw(this.opts.gateway.db, {
+                        sql: `select * from Users where private=0 AND username like ? LIMIT 1`,
+                        params: [terms[i]],
+                        single:true
+                    })
+                    if (resp[0]){
+                        found = resp[0]
+                    }
+    
+                }
+                let mids = await new DatabaseMatch({}).raw(this.opts.gateway.db, {
+                    sql: `select Matchs.matchid from Matchs CROSS JOIN MatchAcceptances on MatchAcceptances.matchid = Matchs.matchid where Matchs.privacylevel=0 AND MatchAcceptances.userid=?`,
+                    params:[found.userid],
+                    model:DatabaseMatch
+                })
+                matchIds = mids.map(m=>{return m.matchid})
+            } else {
+                let mids = await new DatabaseMatch({}).raw(this.opts.gateway.db, {
+                    sql: `select Matchs.matchid from Matchs where Matchs.privacylevel=0`,
+                    params:[],
+                    model:DatabaseMatch
+                })
+                matchIds = mids.map(m=>{return m.matchid})
             }
-            
-            let finished = req.query.active==undefined?undefined:(req.query.active?0:1)
-            let matches = await new DatabaseMatch({})
-            let games = await new DatabaseGame({userid:userid, gamefinished:finished}).select({db:this.opts.gateway.db})
-            if (req.query.detail=="full"){
-                for (let game of games)
-                    game.moves = await new DatabaseMove({gameid:game.gameid}).select({db:this.opts.gateway.db})
-                  
+            if(!matchIds.length){
+                throw new NotFound("Game")
             }
+            let finished=""
+            if(req.query.active==="true"){
+                finished = "AND gamefinished is NULL"
+            } else if(req.query.active==="false"){
+                finished = "AND gamefinished is not NULL"
+            }
+            let games = await new DatabaseGame({}).raw(this.opts.gateway.db, {
+                sql: `select * from Games where matchid in (${matchIds.map(()=>"?").join(",")}) ${finished}`,
+                params:matchIds,
+                model:DatabaseGame
+            })
+            if (!games.length){
+                throw new NotFound("Game")
+            }
+            let allGames = []
+            let personMap = new Map<number, DatabaseUser>()
+            for (let g of games){
+                let match = await new DatabaseMatch({matchid:g.matchid}).select({db:this.opts.gateway.db})[0]
+                let acceptances = await new DatabaseMatchAcceptance({matchid:g.matchid}).select({db:this.opts.gateway.db})
+                let moves = await new DatabaseMove({gameid:g.gameid}).select({db:this.opts.gateway.db})
+                let users = []
+                for (let acc of acceptances){
+                    if (!personMap.has(acc.userid)){
+                        personMap.set(acc.userid, (await (new DatabaseUser({userid:acc.userid})).select({db:this.opts.gateway.db}))[0])
+                    }
+                    users.push(personMap.get(acc.userid))
+                }
+               let data = {
+                   players:Array.from(personMap.values()).map(e=>e.username),
+                   finished:g.gamefinished!=null
+               }
+               if (g.gamefinished!=null){
+                   data.winner = personMap.get(g.gamefinished).username
+                   data.turns = moves.length
+               }
+               if (req.query.detail==="full"){
+                   data.moves = moves.map(m=>{
+                    return {
+                       username:personMap.get(m.userid).username,
+                       x:m.x,
+                       y:m.y,
+                       time:m.time
+                   }})
+               }
+                allGames.push(data)
+            }
+      
             
             
-            success(new ResourceSuccess(games));
+            success(new ResourceSuccess(allGames));
 
         }))
 

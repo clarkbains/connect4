@@ -1,8 +1,8 @@
 <template>
     <div class="col">
-        <h5 class="${(g.myTurn && !g.finished)?'text-danger font-weight-bold':''}"> ${g.match.name} <i>${(g.myTurn && !g.finished)?" (Your turn)":""}</i>
+        <h5 class="${(g.myTurn && !g.finished)?'text-danger font-weight-bold':''}"> ${g.match.msg} <i>${(g.myTurn && !g.finished)?" (Your turn)":""}</i>
         </h5>
-        <i> ${g.match.msg}</i>
+        <i> ${g.match.name}</i>
 
 
         <div if.bind="g.finished">

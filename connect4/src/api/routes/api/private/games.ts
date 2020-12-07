@@ -188,16 +188,6 @@ module.exports = class {
             success(new statuses.GenericSuccess())
 
         }))
-        this.app.get("/:gameid/messages", APIHelpers.WrapRequest(async (req: express.Request, res: express.Response, success: Function) => {
-            let game:Game = await APIHelpers.fetchGame(req.params.gameid, res.locals.user.userid,this.opts.gateway.db)
-            //let game = await APIHelpers.isInGame(req.params.gameid, r.userid,this.opts.gateway.db)
-            if (!game){
-                throw new statuses.ResourcePermissionError()
-            }
-
-            let msgs = await new models.DatabaseGameMessage({gameid: req.params.gameid}).select({db:this.opts.gateway.db})
-            success(new statuses.MesageSuccess(msgs))
-        }))
 
         this.app.post("/:gameid/messages/authorize", APIHelpers.WrapRequest(async (req: express.Request, res: express.Response, success: Function) => {
             let r = new models.EventSubscription(req.body)

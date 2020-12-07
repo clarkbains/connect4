@@ -2,8 +2,8 @@
   "program": {
     "fileInfos": {
       "./node_modules/typescript/lib/lib.es5.d.ts": {
-        "version": "69f0c334b0ee4235f6219b22f42e4fa04b414535c782b4dda793ed1918cc835c",
-        "signature": "69f0c334b0ee4235f6219b22f42e4fa04b414535c782b4dda793ed1918cc835c",
+        "version": "c9a1f03d6ba0fe3c871eb0dd81622e78fbb61ade70878b34d48a341a690c59e9",
+        "signature": "c9a1f03d6ba0fe3c871eb0dd81622e78fbb61ade70878b34d48a341a690c59e9",
         "affectsGlobalScope": true
       },
       "./node_modules/typescript/lib/lib.es2015.d.ts": {
@@ -42,18 +42,18 @@
         "affectsGlobalScope": true
       },
       "./node_modules/typescript/lib/lib.es2015.iterable.d.ts": {
-        "version": "8b2a5df1ce95f78f6b74f1a555ccdb6baab0486b42d8345e0871dd82811f9b9a",
-        "signature": "8b2a5df1ce95f78f6b74f1a555ccdb6baab0486b42d8345e0871dd82811f9b9a",
+        "version": "42f5e41e5893da663dbf0394268f54f1da4b43dc0ddd2ea4bf471fe5361d6faf",
+        "signature": "42f5e41e5893da663dbf0394268f54f1da4b43dc0ddd2ea4bf471fe5361d6faf",
         "affectsGlobalScope": true
       },
       "./node_modules/typescript/lib/lib.es2015.promise.d.ts": {
-        "version": "2bb4b3927299434052b37851a47bf5c39764f2ba88a888a107b32262e9292b7c",
-        "signature": "2bb4b3927299434052b37851a47bf5c39764f2ba88a888a107b32262e9292b7c",
+        "version": "0b7a905675e6cb4211c128f0a3aa47d414b275180a299a9aad5d3ec298abbfc4",
+        "signature": "0b7a905675e6cb4211c128f0a3aa47d414b275180a299a9aad5d3ec298abbfc4",
         "affectsGlobalScope": true
       },
       "./node_modules/typescript/lib/lib.es2015.proxy.d.ts": {
-        "version": "7207e317a2cb07a177e7d963ab7b8c0e85dde7f9ddb50351f830239bf597569e",
-        "signature": "7207e317a2cb07a177e7d963ab7b8c0e85dde7f9ddb50351f830239bf597569e",
+        "version": "dfff68b3c34338f6b307a25d4566de15eed7973b0dc5d69f9fde2bcac1c25315",
+        "signature": "dfff68b3c34338f6b307a25d4566de15eed7973b0dc5d69f9fde2bcac1c25315",
         "affectsGlobalScope": true
       },
       "./node_modules/typescript/lib/lib.es2015.reflect.d.ts": {
@@ -67,8 +67,8 @@
         "affectsGlobalScope": true
       },
       "./node_modules/typescript/lib/lib.es2015.symbol.wellknown.d.ts": {
-        "version": "9d122b7e8c1a5c72506eea50c0973cba55b92b5532d5cafa8a6ce2c547d57551",
-        "signature": "9d122b7e8c1a5c72506eea50c0973cba55b92b5532d5cafa8a6ce2c547d57551",
+        "version": "4670208dd7da9d6c774ab1b75c1527a810388c7989c4905de6aaea8561cb9dce",
+        "signature": "4670208dd7da9d6c774ab1b75c1527a810388c7989c4905de6aaea8561cb9dce",
         "affectsGlobalScope": true
       },
       "./node_modules/typescript/lib/lib.es2016.array.include.d.ts": {
@@ -82,8 +82,8 @@
         "affectsGlobalScope": true
       },
       "./node_modules/typescript/lib/lib.es2017.sharedmemory.d.ts": {
-        "version": "7ce9f0bde3307ca1f944119f6365f2d776d281a393b576a18a2f2893a2d75c98",
-        "signature": "7ce9f0bde3307ca1f944119f6365f2d776d281a393b576a18a2f2893a2d75c98",
+        "version": "b5e4c2d67aa844ed503b29cd4ca2ede1a229ac7fe874613b2c996fa9c581a25f",
+        "signature": "b5e4c2d67aa844ed503b29cd4ca2ede1a229ac7fe874613b2c996fa9c581a25f",
         "affectsGlobalScope": true
       },
       "./node_modules/typescript/lib/lib.es2017.string.d.ts": {
@@ -522,12 +522,12 @@
         "affectsGlobalScope": false
       },
       "./connect4/src/api/routes/api.ts": {
-        "version": "deadef369f6c73bae77665f03aa25e60ac70f93d3ef001b38e6d09f9c58e2380",
+        "version": "ad101098e739843693d6130b611dfc7ad14c6c7842c88411bea9ef9d8a6d6d03",
         "signature": "8e609bb71c20b858c77f0e9f90bb1319db8477b13f9f965f1a1e18524bf50881",
         "affectsGlobalScope": false
       },
       "./connect4/src/api/routes/ui.ts": {
-        "version": "c8238859f96e75a2a2ff64c5e4fa711ba13ca6033ea7484c96f9ae5c9086fc2a",
+        "version": "696b93b6c0567f208b8c62d97f6e4caf2c8ea8ecbb23753ae78b09315ebc464a",
         "signature": "8e609bb71c20b858c77f0e9f90bb1319db8477b13f9f965f1a1e18524bf50881",
         "affectsGlobalScope": false
       },
@@ -542,12 +542,12 @@
         "affectsGlobalScope": false
       },
       "./connect4/src/api/routes/api/private/games.ts": {
-        "version": "82d353ac62b68a70a4e6f427129642381190f021fc4c93d15bcf040e9e074cd2",
+        "version": "9a39a8321ea56000f0d29b97fac8ac6f7ab91d1943945904724822209d2e4c70",
         "signature": "8e609bb71c20b858c77f0e9f90bb1319db8477b13f9f965f1a1e18524bf50881",
         "affectsGlobalScope": false
       },
       "./connect4/src/api/routes/api/private/user.ts": {
-        "version": "7571aa63a634ed07a0eb72346ee08913cc66cbaac6d24c499bc461c2aee9d33c",
+        "version": "5d100a74c5f50781ade1b248144141ebc1e3a6cb786f77562671a7fc52cc6431",
         "signature": "8e609bb71c20b858c77f0e9f90bb1319db8477b13f9f965f1a1e18524bf50881",
         "affectsGlobalScope": false
       },
@@ -557,12 +557,12 @@
         "affectsGlobalScope": false
       },
       "./connect4/src/api/routes/api/public/games.ts": {
-        "version": "db7be79e82929e1dfa51e97cea444306d57dabf349fb64638842e6b5ecd738a6",
+        "version": "c758fe327ddc53d18ff60646b9693af6fae2de9442796ea85defc374b11cc4e2",
         "signature": "8e609bb71c20b858c77f0e9f90bb1319db8477b13f9f965f1a1e18524bf50881",
         "affectsGlobalScope": false
       },
       "./connect4/src/api/routes/api/public/user.ts": {
-        "version": "1c7b89d5d01c0731afc65e96d712702ea856396d548d08635a6ae85d9c9a4a3d",
+        "version": "23af6ee7c872245a9061223ea7d1acdfa74e9d7620ed6655195762c3e152bf59",
         "signature": "8e609bb71c20b858c77f0e9f90bb1319db8477b13f9f965f1a1e18524bf50881",
         "affectsGlobalScope": false
       },
@@ -606,6 +606,7 @@
       "emitDecoratorMetadata": true,
       "skipLibCheck": true,
       "forceConsistentCasingInFileNames": true,
+      "watch": true,
       "configFilePath": "./tsconfig.json"
     },
     "referencedMap": {
@@ -3911,7 +3912,7 @@
             "relatedInformation": [
               {
                 "file": "./node_modules/typescript/lib/lib.es5.d.ts",
-                "start": 67482,
+                "start": 67402,
                 "length": 239,
                 "messageText": "'then' is declared here.",
                 "category": 3,
@@ -3921,7 +3922,6 @@
           }
         ]
       ],
-      "./connect4/src/api/routes/api.ts",
       [
         "./connect4/src/api/routes/api/private.ts",
         [
@@ -3956,321 +3956,6 @@
             "code": 2339,
             "category": 1,
             "messageText": "Property 'tracker' does not exist on type 'object'."
-          }
-        ]
-      ],
-      [
-        "./connect4/src/api/routes/api/private/games.ts",
-        [
-          {
-            "file": "./connect4/src/api/routes/api/private/games.ts",
-            "start": 786,
-            "length": 7,
-            "code": 2339,
-            "category": 1,
-            "messageText": "Property 'gateway' does not exist on type 'object'."
-          },
-          {
-            "file": "./connect4/src/api/routes/api/private/games.ts",
-            "start": 1021,
-            "length": 7,
-            "code": 2339,
-            "category": 1,
-            "messageText": "Property 'gateway' does not exist on type 'object'."
-          },
-          {
-            "file": "./connect4/src/api/routes/api/private/games.ts",
-            "start": 1414,
-            "length": 7,
-            "code": 2339,
-            "category": 1,
-            "messageText": "Property 'gateway' does not exist on type 'object'."
-          },
-          {
-            "file": "./connect4/src/api/routes/api/private/games.ts",
-            "start": 1572,
-            "length": 38,
-            "code": 2345,
-            "category": 1,
-            "messageText": {
-              "messageText": "Argument of type 'number[]' is not assignable to parameter of type 'object[]'.",
-              "category": 1,
-              "code": 2345,
-              "next": [
-                {
-                  "messageText": "Type 'number' is not assignable to type 'object'.",
-                  "category": 1,
-                  "code": 2322
-                }
-              ]
-            }
-          },
-          {
-            "file": "./connect4/src/api/routes/api/private/games.ts",
-            "start": 1969,
-            "length": 7,
-            "code": 2339,
-            "category": 1,
-            "messageText": "Property 'gateway' does not exist on type 'object'."
-          },
-          {
-            "file": "./connect4/src/api/routes/api/private/games.ts",
-            "start": 2294,
-            "length": 3,
-            "code": 2339,
-            "category": 1,
-            "messageText": "Property 'bus' does not exist on type 'object'."
-          },
-          {
-            "file": "./connect4/src/api/routes/api/private/games.ts",
-            "start": 2741,
-            "length": 7,
-            "code": 2339,
-            "category": 1,
-            "messageText": "Property 'gateway' does not exist on type 'object'."
-          },
-          {
-            "file": "./connect4/src/api/routes/api/private/games.ts",
-            "start": 3165,
-            "length": 3,
-            "code": 2339,
-            "category": 1,
-            "messageText": "Property 'bus' does not exist on type 'object'."
-          },
-          {
-            "file": "./connect4/src/api/routes/api/private/games.ts",
-            "start": 3441,
-            "length": 7,
-            "code": 2339,
-            "category": 1,
-            "messageText": "Property 'gateway' does not exist on type 'object'."
-          },
-          {
-            "file": "./connect4/src/api/routes/api/private/games.ts",
-            "start": 3608,
-            "length": 3,
-            "code": 2339,
-            "category": 1,
-            "messageText": "Property 'bus' does not exist on type 'object'."
-          },
-          {
-            "file": "./connect4/src/api/routes/api/private/games.ts",
-            "start": 3712,
-            "length": 3,
-            "code": 2339,
-            "category": 1,
-            "messageText": "Property 'bus' does not exist on type 'object'."
-          },
-          {
-            "file": "./connect4/src/api/routes/api/private/games.ts",
-            "start": 4116,
-            "length": 7,
-            "code": 2339,
-            "category": 1,
-            "messageText": "Property 'gateway' does not exist on type 'object'."
-          },
-          {
-            "file": "./connect4/src/api/routes/api/private/games.ts",
-            "start": 4751,
-            "length": 7,
-            "code": 2339,
-            "category": 1,
-            "messageText": "Property 'gateway' does not exist on type 'object'."
-          },
-          {
-            "file": "./connect4/src/api/routes/api/private/games.ts",
-            "start": 4868,
-            "length": 7,
-            "code": 2339,
-            "category": 1,
-            "messageText": "Property 'gateway' does not exist on type 'object'."
-          },
-          {
-            "file": "./connect4/src/api/routes/api/private/games.ts",
-            "start": 5171,
-            "length": 7,
-            "code": 2339,
-            "category": 1,
-            "messageText": "Property 'gateway' does not exist on type 'object'."
-          },
-          {
-            "file": "./connect4/src/api/routes/api/private/games.ts",
-            "start": 5625,
-            "length": 7,
-            "code": 2339,
-            "category": 1,
-            "messageText": "Property 'gateway' does not exist on type 'object'."
-          },
-          {
-            "file": "./connect4/src/api/routes/api/private/games.ts",
-            "start": 6387,
-            "length": 7,
-            "code": 2339,
-            "category": 1,
-            "messageText": "Property 'gateway' does not exist on type 'object'."
-          },
-          {
-            "file": "./connect4/src/api/routes/api/private/games.ts",
-            "start": 6492,
-            "length": 3,
-            "code": 2339,
-            "category": 1,
-            "messageText": "Property 'bus' does not exist on type 'object'."
-          },
-          {
-            "file": "./connect4/src/api/routes/api/private/games.ts",
-            "start": 6545,
-            "length": 3,
-            "code": 2339,
-            "category": 1,
-            "messageText": "Property 'bus' does not exist on type 'object'."
-          },
-          {
-            "file": "./connect4/src/api/routes/api/private/games.ts",
-            "start": 6708,
-            "length": 7,
-            "code": 2339,
-            "category": 1,
-            "messageText": "Property 'gateway' does not exist on type 'object'."
-          },
-          {
-            "file": "./connect4/src/api/routes/api/private/games.ts",
-            "start": 6747,
-            "length": 3,
-            "messageText": "Type 'unknown' is not an array type or a string type or does not have a '[Symbol.iterator]()' method that returns an iterator.",
-            "category": 1,
-            "code": 2549
-          },
-          {
-            "file": "./connect4/src/api/routes/api/private/games.ts",
-            "start": 6779,
-            "length": 3,
-            "code": 2339,
-            "category": 1,
-            "messageText": "Property 'bus' does not exist on type 'object'."
-          },
-          {
-            "file": "./connect4/src/api/routes/api/private/games.ts",
-            "start": 7323,
-            "length": 7,
-            "code": 2339,
-            "category": 1,
-            "messageText": "Property 'gateway' does not exist on type 'object'."
-          },
-          {
-            "file": "./connect4/src/api/routes/api/private/games.ts",
-            "start": 8089,
-            "length": 7,
-            "code": 2339,
-            "category": 1,
-            "messageText": "Property 'gateway' does not exist on type 'object'."
-          },
-          {
-            "file": "./connect4/src/api/routes/api/private/games.ts",
-            "start": 8352,
-            "length": 7,
-            "code": 2339,
-            "category": 1,
-            "messageText": "Property 'gateway' does not exist on type 'object'."
-          },
-          {
-            "file": "./connect4/src/api/routes/api/private/games.ts",
-            "start": 8388,
-            "length": 3,
-            "code": 2339,
-            "category": 1,
-            "messageText": "Property 'bus' does not exist on type 'object'."
-          },
-          {
-            "file": "./connect4/src/api/routes/api/private/games.ts",
-            "start": 8814,
-            "length": 7,
-            "code": 2339,
-            "category": 1,
-            "messageText": "Property 'gateway' does not exist on type 'object'."
-          },
-          {
-            "file": "./connect4/src/api/routes/api/private/games.ts",
-            "start": 9137,
-            "length": 7,
-            "code": 2339,
-            "category": 1,
-            "messageText": "Property 'gateway' does not exist on type 'object'."
-          },
-          {
-            "file": "./connect4/src/api/routes/api/private/games.ts",
-            "start": 9631,
-            "length": 7,
-            "code": 2339,
-            "category": 1,
-            "messageText": "Property 'gateway' does not exist on type 'object'."
-          },
-          {
-            "file": "./connect4/src/api/routes/api/private/games.ts",
-            "start": 9866,
-            "length": 3,
-            "code": 2339,
-            "category": 1,
-            "messageText": "Property 'bus' does not exist on type 'object'."
-          },
-          {
-            "file": "./connect4/src/api/routes/api/private/games.ts",
-            "start": 10282,
-            "length": 7,
-            "code": 2339,
-            "category": 1,
-            "messageText": "Property 'gateway' does not exist on type 'object'."
-          },
-          {
-            "file": "./connect4/src/api/routes/api/private/games.ts",
-            "start": 11265,
-            "length": 7,
-            "code": 2339,
-            "category": 1,
-            "messageText": "Property 'gateway' does not exist on type 'object'."
-          },
-          {
-            "file": "./connect4/src/api/routes/api/private/games.ts",
-            "start": 11486,
-            "length": 3,
-            "code": 2339,
-            "category": 1,
-            "messageText": "Property 'bus' does not exist on type 'object'."
-          },
-          {
-            "file": "./connect4/src/api/routes/api/private/games.ts",
-            "start": 12013,
-            "length": 7,
-            "code": 2339,
-            "category": 1,
-            "messageText": "Property 'gateway' does not exist on type 'object'."
-          },
-          {
-            "file": "./connect4/src/api/routes/api/private/games.ts",
-            "start": 12220,
-            "length": 7,
-            "code": 2339,
-            "category": 1,
-            "messageText": "Property 'gateway' does not exist on type 'object'."
-          },
-          {
-            "file": "./connect4/src/api/routes/api/private/games.ts",
-            "start": 12290,
-            "length": 5,
-            "code": 2345,
-            "category": 1,
-            "messageText": {
-              "messageText": "Argument of type 'unknown' is not assignable to parameter of type 'DatabaseMove[]'.",
-              "category": 1,
-              "code": 2345,
-              "next": [
-                {
-                  "messageText": "Type '{}' is missing the following properties from type 'DatabaseMove[]': length, pop, push, concat, and 26 more.",
-                  "category": 1,
-                  "code": 2740
-                }
-              ]
-            }
           }
         ]
       ],
@@ -4460,7 +4145,15 @@
           },
           {
             "file": "./connect4/src/api/routes/api/private/user.ts",
-            "start": 2212,
+            "start": 2035,
+            "length": 3,
+            "code": 2339,
+            "category": 1,
+            "messageText": "Property 'bus' does not exist on type 'object'."
+          },
+          {
+            "file": "./connect4/src/api/routes/api/private/user.ts",
+            "start": 2277,
             "length": 7,
             "code": 2339,
             "category": 1,
@@ -4468,7 +4161,15 @@
           },
           {
             "file": "./connect4/src/api/routes/api/private/user.ts",
-            "start": 2632,
+            "start": 2437,
+            "length": 3,
+            "code": 2339,
+            "category": 1,
+            "messageText": "Property 'bus' does not exist on type 'object'."
+          },
+          {
+            "file": "./connect4/src/api/routes/api/private/user.ts",
+            "start": 2762,
             "length": 7,
             "code": 2339,
             "category": 1,
@@ -4476,7 +4177,7 @@
           },
           {
             "file": "./connect4/src/api/routes/api/private/user.ts",
-            "start": 2706,
+            "start": 2836,
             "length": 3,
             "code": 2339,
             "category": 1,
@@ -4484,7 +4185,7 @@
           },
           {
             "file": "./connect4/src/api/routes/api/private/user.ts",
-            "start": 2886,
+            "start": 3016,
             "length": 7,
             "code": 2339,
             "category": 1,
@@ -4492,7 +4193,7 @@
           },
           {
             "file": "./connect4/src/api/routes/api/private/user.ts",
-            "start": 2952,
+            "start": 3082,
             "length": 7,
             "code": 2339,
             "category": 1,
@@ -4500,7 +4201,7 @@
           },
           {
             "file": "./connect4/src/api/routes/api/private/user.ts",
-            "start": 3104,
+            "start": 3234,
             "length": 7,
             "code": 2345,
             "category": 1,
@@ -4519,7 +4220,7 @@
           },
           {
             "file": "./connect4/src/api/routes/api/private/user.ts",
-            "start": 3698,
+            "start": 3828,
             "length": 7,
             "code": 2339,
             "category": 1,
@@ -4527,7 +4228,7 @@
           },
           {
             "file": "./connect4/src/api/routes/api/private/user.ts",
-            "start": 3868,
+            "start": 3998,
             "length": 7,
             "code": 2339,
             "category": 1,
@@ -4535,7 +4236,7 @@
           },
           {
             "file": "./connect4/src/api/routes/api/private/user.ts",
-            "start": 3956,
+            "start": 4086,
             "length": 3,
             "code": 2339,
             "category": 1,
@@ -4543,7 +4244,7 @@
           },
           {
             "file": "./connect4/src/api/routes/api/private/user.ts",
-            "start": 4007,
+            "start": 4137,
             "length": 3,
             "code": 2339,
             "category": 1,
@@ -4551,7 +4252,7 @@
           },
           {
             "file": "./connect4/src/api/routes/api/private/user.ts",
-            "start": 4344,
+            "start": 4474,
             "length": 7,
             "code": 2339,
             "category": 1,
@@ -4559,7 +4260,7 @@
           },
           {
             "file": "./connect4/src/api/routes/api/private/user.ts",
-            "start": 4497,
+            "start": 4627,
             "length": 7,
             "code": 2339,
             "category": 1,
@@ -4567,7 +4268,7 @@
           },
           {
             "file": "./connect4/src/api/routes/api/private/user.ts",
-            "start": 4569,
+            "start": 4699,
             "length": 3,
             "code": 2339,
             "category": 1,
@@ -4575,7 +4276,7 @@
           },
           {
             "file": "./connect4/src/api/routes/api/private/user.ts",
-            "start": 4663,
+            "start": 4793,
             "length": 7,
             "code": 2339,
             "category": 1,
@@ -4583,7 +4284,7 @@
           },
           {
             "file": "./connect4/src/api/routes/api/private/user.ts",
-            "start": 4714,
+            "start": 4844,
             "length": 3,
             "code": 2339,
             "category": 1,
@@ -4591,7 +4292,7 @@
           },
           {
             "file": "./connect4/src/api/routes/api/private/user.ts",
-            "start": 4808,
+            "start": 4938,
             "length": 7,
             "code": 2339,
             "category": 1,
@@ -4599,7 +4300,7 @@
           },
           {
             "file": "./connect4/src/api/routes/api/private/user.ts",
-            "start": 5648,
+            "start": 5778,
             "length": 7,
             "code": 2339,
             "category": 1,
@@ -4607,7 +4308,7 @@
           },
           {
             "file": "./connect4/src/api/routes/api/private/user.ts",
-            "start": 5686,
+            "start": 5816,
             "length": 6,
             "code": 2339,
             "category": 1,
@@ -4615,7 +4316,7 @@
           },
           {
             "file": "./connect4/src/api/routes/api/private/user.ts",
-            "start": 5861,
+            "start": 5991,
             "length": 7,
             "code": 2339,
             "category": 1,
@@ -4623,7 +4324,7 @@
           },
           {
             "file": "./connect4/src/api/routes/api/private/user.ts",
-            "start": 6069,
+            "start": 6199,
             "length": 7,
             "code": 2339,
             "category": 1,
@@ -4631,7 +4332,7 @@
           },
           {
             "file": "./connect4/src/api/routes/api/private/user.ts",
-            "start": 6240,
+            "start": 6370,
             "length": 7,
             "code": 2339,
             "category": 1,
@@ -4639,7 +4340,7 @@
           },
           {
             "file": "./connect4/src/api/routes/api/private/user.ts",
-            "start": 6334,
+            "start": 6464,
             "length": 3,
             "code": 2339,
             "category": 1,
@@ -4647,7 +4348,7 @@
           },
           {
             "file": "./connect4/src/api/routes/api/private/user.ts",
-            "start": 6386,
+            "start": 6516,
             "length": 3,
             "code": 2339,
             "category": 1,
@@ -4655,7 +4356,7 @@
           },
           {
             "file": "./connect4/src/api/routes/api/private/user.ts",
-            "start": 7072,
+            "start": 7202,
             "length": 7,
             "code": 2339,
             "category": 1,
@@ -4663,7 +4364,7 @@
           },
           {
             "file": "./connect4/src/api/routes/api/private/user.ts",
-            "start": 7110,
+            "start": 7240,
             "length": 6,
             "code": 2339,
             "category": 1,
@@ -4671,7 +4372,7 @@
           },
           {
             "file": "./connect4/src/api/routes/api/private/user.ts",
-            "start": 7239,
+            "start": 7369,
             "length": 7,
             "code": 2339,
             "category": 1,
@@ -4679,7 +4380,7 @@
           },
           {
             "file": "./connect4/src/api/routes/api/private/user.ts",
-            "start": 7332,
+            "start": 7462,
             "length": 3,
             "code": 2339,
             "category": 1,
@@ -4687,7 +4388,7 @@
           },
           {
             "file": "./connect4/src/api/routes/api/private/user.ts",
-            "start": 7391,
+            "start": 7521,
             "length": 3,
             "code": 2339,
             "category": 1,
@@ -4695,7 +4396,7 @@
           },
           {
             "file": "./connect4/src/api/routes/api/private/user.ts",
-            "start": 7688,
+            "start": 7827,
             "length": 7,
             "code": 2339,
             "category": 1,
@@ -4703,7 +4404,7 @@
           },
           {
             "file": "./connect4/src/api/routes/api/private/user.ts",
-            "start": 8027,
+            "start": 8166,
             "length": 7,
             "code": 2339,
             "category": 1,
@@ -4711,7 +4412,7 @@
           },
           {
             "file": "./connect4/src/api/routes/api/private/user.ts",
-            "start": 8133,
+            "start": 8272,
             "length": 6,
             "code": 2339,
             "category": 1,
@@ -4719,7 +4420,7 @@
           },
           {
             "file": "./connect4/src/api/routes/api/private/user.ts",
-            "start": 8169,
+            "start": 8308,
             "length": 3,
             "code": 2339,
             "category": 1,
@@ -4727,7 +4428,7 @@
           },
           {
             "file": "./connect4/src/api/routes/api/private/user.ts",
-            "start": 8293,
+            "start": 8432,
             "length": 3,
             "code": 2339,
             "category": 1,
@@ -4735,7 +4436,7 @@
           },
           {
             "file": "./connect4/src/api/routes/api/private/user.ts",
-            "start": 8371,
+            "start": 8510,
             "length": 4,
             "messageText": "Type 'unknown' is not an array type or a string type or does not have a '[Symbol.iterator]()' method that returns an iterator.",
             "category": 1,
@@ -4743,7 +4444,7 @@
           },
           {
             "file": "./connect4/src/api/routes/api/private/user.ts",
-            "start": 8697,
+            "start": 8835,
             "length": 7,
             "code": 2339,
             "category": 1,
@@ -4751,7 +4452,7 @@
           },
           {
             "file": "./connect4/src/api/routes/api/private/user.ts",
-            "start": 9044,
+            "start": 9181,
             "length": 7,
             "code": 2339,
             "category": 1,
@@ -4759,7 +4460,7 @@
           },
           {
             "file": "./connect4/src/api/routes/api/private/user.ts",
-            "start": 9518,
+            "start": 9655,
             "length": 7,
             "code": 2339,
             "category": 1,
@@ -4767,7 +4468,7 @@
           },
           {
             "file": "./connect4/src/api/routes/api/private/user.ts",
-            "start": 9648,
+            "start": 9785,
             "length": 3,
             "code": 2339,
             "category": 1,
@@ -4775,7 +4476,7 @@
           },
           {
             "file": "./connect4/src/api/routes/api/private/user.ts",
-            "start": 10266,
+            "start": 10403,
             "length": 7,
             "code": 2339,
             "category": 1,
@@ -4783,7 +4484,7 @@
           },
           {
             "file": "./connect4/src/api/routes/api/private/user.ts",
-            "start": 10308,
+            "start": 10445,
             "length": 6,
             "code": 2339,
             "category": 1,
@@ -4791,7 +4492,7 @@
           },
           {
             "file": "./connect4/src/api/routes/api/private/user.ts",
-            "start": 10715,
+            "start": 10852,
             "length": 7,
             "code": 2339,
             "category": 1,
@@ -4799,7 +4500,7 @@
           },
           {
             "file": "./connect4/src/api/routes/api/private/user.ts",
-            "start": 10757,
+            "start": 10894,
             "length": 6,
             "code": 2339,
             "category": 1,
@@ -4807,7 +4508,7 @@
           },
           {
             "file": "./connect4/src/api/routes/api/private/user.ts",
-            "start": 11085,
+            "start": 11222,
             "length": 7,
             "code": 2339,
             "category": 1,
@@ -4815,7 +4516,7 @@
           },
           {
             "file": "./connect4/src/api/routes/api/private/user.ts",
-            "start": 11127,
+            "start": 11264,
             "length": 6,
             "code": 2339,
             "category": 1,
@@ -4823,7 +4524,7 @@
           },
           {
             "file": "./connect4/src/api/routes/api/private/user.ts",
-            "start": 11500,
+            "start": 11637,
             "length": 7,
             "code": 2339,
             "category": 1,
@@ -4831,7 +4532,7 @@
           },
           {
             "file": "./connect4/src/api/routes/api/private/user.ts",
-            "start": 11594,
+            "start": 11731,
             "length": 3,
             "code": 2339,
             "category": 1,
@@ -4839,7 +4540,7 @@
           },
           {
             "file": "./connect4/src/api/routes/api/private/user.ts",
-            "start": 11651,
+            "start": 11788,
             "length": 3,
             "code": 2339,
             "category": 1,
@@ -4848,281 +4549,6 @@
         ]
       ],
       "./connect4/src/api/routes/api/public.ts",
-      [
-        "./connect4/src/api/routes/api/public/games.ts",
-        [
-          {
-            "file": "./connect4/src/api/routes/api/public/games.ts",
-            "start": 974,
-            "length": 7,
-            "code": 2339,
-            "category": 1,
-            "messageText": "Property 'gateway' does not exist on type 'object'."
-          },
-          {
-            "file": "./connect4/src/api/routes/api/public/games.ts",
-            "start": 1018,
-            "length": 6,
-            "code": 2339,
-            "category": 1,
-            "messageText": "Property 'length' does not exist on type 'unknown'."
-          },
-          {
-            "file": "./connect4/src/api/routes/api/public/games.ts",
-            "start": 1331,
-            "length": 7,
-            "code": 2339,
-            "category": 1,
-            "messageText": "Property 'gateway' does not exist on type 'object'."
-          },
-          {
-            "file": "./connect4/src/api/routes/api/public/games.ts",
-            "start": 1420,
-            "length": 5,
-            "messageText": "Type 'unknown' is not an array type or a string type or does not have a '[Symbol.iterator]()' method that returns an iterator.",
-            "category": 1,
-            "code": 2549
-          },
-          {
-            "file": "./connect4/src/api/routes/api/public/games.ts",
-            "start": 1526,
-            "length": 7,
-            "code": 2339,
-            "category": 1,
-            "messageText": "Property 'gateway' does not exist on type 'object'."
-          }
-        ]
-      ],
-      [
-        "./connect4/src/api/routes/api/public/user.ts",
-        [
-          {
-            "file": "./connect4/src/api/routes/api/public/user.ts",
-            "start": 663,
-            "length": 4,
-            "code": 2339,
-            "category": 1,
-            "messageText": "Property 'auth' does not exist on type 'object'."
-          },
-          {
-            "file": "./connect4/src/api/routes/api/public/user.ts",
-            "start": 1065,
-            "length": 7,
-            "code": 2339,
-            "category": 1,
-            "messageText": "Property 'gateway' does not exist on type 'object'."
-          },
-          {
-            "file": "./connect4/src/api/routes/api/public/user.ts",
-            "start": 1125,
-            "length": 3,
-            "code": 2339,
-            "category": 1,
-            "messageText": "Property 'map' does not exist on type 'unknown'."
-          },
-          {
-            "file": "./connect4/src/api/routes/api/public/user.ts",
-            "start": 1656,
-            "length": 7,
-            "code": 2339,
-            "category": 1,
-            "messageText": "Property 'gateway' does not exist on type 'object'."
-          },
-          {
-            "file": "./connect4/src/api/routes/api/public/user.ts",
-            "start": 2239,
-            "length": 7,
-            "code": 2339,
-            "category": 1,
-            "messageText": "Property 'gateway' does not exist on type 'object'."
-          },
-          {
-            "file": "./connect4/src/api/routes/api/public/user.ts",
-            "start": 2703,
-            "length": 7,
-            "code": 2339,
-            "category": 1,
-            "messageText": "Property 'gateway' does not exist on type 'object'."
-          },
-          {
-            "file": "./connect4/src/api/routes/api/public/user.ts",
-            "start": 2788,
-            "length": 6,
-            "code": 2339,
-            "category": 1,
-            "messageText": "Property 'length' does not exist on type 'unknown'."
-          },
-          {
-            "file": "./connect4/src/api/routes/api/public/user.ts",
-            "start": 2942,
-            "length": 7,
-            "code": 2339,
-            "category": 1,
-            "messageText": "Property 'gateway' does not exist on type 'object'."
-          },
-          {
-            "file": "./connect4/src/api/routes/api/public/user.ts",
-            "start": 2978,
-            "length": 6,
-            "code": 2339,
-            "category": 1,
-            "messageText": "Property 'length' does not exist on type 'unknown'."
-          },
-          {
-            "file": "./connect4/src/api/routes/api/public/user.ts",
-            "start": 3102,
-            "length": 4,
-            "code": 2339,
-            "category": 1,
-            "messageText": "Property 'auth' does not exist on type 'object'."
-          },
-          {
-            "file": "./connect4/src/api/routes/api/public/user.ts",
-            "start": 3214,
-            "length": 4,
-            "code": 2339,
-            "category": 1,
-            "messageText": "Property 'auth' does not exist on type 'object'."
-          },
-          {
-            "file": "./connect4/src/api/routes/api/public/user.ts",
-            "start": 3952,
-            "length": 4,
-            "code": 2339,
-            "category": 1,
-            "messageText": "Property 'auth' does not exist on type 'object'."
-          },
-          {
-            "file": "./connect4/src/api/routes/api/public/user.ts",
-            "start": 4171,
-            "length": 3,
-            "code": 2339,
-            "category": 1,
-            "messageText": "Property 'use' does not exist on type '{}'."
-          },
-          {
-            "file": "./connect4/src/api/routes/api/public/user.ts",
-            "start": 4268,
-            "length": 6,
-            "code": 2339,
-            "category": 1,
-            "messageText": "Property 'userid' does not exist on type '{}'."
-          },
-          {
-            "file": "./connect4/src/api/routes/api/public/user.ts",
-            "start": 4547,
-            "length": 7,
-            "code": 2339,
-            "category": 1,
-            "messageText": "Property 'gateway' does not exist on type 'object'."
-          },
-          {
-            "file": "./connect4/src/api/routes/api/public/user.ts",
-            "start": 4583,
-            "length": 6,
-            "code": 2339,
-            "category": 1,
-            "messageText": "Property 'length' does not exist on type 'unknown'."
-          },
-          {
-            "file": "./connect4/src/api/routes/api/public/user.ts",
-            "start": 4871,
-            "length": 7,
-            "code": 2339,
-            "category": 1,
-            "messageText": "Property 'gateway' does not exist on type 'object'."
-          },
-          {
-            "file": "./connect4/src/api/routes/api/public/user.ts",
-            "start": 4907,
-            "length": 6,
-            "code": 2339,
-            "category": 1,
-            "messageText": "Property 'length' does not exist on type 'unknown'."
-          },
-          {
-            "file": "./connect4/src/api/routes/api/public/user.ts",
-            "start": 5078,
-            "length": 4,
-            "code": 2339,
-            "category": 1,
-            "messageText": "Property 'auth' does not exist on type 'object'."
-          },
-          {
-            "file": "./connect4/src/api/routes/api/public/user.ts",
-            "start": 5698,
-            "length": 4,
-            "code": 2339,
-            "category": 1,
-            "messageText": "Property 'conf' does not exist on type 'object'."
-          },
-          {
-            "file": "./connect4/src/api/routes/api/public/user.ts",
-            "start": 5831,
-            "length": 4,
-            "code": 2339,
-            "category": 1,
-            "messageText": "Property 'auth' does not exist on type 'object'."
-          },
-          {
-            "file": "./connect4/src/api/routes/api/public/user.ts",
-            "start": 5995,
-            "length": 7,
-            "code": 2339,
-            "category": 1,
-            "messageText": "Property 'gateway' does not exist on type 'object'."
-          },
-          {
-            "file": "./connect4/src/api/routes/api/public/user.ts",
-            "start": 6302,
-            "length": 6,
-            "code": 2339,
-            "category": 1,
-            "messageText": "Property 'length' does not exist on type 'unknown'."
-          },
-          {
-            "file": "./connect4/src/api/routes/api/public/user.ts",
-            "start": 6375,
-            "length": 7,
-            "code": 2339,
-            "category": 1,
-            "messageText": "Property 'gateway' does not exist on type 'object'."
-          },
-          {
-            "file": "./connect4/src/api/routes/api/public/user.ts",
-            "start": 6481,
-            "length": 7,
-            "code": 2339,
-            "category": 1,
-            "messageText": "Property 'gateway' does not exist on type 'object'."
-          },
-          {
-            "file": "./connect4/src/api/routes/api/public/user.ts",
-            "start": 7001,
-            "length": 7,
-            "code": 2339,
-            "category": 1,
-            "messageText": "Property 'gateway' does not exist on type 'object'."
-          },
-          {
-            "file": "./connect4/src/api/routes/api/public/user.ts",
-            "start": 7036,
-            "length": 6,
-            "code": 2339,
-            "category": 1,
-            "messageText": "Property 'length' does not exist on type 'unknown'."
-          },
-          {
-            "file": "./connect4/src/api/routes/api/public/user.ts",
-            "start": 7135,
-            "length": 4,
-            "code": 2339,
-            "category": 1,
-            "messageText": "Property 'auth' does not exist on type 'object'."
-          }
-        ]
-      ],
-      "./connect4/src/api/routes/ui.ts",
       "./node_modules/@types/anymatch/index.d.ts",
       "./node_modules/@types/color-name/index.d.ts",
       "./node_modules/@types/component-emitter/index.d.ts",
@@ -5221,5 +4647,5 @@
       "./node_modules/typescript/lib/lib.esnext.intl.d.ts"
     ]
   },
-  "version": "4.1.2"
+  "version": "4.0.2"
 }

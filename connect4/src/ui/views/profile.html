@@ -21,6 +21,7 @@
                             <p class="card-text"><i class="fa fa-eye" if.bind="private !== undefined"></i>
                                 Visibility <i class="fa fa-${private?'lock':'globe'}"
                                     click.delegate="togglePrivate()"></i>
+                                    <p if.bind="editing">(Click ${private?'lock':'globe'} Icon to change privacy)</p>
                             </p>
 
                             <button class="btn btn-${editing?'primary':'secondary'}" if.bind="profile.isEditable"

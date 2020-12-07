@@ -111,11 +111,13 @@ export class PlayGame {
     async toggleLive() {
         console.log("Toggling Live Modes")
         if (this.history) {
+            //Goes to most recent
+            await this.histMove(2)
             this.history = undefined
         }
         else {
-            this.setupHist()
-            this.showHistBoard()
+            await this.setupHist()
+            await this.showHistBoard()
         }
     }
     async histMove(type) {

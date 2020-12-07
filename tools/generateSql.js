@@ -1,7 +1,7 @@
 const fs = require('fs')
 let models = fs.readFileSync(process.argv[2], 'utf8')
 let classes = models.match(/export\s*class\s*(\w*)/ig).map(e => e.match(/(\w*)$/)[1])
-
+//Useage 'node tools/generateSql.js connect4/src/api/models/models.ts DatabaseUser' in the root dir of this project. Remove the last arg to see a list of available models. 
 
 //classes = classes[1].split("\n").map(elm=>elm.replace(/\s/g,"").split(":")[0].replace(/(^"|"$)/g,"")).filter(e=>e)
 

@@ -19,20 +19,50 @@ module.exports = class {
             res.send(this.opts.auth.createToken(req.params.token))
         })
         this.app.get("/", APIHelpers.WrapRequest(async (req: express.Request, res: express.Response, success: Function) => {
+            let found = new Map<number,models.DatabaseUser>();
+            let terms = [`${req.query.name}%`, `%${req.query.name}`, `%${req.query.name}%`]
 
-            //Not sure if this is case sensitive or not, but its 12:40 am and I don't really want to check rn
-            let dbObj = await new models.DatabaseUser({ username: req.query.name, private: 0 }).select({ db: this.opts.gateway.db })
-            success(new ResourceSuccess(dbObj.map(e => { return e.username })))
+            for (let i = 0; i < terms.length; i++) {
+                let resp = await new models.DatabaseUser({}).raw(this.opts.gateway.db, {
+                    sql: `select * from Users where private=0 AND username like ?`,
+                    params: [terms[i]]
+                })
+                for(let u of resp){
+                    found.set(u.userid, u)
+                }
+            
+            }
+            if (!found.size){
+                throw new statuses.NotFound("User")
+            }
+            let ua = []
+            for (let v of found.values()){
+                ua.push(v)
+            }
+            success(new statuses.GetUsersSuccess(ua))
+            
 
         }))
         this.app.get("/:username", APIHelpers.WrapRequest(async (req: express.Request, res: express.Response, success: Function) => {
-
-            //Not sure if this is case sensitive or not, but its 12:40 am and I don't really want to check rn
-            if (!req.params.username) {
+            if (!req.params.username){
                 throw new MissingRequiredField(["username"])
             }
-            let dbObj = await new models.DatabaseUser({ username: req.params.username, private: 0 }).select({ db: this.opts.gateway.db })
-            success(new ResourceSuccess(dbObj))
+
+            let terms = [`${req.params.username}%`, `%${req.params.username}`, `%${req.params.username}%`]
+            for (let i = 0; i < terms.length; i++) {
+                let resp = await new models.DatabaseUser({}).raw(this.opts.gateway.db, {
+                    sql: `select * from Users where private=0 AND username like ? LIMIT 1`,
+                    params: [terms[i]],
+                    single:true
+                })
+                if (resp[0]){
+                    success(new statuses.GetUserSuccess(resp[0]));
+                    return;
+                }
+
+            }
+
+           throw new statuses.NotFound("User")
 
         }))
         this.app.post("/", APIHelpers.WrapRequest(async (req: express.Request, res: express.Response, success: Function) => {

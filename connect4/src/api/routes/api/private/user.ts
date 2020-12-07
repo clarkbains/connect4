@@ -41,11 +41,13 @@ module.exports = class {
             await res.locals.user.update({ db: this.opts.gateway.db })
                 .catch(e => { throw new statuses.DatabaseError() })
             success(modified)
+            this.opts.bus.emit("user"+res.locals.user.userid,{})
         }))
         this.app.delete("/me", APIHelpers.WrapRequest(async (req: express.Request, res: express.Response, success: Function) => {
             await res.locals.user.delete({ db: this.opts.gateway.db })
                 .catch(e => { throw new statuses.DatabaseError() })
             success(new statuses.DeleteSuccess("User"))
+            this.opts.bus.emit("user"+res.locals.user.userid,{})
         }))
         this.app.get("/me/friends", APIHelpers.WrapRequest(async (req: express.Request, res: express.Response, success: Function) => {
             let resp = await new DatabaseFriend({
@@ -147,6 +149,7 @@ module.exports = class {
             this.opts.bus.emit("user"+pending[0].user1,{})
             this.opts.bus.emit("user"+res.locals.user.userid,{})
         }))
+        
         this.app.get("/search", APIHelpers.WrapRequest(async (req: express.Request, res: express.Response, success: Function) => {
             let friends = await (new DatabaseFriend({ user1: res.locals.user.userid })).select({ db: this.opts.gateway.db })
             let found = new Set<number>();
@@ -165,11 +168,9 @@ module.exports = class {
                 }
             }
 
-
             let users = []
             for (let u of found) {
                 users.push(await APIHelpers.GetUser(res.locals.user, u, this.opts.gateway.db))
-
             }
             success(new statuses.GetUsersSuccess(users))
 

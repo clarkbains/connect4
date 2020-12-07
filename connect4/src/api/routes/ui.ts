@@ -13,9 +13,6 @@ module.exports = class {
         console.log(path.join(__dirname,"..","..","ui"))
         this.app.use(express.static(path.join(__dirname,"..","..","ui")))
         
-        this.app.get("/test", (req, res) => {
-            res.send("UI Good!")
-        })}
     }
 
    
