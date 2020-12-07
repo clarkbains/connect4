@@ -157,6 +157,12 @@ export class Profile {
             _this.ns.danger(e.msg, e.info)
         })
     }
+    declineFriendRequest(){
+        let _this = this
+        this.gateway.declineFriendRequest(this.profile.pendingFriend).then((e) => { _this.activate() }).catch(e => {
+            _this.ns.danger(e.msg, e.info)
+        })
+    }
 
 
     togglePrivate() {

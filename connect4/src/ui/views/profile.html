@@ -52,6 +52,8 @@
                                     Pending</button>
                                 <button class="btn btn-secondary" if.bind="acceptButton"
                                     click.delegate="acceptFriendRequest()">Accept Request</button>
+                                <button class="btn btn-danger" if.bind="acceptButton"
+                                    click.delegate="declineFriendRequest()">Reject Request</button>
 
                             </div>
                             <button class="btn btn-outline-danger" if.bind="removeButton"
