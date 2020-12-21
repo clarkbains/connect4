@@ -215,7 +215,7 @@ export class PlayGame {
         }
 
         let s = this.allPlayers.sort()
-        let colours = ["red", "green", "blue", "purple"]
+        let colours = ["red", "purple", "blue", "green"]
         let colourMap = {}
         for (let i in s) {
             colourMap[s[i]] = colours[i]
