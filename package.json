@@ -8,24 +8,19 @@
   },
   "license": "MIT",
   "dependencies": {
-    "@babel/plugin-transform-runtime": "^7.12.1",
-    "@babel/polyfill": "^7.11.5",
-    "aurelia-animator-css": "^1.0.4",
-    "aurelia-bootstrapper": "^2.3.3",
-    "aurelia-plugins-notifier": "^2.6.0",
     "body-parser": "^1.19.0",
-    "bootstrap": "^4.5.2",
     "compression": "^1.7.4",
     "express": "^4.17.1",
     "font-awesome": "^4.7.0",
     "jquery": "^3.5.1",
     "jsonwebtoken": "^8.5.1",
     "socket.io": "^3.0.1",
-    "socket.io-client": "^3.0.1",
     "source-map-support": "^0.5.19",
     "sqlite3": "^5.0.0"
   },
   "devDependencies": {
+    "bootstrap": "^4.5.2",
+    "socket.io-client": "^3.0.1",
     "@babel/core": "^7.11.1",
     "@babel/plugin-proposal-class-properties": "^7.10.4",
     "@babel/plugin-proposal-decorators": "^7.10.5",
@@ -67,7 +62,12 @@
     "webpack": "^4.44.1",
     "webpack-bundle-analyzer": "^3.8.0",
     "webpack-cli": "^3.3.12",
-    "webpack-dev-server": "^3.11.0"
+    "webpack-dev-server": "^3.11.0",
+    "@babel/plugin-transform-runtime": "^7.12.1",
+    "@babel/polyfill": "^7.11.5",
+    "aurelia-animator-css": "^1.0.4",
+    "aurelia-bootstrapper": "^2.3.3",
+    "aurelia-plugins-notifier": "^2.6.0"
   },
   "scripts": {
     "run:api-node": "node-dev --notify=false  connect4/dist/api/main.js",
