@@ -38,6 +38,16 @@ export class Login {
                 _this.ns.danger(e.msg,e.info)
             })
         }
+    logindummy() {
+        let _this = this
+        console.log("Logging in");
+        this.g.login("demo1111", "demo1111")
+            .then(e => { console.log("Looks Like We Logged In!", e); _this.g.setId(e.userid); this.redir() })
+            .catch(e=>{
+                console.error("Ran into issue getting profile, notifying",e); 
+                _this.ns.danger(e.msg,e.info)
+            })
+        }
     redir() {
         this.router.navigate(this.after)
     }
